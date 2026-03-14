@@ -15,15 +15,18 @@ public class WindowManager {
 	static final String RESOURCE_DIR = "";
 	static final String FXML_DASHBOARD = "dashboard.fxml";
 
-	public static void test() {
-
-	}
-
-	public static Stage createWindow(String fxml, String title) {
+	public static Stage createWindow(String fxml, String title, Object controller) {
 		try {
 
-			FXMLLoader loader = new FXMLLoader(
-					WindowManager.class.getResource(fxml));
+			URL fxmlUrl = WindowManager.class.getResource(fxml);
+			if (fxmlUrl == null) {
+				throw new RuntimeException("FXML not found: " + fxml);
+			}
+
+			FXMLLoader loader = new FXMLLoader(fxmlUrl);
+
+			loader.setClassLoader(WindowManager.class.getClassLoader());
+			loader.setController(controller);
 
 			Parent root = loader.load();
 			Stage stage = new Stage();
@@ -40,12 +43,6 @@ public class WindowManager {
 		String fxmlPath = RESOURCE_DIR + "/" + FXML_DASHBOARD;
 
 		try {
-
-			// loader.setClassLoader(getClass().getClassLoader());
-
-			// FXMLLoader loader = new FXMLLoader(
-			// WindowManager.class.getResource(fxmlPath));
-
 			URL fxmlUrl = WindowManager.class.getResource(fxmlPath);
 			if (fxmlUrl == null) {
 				throw new RuntimeException("FXML not found: " + fxmlPath);

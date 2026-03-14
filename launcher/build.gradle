@@ -22,3 +22,17 @@ jar {
         attributes 'Main-Class': 'launcher.Launcher'
     }
 }
+
+// tasks.withType(JavaExec).configureEach {
+//     jvmArgs += [
+//         "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
+//     ]
+// }
+
+tasks.withType(JavaExec).configureEach {
+    if (project.hasProperty("debug")) {
+        jvmArgs += [
+            "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
+        ]
+    }
+}

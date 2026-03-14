@@ -11,5 +11,15 @@
 		"java.import.gradle.wrapper.enabled": true,
 		"java.configuration.updateBuildConfiguration": "automatic",
 	},
-	"launch": {}
+	"launch": {
+		"configurations": [
+			{
+				"type": "java",
+				"name": "Attach Gradle",
+				"request": "attach",
+				"hostName": "localhost",
+				"port": 5005
+			}
+		]
+	}
 }

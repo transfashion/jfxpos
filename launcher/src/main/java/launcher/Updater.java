@@ -31,7 +31,8 @@ public final class Updater {
 	static UpdateInfo getUpdateInfo() throws Exception {
 		Thread.sleep(3000); // Simulate some process delay for visibility
 
-		UpdateInfo info = new UpdateInfo();
+		// UpdateInfo info = new UpdateInfo();
+		UpdateInfo info = null;
 		return info;
 	}
 

@@ -1,0 +1,27 @@
+// root-project/build.gradle
+plugins {
+    id 'org.openjfx.javafxplugin' version '0.0.14' apply false
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
+
+    // Redirect all JAR outputs to root project's build/libs
+    tasks.withType(Jar) {
+        destinationDirectory = file("${rootProject.projectDir}/build/libs")
+    }
+}
+
+task run(dependsOn: ':launcher:run')

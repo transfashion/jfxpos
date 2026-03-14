@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": ".",
+			"name": "Point of Sales"
+		}
+	],
+	"settings": {
+		"editor.insertSpaces": false,
+		"editor.detectIndentation": false,
+		"java.import.gradle.wrapper.enabled": true,
+		"java.configuration.updateBuildConfiguration": "automatic",
+	},
+	"launch": {}
+}

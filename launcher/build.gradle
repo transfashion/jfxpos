@@ -1,0 +1,24 @@
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin'
+}
+
+javafx {
+    version = "21"
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+
+application {
+    mainClass = 'launcher.Launcher'
+}
+
+run {
+    workingDir = rootProject.projectDir
+}
+
+jar {
+    archiveFileName = 'launcher.jar'
+    manifest {
+        attributes 'Main-Class': 'launcher.Launcher'
+    }
+}

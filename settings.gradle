@@ -1,0 +1,4 @@
+rootProject.name = 'pointofsales'
+
+include 'jfxpos'
+include 'launcher'

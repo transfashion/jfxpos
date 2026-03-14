@@ -90,18 +90,6 @@ public final class Launcher extends Application {
 
 					Stage primaryStage = new Stage();
 
-					// Buat Efek Fade Out untuk Splash Screen
-					javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(
-							Duration.millis(1000), root);
-					fadeOut.setFromValue(1.0);
-					fadeOut.setToValue(0.0);
-
-					// 3. Setelah animasi selesai, baru tutup splashStage
-					fadeOut.setOnFinished(event -> {
-						splashStage.close();
-						primaryStage.toFront(); // Angkat window utama ke depan
-					});
-
 					try {
 						Object appInstance = appClass.getDeclaredConstructor().newInstance();
 						Method startMethod = appClass.getMethod("start", Stage.class);
@@ -115,44 +103,18 @@ public final class Launcher extends Application {
 						primaryStage.toBack();
 
 						// tutup splash screen
-						PauseTransition delay = new PauseTransition(Duration.seconds(1));
-						delay.setOnFinished(evt -> fadeOut.play());
-						delay.play();
+						closeSplashScreen(root, splashStage, primaryStage);
 
 					} catch (Exception e) {
-						e.printStackTrace();
 						status.setText("Load failed: " + e.getMessage());
+
 						splashStage.setAlwaysOnTop(false);
 						if (primaryStage.isShowing()) {
 							primaryStage.close();
 						}
 
-						Alert alert = new Alert(Alert.AlertType.ERROR);
-						alert.setTitle("Error");
-						alert.setHeaderText("Load Failed!");
-
-						String errorMessage = e.getMessage();
-						if (errorMessage == null) {
-							alert.setContentText(e.toString());
-						} else {
-							alert.setContentText(e.getMessage());
-						}
-
-						StringWriter sw = new StringWriter();
-						PrintWriter pw = new PrintWriter(sw);
-						e.printStackTrace(pw);
-
-						TextArea textArea = new TextArea(sw.toString());
-						textArea.setEditable(false);
-						textArea.setWrapText(true);
-
-						alert.getDialogPane().setExpandableContent(textArea);
-
-						// tutup splash screen
-						PauseTransition delay = new PauseTransition(Duration.seconds(1));
-						delay.setOnFinished(evt -> fadeOut.play());
-						delay.play();
-
+						Alert alert = createAlert(e);
+						closeSplashScreen(root, splashStage, primaryStage);
 						alert.showAndWait(); // MODAL
 
 					}
@@ -167,5 +129,51 @@ public final class Launcher extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
+	}
+
+	public static Alert createAlert(Exception e) {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("Load Failed!");
+
+		String errorMessage = e.getMessage();
+		if (errorMessage == null) {
+			alert.setContentText(e.toString());
+		} else {
+			alert.setContentText(e.getMessage());
+		}
+
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		e.printStackTrace(pw);
+
+		TextArea textArea = new TextArea(sw.toString());
+		textArea.setEditable(false);
+		textArea.setWrapText(true);
+
+		alert.getDialogPane().setExpandableContent(textArea);
+
+		return alert;
+	}
+
+	public static void closeSplashScreen(VBox root, Stage splashStage, Stage primaryStage) {
+		// Buat Efek Fade Out untuk Splash Screen
+		javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(
+				Duration.millis(1000), root);
+		fadeOut.setFromValue(1.0);
+		fadeOut.setToValue(0.0);
+
+		// 3. Setelah animasi selesai, baru tutup splashStage
+		fadeOut.setOnFinished(event -> {
+			splashStage.close();
+			if (primaryStage.isShowing()) {
+				primaryStage.toFront(); // Angkat window utama ke depan
+			}
+		});
+
+		// tutup splash screen
+		PauseTransition delay = new PauseTransition(Duration.seconds(1));
+		delay.setOnFinished(evt -> fadeOut.play());
+		delay.play();
 	}
 }

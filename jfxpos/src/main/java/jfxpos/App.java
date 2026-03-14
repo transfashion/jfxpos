@@ -10,11 +10,10 @@ public class App extends Application {
 	public static AppConfig config;
 
 	@Override
-	public void start(Stage stage) {
+	public void start(Stage stage) throws Exception {
 		try {
 			WindowManager.openDashboardWindow(stage);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw e;
 		}
 	}
@@ -33,4 +32,5 @@ public class App extends Application {
 			throw e;
 		}
 	}
+
 }

@@ -10,6 +10,19 @@
 		"editor.detectIndentation": false,
 		"java.import.gradle.wrapper.enabled": true,
 		"java.configuration.updateBuildConfiguration": "automatic",
+		"files.exclude": {
+			"**/.git": true,
+			"**/.svn": true,
+			"**/.hg": true,
+			"**/.DS_Store": true,
+			"**/Thumbs.db": true,
+			"**/.gradle": true,
+			"jfxpos/build": true,
+			"launcher/build": true
+		},
+		"search.exclude": {
+			"**/build": true
+		}
 	},
 	"launch": {
 		"configurations": [

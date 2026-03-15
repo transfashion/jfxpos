@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import jfxpos.config.AppConfig;
 import jfxpos.config.AppConfigStore;
+import jfxpos.util.WindowManager;
 
 public class App extends Application {
 

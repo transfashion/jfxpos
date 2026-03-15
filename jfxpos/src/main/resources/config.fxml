@@ -7,22 +7,23 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="442.0" prefWidth="638.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="472.0" prefWidth="612.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="60.0" layoutY="51.0" text="Setting Token" />
-      <TextField layoutX="154.0" layoutY="47.0" prefHeight="26.0" prefWidth="431.0" promptText="setting token" />
+      <TextField fx:id="txtToken" layoutX="154.0" layoutY="47.0" prefHeight="26.0" prefWidth="431.0" promptText="setting token" />
       <Button layoutX="153.0" layoutY="83.0" mnemonicParsing="false" onAction="#onParseToken" prefHeight="26.0" prefWidth="99.0" text="Parse" />
       <Label layoutX="78.0" layoutY="146.0" text="Server URL" />
-      <TextField disable="true" layoutX="154.0" layoutY="142.0" prefHeight="26.0" prefWidth="431.0" promptText="server url" />
+      <TextField fx:id="txtServerUrl" disable="true" layoutX="154.0" layoutY="142.0" prefHeight="26.0" prefWidth="431.0" promptText="server url" />
       <Label layoutX="104.0" layoutY="181.0" text="Site ID" />
-      <TextField disable="true" layoutX="154.0" layoutY="178.0" prefHeight="26.0" prefWidth="187.0" promptText="site_id" />
+      <TextField fx:id="txtSiteId" disable="true" layoutX="154.0" layoutY="178.0" prefHeight="26.0" prefWidth="187.0" promptText="site_id" />
       <Label layoutX="387.0" layoutY="182.0" text="Secret Key" />
-      <PasswordField disable="true" layoutX="462.0" layoutY="177.0" prefHeight="26.0" prefWidth="123.0" promptText="password" />
-      <Label layoutX="62.0" layoutY="232.0" text="Ticket Printer" />
-      <TextField layoutX="154.0" layoutY="228.0" prefHeight="26.0" prefWidth="282.0" promptText="site_id" />
+      <PasswordField fx:id="txtKey" disable="true" layoutX="462.0" layoutY="177.0" prefHeight="26.0" prefWidth="123.0" promptText="password" />
+      <Label layoutX="62.0" layoutY="274.0" text="Ticket Printer" />
+      <TextField fx:id="txtTicketPrinter" layoutX="154.0" layoutY="270.0" prefHeight="26.0" prefWidth="282.0" promptText="site_id" />
       <Button layoutX="266.0" layoutY="375.0" mnemonicParsing="false" onAction="#onCancel" prefHeight="26.0" prefWidth="99.0" text="Cancel" />
       <Button layoutX="153.0" layoutY="375.0" mnemonicParsing="false" onAction="#onSaveSetting" prefHeight="26.0" prefWidth="99.0" text="Save" />
-      <CheckBox layoutX="153.0" layoutY="293.0" mnemonicParsing="false" text="Maximize Main Window" />
+      <CheckBox fx:id="chkMaximizeMainWindow" layoutX="153.0" layoutY="322.0" mnemonicParsing="false" text="Maximize Main Window" />
+      <Label layoutX="75.0" layoutY="221.0" text="Machine ID" />
+      <TextField fx:id="txtMachineId" disable="true" layoutX="153.0" layoutY="217.0" prefHeight="26.0" prefWidth="123.0" />
    </children>
 </AnchorPane>

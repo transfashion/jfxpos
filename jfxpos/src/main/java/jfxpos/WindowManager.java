@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import jfxpos.controller.DashboardController;
+import jfxpos.controller.LoginController;
 
 public class WindowManager {
 
@@ -16,7 +17,11 @@ public class WindowManager {
 	static final String FXML_DASHBOARD = "dashboard.fxml";
 	static final String FXML_LOGIN = "login.fxml";
 
-	static Stage stageDashboard;
+	static Stage stageMain;
+
+	public static void setMainStage(Stage stage) {
+		WindowManager.stageMain = stage;
+	}
 
 	public static Scene createScene(String fxml, Object controller) throws Exception {
 		try {
@@ -53,28 +58,37 @@ public class WindowManager {
 		}
 	}
 
-	public static Stage openDashboardWindow(Stage stage) {
+	public static Stage openLogin() throws Exception {
 		String fxml = RESOURCE_DIR + "/" + FXML_LOGIN;
+		Stage stage = WindowManager.stageMain;
 
-		WindowManager.stageDashboard = stage;
+		LoginController controller = new LoginController();
+		Scene loginScene = createScene(fxml, controller);
+		stage.setTitle(DASHBOARD_TITLE);
+		stage.setScene(loginScene);
+		stage.setMinWidth(800);
+		stage.setMinHeight(600);
+		stage.show();
 
-		try {
+		Platform.runLater(() -> {
+			// stage.setMaximized(true);
+			stage.requestFocus();
 
-			DashboardController controller = new DashboardController();
-			Scene loginScene = createScene(fxml, controller);
-			stage.setTitle(DASHBOARD_TITLE);
-			stage.setScene(loginScene);
-			stage.show();
+		});
 
-			Platform.runLater(() -> {
-				stage.setMaximized(true);
-				stage.requestFocus();
-			});
+		return stage;
 
-			return stage;
-		} catch (Exception ex) {
-			throw new RuntimeException("Cannot create window: " + fxml, ex);
-		}
+	}
+
+	public static Stage openDashboard() throws Exception {
+		String fxml = RESOURCE_DIR + "/" + FXML_DASHBOARD;
+		Stage stage = WindowManager.stageMain;
+
+		DashboardController controller = new DashboardController();
+		Scene dashboardScene = createScene(fxml, controller);
+		stage.setScene(dashboardScene);
+
+		return stage;
 	}
 
 }

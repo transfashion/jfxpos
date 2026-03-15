@@ -18,10 +18,13 @@
 			"**/Thumbs.db": true,
 			"**/.gradle": true,
 			"jfxpos/build": true,
-			"launcher/build": true
+			"jfxpos/bin": true,
+			"launcher/build": true,
+			"launcher/bin": true
 		},
 		"search.exclude": {
-			"**/build": true
+			"**/build": true,
+			"**/bin": true
 		}
 	},
 	"launch": {

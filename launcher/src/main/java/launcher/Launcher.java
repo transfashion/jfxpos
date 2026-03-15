@@ -3,11 +3,13 @@ package launcher;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -26,6 +28,7 @@ public final class Launcher extends Application {
 
 	@Override
 	public final void start(Stage splashStage) {
+
 		// Simple Splash Screen UI
 		Label title = new Label("JFX Point of Sales");
 		title.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;");
@@ -40,9 +43,17 @@ public final class Launcher extends Application {
 		scene.setFill(null); // Transparent scene background
 
 		splashStage.initStyle(StageStyle.TRANSPARENT);
+		splashStage.setWidth(400);
+		splashStage.setHeight(250);
 		splashStage.setScene(scene);
 		splashStage.setAlwaysOnTop(true);
 		splashStage.show();
+
+		Platform.runLater(() -> {
+			Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+			splashStage.setX((bounds.getWidth() - splashStage.getWidth()) / 2);
+			splashStage.setY((bounds.getHeight() - splashStage.getHeight()) / 2);
+		});
 
 		// Background loading task
 		new Thread(() -> {

@@ -12,7 +12,8 @@ public class App extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		try {
-			WindowManager.openDashboardWindow(stage);
+			WindowManager.setMainStage(stage);
+			WindowManager.openLogin();
 		} catch (Exception e) {
 			throw e;
 		}

@@ -13,5 +13,8 @@ Thumbs.db
 build/
 out/
 
+# jfxpos/bin
+# launcher/bin
+
 # Gradle
 .gradle/

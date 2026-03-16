@@ -1,0 +1,32 @@
+clean
+===================
+gradlew clean
+
+
+
+rebuild
+====================
+gradlew clean build
+
+
+
+run
+===================
+gradlew run
+gradlew build run
+gradlew clean build run
+
+
+
+
+build exe (image)
+=====================
+gradlew :launcher:jpackageImage
+
+
+build installer
+========================
+gradlew :launcher:jpackage
+
+
+

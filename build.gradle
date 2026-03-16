@@ -1,5 +1,6 @@
 // root-project/build.gradle
 plugins {
+	id 'base'
     id 'org.openjfx.javafxplugin' version '0.0.14' apply false
 }
 
@@ -24,7 +25,12 @@ subprojects {
     }
 }
 
+tasks.named("clean") {
+    delete rootProject.layout.buildDirectory
+}
+
 task run(dependsOn: ':launcher:run')
+
 
 
 

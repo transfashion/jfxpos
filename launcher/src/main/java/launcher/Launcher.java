@@ -15,12 +15,19 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import javafx.animation.PauseTransition;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
+
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Properties;
 
 public final class Launcher extends Application {
 
@@ -63,17 +70,9 @@ public final class Launcher extends Application {
 
 				Updater.update(status);
 
-				// Find jfxpos.jar
-				File jarFile = new File("build/libs/jfxpos.jar");
-				if (!jarFile.exists()) {
-					Platform.runLater(() -> {
-						status.setText("Error: jfxpos.jar not found!");
-						status.setStyle("-fx-text-fill: #e74c3c;");
-					});
-					return;
-				}
+				Path jarPath = getJarPath();
 
-				URL[] urls = { jarFile.toURI().toURL() };
+				URL[] urls = { jarPath.toUri().toURL() };
 
 				// Use current class loader as parent to ensure JavaFX classes are found
 				appClassLoader = new URLClassLoader(urls, Launcher.class.getClassLoader());
@@ -110,10 +109,9 @@ public final class Launcher extends Application {
 						System.out.println("Starting Main Applicaton");
 						startMethod.invoke(appInstance, primaryStage);
 
-						// Pastikan window utama muncul di belakang splash sebentar
-						primaryStage.toBack();
+						primaryStage.setAlwaysOnTop(true);
+						primaryStage.setAlwaysOnTop(false);
 
-						// tutup splash screen
 						closeSplashScreen(root, splashStage, primaryStage);
 
 					} catch (Exception e) {
@@ -133,7 +131,12 @@ public final class Launcher extends Application {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Platform.runLater(() -> status.setText("Load failed: " + e.getMessage()));
+				Platform.runLater(() -> {
+					splashStage.setAlwaysOnTop(false);
+					Alert alert = createAlert(e);
+					alert.showAndWait();
+					splashStage.close();
+				});
 			}
 		}).start();
 	}
@@ -179,6 +182,7 @@ public final class Launcher extends Application {
 			splashStage.close();
 			if (primaryStage.isShowing()) {
 				primaryStage.toFront(); // Angkat window utama ke depan
+				primaryStage.setAlwaysOnTop(false);
 			}
 		});
 
@@ -186,5 +190,56 @@ public final class Launcher extends Application {
 		PauseTransition delay = new PauseTransition(Duration.seconds(1));
 		delay.setOnFinished(evt -> fadeOut.play());
 		delay.play();
+	}
+
+	public static Path getJarPath() throws IOException {
+		Path jarPath;
+
+		Path jfxposCfg = Paths.get(System.getProperty("user.dir")).resolve("app/jfxpos.cfg");
+		Path jfxposJar = Paths.get(System.getProperty("user.dir")).resolve("app/jfxpos.jar");
+		Path ideJar = Paths.get("build/libs/jfxpos.jar").toAbsolutePath();
+
+		if (Files.exists(jfxposCfg)) {
+			// baca dulu dari konfigurasi file
+			String fileName = getJfxposFile(jfxposCfg);
+			jarPath = Paths.get(System.getProperty("user.dir")).resolve("app/" + fileName);
+			if (!Files.exists(jarPath)) {
+				throw new RuntimeException("Tidak menemukan '" + jarPath.toString() + "'!");
+			}
+		} else if (Files.exists(jfxposJar)) {
+			jarPath = jfxposJar;
+		} else if (Files.exists(ideJar)) {
+			jarPath = ideJar;
+		} else {
+			throw new RuntimeException("Tidak menemukan 'jfxpos.jar'!");
+		}
+
+		return jarPath;
+	}
+
+	public static String getJfxposFile(Path cfgFilePath) throws IOException {
+		Properties props = new Properties();
+
+		try (BufferedReader reader = new BufferedReader(new FileReader(cfgFilePath.toFile()))) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				line = line.trim();
+				// skip empty line atau komentar
+				if (line.isEmpty() || line.startsWith("#") || line.startsWith(";") || line.startsWith("["))
+					continue;
+
+				// split key=value
+				int idx = line.indexOf('=');
+				if (idx > 0) {
+					String key = line.substring(0, idx).trim();
+					String value = line.substring(idx + 1).trim();
+					props.setProperty(key, value);
+				}
+			}
+		}
+
+		// ambil nilai jfxpos
+		String jfxpos = props.getProperty("jfxpos", "jfxpos.jar");
+		return jfxpos;
 	}
 }

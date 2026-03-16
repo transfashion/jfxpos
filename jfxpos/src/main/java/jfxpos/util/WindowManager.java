@@ -78,6 +78,14 @@ public class WindowManager {
 		stage.sizeToScene();
 		stage.centerOnScreen();
 
+		stage.setResizable(false);
+		stage.setMinWidth(root.minWidth(-1));
+		stage.setMinHeight(root.minHeight(-1));
+		stage.setWidth(root.prefWidth(-1));
+		stage.setHeight(root.prefHeight(-1));
+		stage.setMaxWidth(root.maxWidth(-1));
+		stage.setMaxHeight(root.maxHeight(-1));
+
 		return stage;
 	}
 
@@ -124,10 +132,6 @@ public class WindowManager {
 
 		Stage stage = createDialog(stageMain, view.root, "Configuration");
 		controller.setStage(stage);
-
-		stage.setResizable(false);
-		stage.setMinWidth(view.root.minWidth(-1));
-		stage.setMinHeight(view.root.minHeight(-1));
 
 		stage.showAndWait();
 	}

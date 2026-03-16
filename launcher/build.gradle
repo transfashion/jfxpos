@@ -1,6 +1,13 @@
 plugins {
     id 'application'
     id 'org.openjfx.javafxplugin'
+	id 'org.beryx.jlink' version '3.0.1'
+}
+
+
+// taabahkan dependency
+dependencies {
+    implementation project(':jfxpos')
 }
 
 javafx {
@@ -10,6 +17,22 @@ javafx {
 
 application {
     mainClass = 'launcher.Launcher'
+
+    mainModule = 'launcher'  
+
+
+}
+
+
+jlink {
+    moduleName = 'launcher'
+    mainClass = 'launcher.Launcher'
+
+    launcher {
+        name = 'jfxpos'
+    }
+	
+
 }
 
 run {

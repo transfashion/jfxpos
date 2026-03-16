@@ -4,6 +4,7 @@ module jfxpos {
 	requires java.prefs;
 
 	exports jfxpos;
+	exports jfxpos.config;
 
 	// Semua package yang digunakan FXML harus di 'opens', bukan 'exports'
 	opens jfxpos.config to javafx.fxml;

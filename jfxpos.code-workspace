@@ -17,6 +17,8 @@
 			"**/.DS_Store": true,
 			"**/Thumbs.db": true,
 			"**/.gradle": true,
+			".idea": true,
+			".vscode": true,
 			"jfxpos/build": true,
 			"jfxpos/bin": true,
 			"launcher/build": true,

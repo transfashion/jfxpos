@@ -31,10 +31,27 @@ jlink {
 
 	jpackage {
         imageName = 'jfxpos'
+		installerName = 'jfxpos-setup'
         installerType = 'exe'
-        appVersion = '1.0.0'
+        appVersion = project.version
+		vendor = project.vendor
+
         if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
             icon = file('src/main/resources/bag.ico')
+
+			imageOptions += [
+				'--icon', 'src/main/resources/bag.ico',
+				'--description', project.description,    // metadata
+				'--vendor', project.vendor,              // metadata
+				'--copyright', project.copyright         // metadata
+			]
+			
+			installerOptions = [
+                '--win-dir-chooser',     // pilih lokasi install
+                '--win-shortcut',        // buat shortcut desktop
+                '--win-menu',            // buat start menu
+                '--win-menu-group', 'JFX Point of Sales'
+            ]
         }
     }
 }

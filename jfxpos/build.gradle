@@ -10,6 +10,33 @@ javafx {
 jar {
     archiveFileName = 'jfxpos.jar'
     manifest {
-        attributes 'Main-Class': 'jfxpos.App'
+		attributes(
+            'Main-Class': 'jfxpos.App',
+            'Implementation-Title': project.name,
+            'Implementation-Version': project.version,
+            'Implementation-Vendor': project.vendor
+        )
     }
+}
+
+
+processResources {
+	
+	inputs.properties([
+		version: project.version,
+		namedversion: project.namedversion,
+		vendor: project.vendor,
+		description: project.description,
+		copyright: project.copyright
+	])
+
+	filesMatching('app.properties') {
+		expand([
+			version: project.version,
+			namedversion: project.namedversion,
+			vendor: project.vendor,
+			description: project.description,
+			copyright: project.copyright
+		])
+	}
 }

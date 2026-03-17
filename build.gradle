@@ -5,6 +5,15 @@ plugins {
 }
 
 allprojects {
+    version = '1.0.2603171138'
+	description = 'JFX POS, Point of Sales System'
+ 	
+	ext {
+		namedversion = 'initiative move'
+        vendor = 'Trans Fashion'
+        copyright = 'Copyright ©2026 Transfashion Indonesia'
+    }
+
     repositories {
         mavenCentral()
     }
@@ -17,6 +26,11 @@ subprojects {
         toolchain {
             languageVersion = JavaLanguageVersion.of(21)
         }
+    }
+
+	// agar saat compilasi, muncul di root project's build/libs (perlu untuk proses development)
+    tasks.withType(Jar) {
+        destinationDirectory = file("${rootProject.projectDir}/build/libs")
     }
 }
 

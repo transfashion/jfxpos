@@ -18,11 +18,6 @@ subprojects {
             languageVersion = JavaLanguageVersion.of(21)
         }
     }
-
-    // Redirect all JAR outputs to root project's build/libs
-    tasks.withType(Jar) {
-        destinationDirectory = file("${rootProject.projectDir}/build/libs")
-    }
 }
 
 tasks.named("clean") {

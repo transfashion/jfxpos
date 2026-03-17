@@ -1,7 +1,7 @@
 plugins {
     id 'application'
     id 'org.openjfx.javafxplugin'
-	id 'org.beryx.jlink' version '3.2.0'
+	id 'org.beryx.jlink' version '3.0.1'
 }
 
 
@@ -18,35 +18,37 @@ javafx {
 application {
 	mainModule = 'launcher' 
     mainClass = 'launcher.Launcher'
-    
-
-
 }
 
 
 jlink {
-    // moduleName = 'launcher'
-	// mainClass = 'launcher.Launcher'
-	moduleName = application.mainModule
-	mainClass = application.mainClass
-
-    launcher {
+    moduleName = application.mainModule
+    mainClass = application.mainClass
+    
+	launcher {
         name = 'jfxpos'
     }
 
-
-
-    jpackage {
+	jpackage {
         imageName = 'jfxpos'
         installerType = 'exe'
         appVersion = '1.0.0'
+        if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+            icon = file('src/main/resources/bag.ico')
+        }
+    }
+}
 
-		if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
-			icon = file('src/main/resources/bag.ico')
-		}
-	}
-
-
+// Copy jfxpos.jar ke direktori app di dalam hasil jpackageImage
+tasks.named('jpackageImage') {
+    doLast {
+        def imageAppDir = layout.buildDirectory.dir("jpackage/jfxpos/app").get().asFile
+        copy {
+            from project(':jfxpos').tasks.named('jar').get().archiveFile
+            into imageAppDir
+        }
+        println "jfxpos.jar copied to: ${imageAppDir}"
+    }
 }
 
 run {
@@ -69,17 +71,3 @@ tasks.withType(JavaExec).configureEach {
     }
 }
 
-
-
-
-// Task untuk menyalin jfxpos.jar ke folder image/app sebelum jpackage
-task copyJfxposJar(type: Copy) {
-    def imageAppDir = file("${buildDir}/jlink/image/app")
-    from project(':jfxpos').tasks.named('jar').get().archiveFile.get().asFile
-    into imageAppDir
-}
-
-// Pastikan copy dijalankan sebelum jpackageImage
-tasks.named('jpackageImage') {
-    dependsOn copyJfxposJar
-}

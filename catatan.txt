@@ -1,32 +1,32 @@
 clean
 ===================
-gradlew clean
+./gradlew clean
 
 
 
 rebuild
 ====================
-gradlew clean build
+./gradlew clean build
 
 
 
 run
 ===================
-gradlew run
-gradlew build run
-gradlew clean build run
+./gradlew run
+./gradlew build run
+./gradlew clean build run
 
 
 
 
 build exe (image)
 =====================
-gradlew :launcher:jpackageImage
+./gradlew :launcher:jpackageImage
 
 
 build installer
 ========================
-gradlew :launcher:jpackage
+./gradlew :launcher:jpackage
 
 
 

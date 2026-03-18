@@ -86,6 +86,8 @@ tasks.named('jpackageImage') {
 
 
 
+
+
 run {
     workingDir = rootProject.projectDir
 }

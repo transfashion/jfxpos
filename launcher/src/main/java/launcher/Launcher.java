@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -54,6 +55,8 @@ public final class Launcher extends Application {
 		splashStage.setHeight(250);
 		splashStage.setScene(scene);
 		splashStage.setAlwaysOnTop(true);
+		splashStage.getIcons().add(
+				new Image(getClass().getResourceAsStream("/bag.png")));
 		splashStage.show();
 
 		Platform.runLater(() -> {
@@ -108,6 +111,9 @@ public final class Launcher extends Application {
 						status.setText("Starting JFX Point of Sales ...");
 						System.out.println("Starting Main Applicaton");
 						startMethod.invoke(appInstance, primaryStage);
+
+						primaryStage.getIcons().add(
+								new Image(getClass().getResourceAsStream("/bag.png")));
 
 						primaryStage.setAlwaysOnTop(true);
 						primaryStage.setAlwaysOnTop(false);
@@ -181,8 +187,9 @@ public final class Launcher extends Application {
 		fadeOut.setOnFinished(event -> {
 			splashStage.close();
 			if (primaryStage.isShowing()) {
-				primaryStage.toFront(); // Angkat window utama ke depan
 				primaryStage.setAlwaysOnTop(false);
+				primaryStage.toFront(); // Angkat window utama ke depan
+				primaryStage.requestFocus();
 			}
 		});
 
@@ -195,14 +202,15 @@ public final class Launcher extends Application {
 	public static Path getJarPath() throws IOException {
 		Path jarPath;
 
-		Path jfxposCfg = Paths.get(System.getProperty("user.dir")).resolve("app/jfxpos.cfg");
-		Path jfxposJar = Paths.get(System.getProperty("user.dir")).resolve("app/jfxpos.jar");
+		Path basePath = Paths.get(System.getProperty("user.dir"));
+		Path jfxposCfg = basePath.resolve("app/jfxpos.cfg");
+		Path jfxposJar = basePath.resolve("app/jfxpos.jar");
 		Path ideJar = Paths.get("build/libs/jfxpos.jar").toAbsolutePath();
 
 		if (Files.exists(jfxposCfg)) {
 			// baca dulu dari konfigurasi file
 			String fileName = getJfxposFile(jfxposCfg);
-			jarPath = Paths.get(System.getProperty("user.dir")).resolve("app/" + fileName);
+			jarPath = basePath.resolve("app/" + fileName);
 			if (!Files.exists(jarPath)) {
 				throw new RuntimeException("Tidak menemukan '" + jarPath.toString() + "'!");
 			}
@@ -211,7 +219,7 @@ public final class Launcher extends Application {
 		} else if (Files.exists(ideJar)) {
 			jarPath = ideJar;
 		} else {
-			throw new RuntimeException("Tidak menemukan 'jfxpos.jar'!");
+			throw new RuntimeException("Tidak menemukan 'jfxpos.jar'!  basePath: " + basePath);
 		}
 
 		return jarPath;

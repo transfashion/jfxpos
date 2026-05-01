@@ -2,46 +2,64 @@ package launcher;
 
 import javafx.application.Platform;
 import javafx.scene.control.Label;
+import java.util.function.Consumer;
 
 public final class Updater {
 
-	static Label status;
+	public static void update(Label statusLabel) {
+		update(toLabel(statusLabel));
+	}
 
-	public static final void update(Label status) {
-		Updater.status = status;
-
+	public static void update(Consumer<String> progress) {
 		try {
-			Platform.runLater(() -> status.setText("Check for Update"));
+			progress.accept("Check for update");
 			UpdateInfo info = getUpdateInfo();
 
 			if (info != null) {
-				Platform.runLater(() -> status.setText("Download Update"));
+				System.out.println("update ditemukan!");
+				progress.accept("Download update");
 				downloadUpdate(info);
 
-				Platform.runLater(() -> status.setText("Apply Update"));
+				progress.accept("Apply update");
 				updateJar(info);
+			} else {
+				System.out.println("Update tidak ditemukan.");
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			Platform.runLater(() -> status.setText("Error on check update"));
-		}
 
+			progress.accept("Update complete");
+
+		} catch (Exception e) {
+			progress.accept("Error: " + e.getMessage());
+			throw new RuntimeException(e);
+		}
+	}
+
+
+	private static Consumer<String> toLabel(Label label) {
+		return msg -> {
+			if (Platform.isFxApplicationThread()) {
+				label.setText(msg);
+			} else {
+				Platform.runLater(() -> label.setText(msg));
+			}
+		};
 	}
 
 	static UpdateInfo getUpdateInfo() throws Exception {
-		Thread.sleep(3000); // Simulate some process delay for visibility
+		System.out.println("cek metadata info update dari server, apakah ada pembaruan jar?");
+		Thread.sleep(3000);
+//		return null;
 
-		// UpdateInfo info = new UpdateInfo();
-		UpdateInfo info = null;
-		return info;
+        return new UpdateInfo();
 	}
 
 	static void downloadUpdate(UpdateInfo info) throws Exception {
-		Thread.sleep(3000); // Simulate some process delay for visibility
+		System.out.println("download file jar dan meta dari server");
+		Thread.sleep(3000);
 	}
 
 	static void updateJar(UpdateInfo info) throws Exception {
-		Thread.sleep(3000); // Simulate some process delay for visibility
+		System.out.println("update file jar dengan yang baru");
+		Thread.sleep(3000);
 	}
-
 }

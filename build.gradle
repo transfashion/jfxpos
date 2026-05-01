@@ -5,7 +5,7 @@ plugins {
 }
 
 allprojects {
-    version = '1.0.2603171138'
+    version = '1.0.260501.0000'
 	description = 'JFX POS, Point of Sales System'
  	
 	ext {
@@ -17,6 +17,17 @@ allprojects {
     repositories {
         mavenCentral()
     }
+}
+
+project(':launcher') {
+	plugins.withId('application') {
+		tasks.named('run') {
+			def env = project.findProperty("env") ?: "dev"
+
+			systemProperty "app.env", env
+			environment "APP_ENV", env
+		}
+	}
 }
 
 subprojects {

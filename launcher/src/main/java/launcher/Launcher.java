@@ -28,226 +28,244 @@ import java.util.Objects;
 import java.util.Properties;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Launcher extends Application {
-    private static final java.util.logging.Logger logger = launcher.Logger.createLogger(Launcher.class.getName());
-    private URLClassLoader appClassLoader;
+	public static final boolean isDev = System.getProperty("app.env", "prod") == "prod" ? false : true;
 
-    @Override
-    public void start(Stage splashStage) {
-        SplashView splash = createSplash(splashStage);
+	private static final Logger logger = LaunchLogger.createLogger(Launcher.class.getName());
+	private URLClassLoader appClassLoader;
 
-        Task<Class<?>> loadTask = createLoadTask();
+	@Override
+	public void start(Stage splashStage) {
+		SplashView splash = createSplash(splashStage);
 
-        // bind status text → otomatis update (mirip state di JS)
-        splash.status.textProperty().bind(loadTask.messageProperty());
+		Task<Class<?>> loadTask = createLoadTask();
 
-        loadTask.setOnSucceeded(e -> {
-            try {
-                startMainApp(loadTask.getValue(), splashStage, splash.root);
-            } catch (Exception ex) {
-                showErrorAndExit(ex, splashStage);
-            }
-        });
+		// bind status text → otomatis update (mirip state di JS)
+		splash.status.textProperty().bind(loadTask.messageProperty());
 
-        loadTask.setOnFailed(e -> showErrorAndExit(loadTask.getException(), splashStage));
+		loadTask.setOnSucceeded(e -> {
+			try {
+				startMainApp(loadTask.getValue(), splashStage, splash.root);
+			} catch (Exception ex) {
+				showErrorAndExit(ex, splashStage);
+			}
+		});
 
-        // start async (pakai virtual thread Java 21)
-        Thread.startVirtualThread(loadTask);
-    }
+		loadTask.setOnFailed(e -> showErrorAndExit(loadTask.getException(), splashStage));
 
-    // =========================
-    // SPLASH UI
-    // =========================
-    private SplashView createSplash(Stage stage) {
-        Label title = new Label(Config.TITLE);
-        title.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;");
+		// String env = System.getProperty("app.env", "prod");
+		// System.out.println(env);
 
-        Label status = new Label("Initializing...");
-        status.setStyle("-fx-font-size: 14px; -fx-text-fill: #ccc;");
+		// start async (pakai virtual thread Java 21)
+		Thread.startVirtualThread(loadTask);
+	}
 
-        VBox root = new VBox(20, title, status);
-        root.setAlignment(Pos.CENTER);
-        root.setStyle("-fx-background-color: #2c3e50; -fx-padding: 40px; -fx-background-radius: 10;");
+	// =========================
+	// SPLASH UI
+	// =========================
+	private SplashView createSplash(Stage stage) {
+		Label title = new Label(Config.TITLE);
+		title.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;");
 
-        Scene scene = new Scene(root, 400, 250);
-        scene.setFill(null);
+		Label status = new Label("Initializing...");
+		status.setStyle("-fx-font-size: 14px; -fx-text-fill: #ccc;");
 
-        stage.initStyle(StageStyle.TRANSPARENT);
-        stage.setScene(scene);
-        stage.setAlwaysOnTop(true);
-        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/" + Config.ICON))));
+		VBox root = new VBox(20, title, status);
+		root.setAlignment(Pos.CENTER);
+		root.setStyle("-fx-background-color: #2c3e50; -fx-padding: 40px; -fx-background-radius: 10;");
 
-        centerStage(stage);
-        stage.show();
+		Scene scene = new Scene(root, 400, 250);
+		scene.setFill(null);
 
-        return new SplashView(root, status);
-    }
+		stage.initStyle(StageStyle.TRANSPARENT);
+		stage.setScene(scene);
+		stage.setAlwaysOnTop(true);
+		stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/" + Config.ICON))));
 
-    private void centerStage(Stage stage) {
-        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-        stage.setX((bounds.getWidth() - 400) / 2);
-        stage.setY((bounds.getHeight() - 250) / 2);
-    }
+		centerStage(stage);
+		stage.show();
 
-    // =========================
-    // BACKGROUND TASK (ASYNC FLOW)
-    // =========================
-    private Task<Class<?>> createLoadTask() {
-        return new Task<>() {
-            @Override
-            protected Class<?> call() throws Exception {
+		return new SplashView(root, status);
+	}
 
-                Path jarPath = getJarPath();
-                logger.info( "jarPath " + jarPath.toString());
+	private void centerStage(Stage stage) {
+		Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+		stage.setX((bounds.getWidth() - 400) / 2);
+		stage.setY((bounds.getHeight() - 250) / 2);
+	}
 
-                updateMessage("Loading updater...");
-                Updater.update(jarPath, this::updateMessage);
+	// =========================
+	// BACKGROUND TASK (ASYNC FLOW)
+	// =========================
+	private Task<Class<?>> createLoadTask() {
+		return new Task<>() {
+			@Override
+			protected Class<?> call() throws Exception {
 
-                updateMessage("Preparing classloader...");
-                URL[] urls = { jarPath.toUri().toURL() };
-                appClassLoader = new URLClassLoader(urls, Launcher.class.getClassLoader());
-                registerShutdownHook();
+				Path jarPath = getJarPath();
+				logger.info("jarPath " + jarPath.toString());
 
-                updateMessage("Loading application class...");
-                String appname = Config.MODULE_NAME + ".App";
-                Class<?> appClass = appClassLoader.loadClass(appname);
+				updateMessage("Loading updater...");
+				Updater.update(jarPath, this::updateMessage);
 
-                updateMessage("Reading configuration...");
-                Thread.sleep(300);
-                Method configMethod = appClass.getMethod("readConfiguration");
-                configMethod.invoke(null);
+				updateMessage("Preparing classloader...");
+				URL[] urls = { jarPath.toUri().toURL() };
+				appClassLoader = new URLClassLoader(urls, Launcher.class.getClassLoader());
+				registerShutdownHook();
 
-                updateMessage("Starting application...");
-                Thread.sleep(300);
-                return appClass;
-            }
-        };
-    }
+				updateMessage("Loading application class...");
+				String appname = Config.MODULE_NAME + ".App";
+				Class<?> appClass = appClassLoader.loadClass(appname);
 
+				updateMessage("Reading configuration...");
+				Thread.sleep(300);
+				Method configMethod = appClass.getMethod("readConfiguration");
+				configMethod.invoke(null);
 
-    private void registerShutdownHook() {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
-                if (appClassLoader != null) {
-                    appClassLoader.close();
-                }
-            } catch (Exception e) {
-                logger.log(Level.WARNING, "Error closing app classloader", e);
-            }
-        }));
-    }
+				updateMessage("Starting application...");
+				Thread.sleep(300);
+				return appClass;
+			}
+		};
+	}
 
-    // =========================
-    // START MAIN APP
-    // =========================
-    private void startMainApp(Class<?> appClass, Stage splashStage, VBox splashRoot) throws Exception {
+	private void registerShutdownHook() {
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			try {
+				if (appClassLoader != null) {
+					appClassLoader.close();
+				}
+			} catch (Exception e) {
+				logger.log(Level.WARNING, "Error closing app classloader", e);
+			}
+		}));
+	}
 
-        Stage primaryStage = new Stage();
+	// =========================
+	// START MAIN APP
+	// =========================
+	private void startMainApp(Class<?> appClass, Stage splashStage, VBox splashRoot) throws Exception {
 
-        Object appInstance = appClass.getDeclaredConstructor().newInstance();
-        Method startMethod = appClass.getMethod("start", Stage.class);
+		Stage primaryStage = new Stage();
 
-        startMethod.invoke(appInstance, primaryStage);
+		Object appInstance = appClass.getDeclaredConstructor().newInstance();
+		Method startMethod = appClass.getMethod("start", Stage.class);
 
-        primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/" + Config.ICON))));
+		startMethod.invoke(appInstance, primaryStage);
 
-        primaryStage.toFront();
-        primaryStage.requestFocus();
+		primaryStage.getIcons()
+				.add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/" + Config.ICON))));
 
-        closeSplash(splashRoot, splashStage, primaryStage);
-    }
+		primaryStage.toFront();
+		primaryStage.requestFocus();
 
-    // =========================
-    // ERROR HANDLING
-    // =========================
-    private void showErrorAndExit(Throwable e, Stage splashStage) {
-        logger.log(Level.SEVERE, "Error in main application", e);
+		closeSplash(splashRoot, splashStage, primaryStage);
+	}
 
-        splashStage.setAlwaysOnTop(false);
+	// =========================
+	// ERROR HANDLING
+	// =========================
+	private void showErrorAndExit(Throwable e, Stage splashStage) {
+		logger.log(Level.SEVERE, "Error in main application", e);
 
-        Alert alert = createAlert(e);
-        alert.showAndWait();
+		splashStage.setAlwaysOnTop(false);
 
-        Platform.exit();
-    }
+		Alert alert = createAlert(e);
+		alert.showAndWait();
 
-    // =========================
-    // UTIL
-    // =========================
-    private static class SplashView {
-        VBox root;
-        Label status;
+		Platform.exit();
+	}
 
-        SplashView(VBox root, Label status) {
-            this.root = root;
-            this.status = status;
-        }
-    }
+	// =========================
+	// UTIL
+	// =========================
+	private static class SplashView {
+		VBox root;
+		Label status;
 
-    // Dummy placeholders (pakai implementasi kamu)
-    private Path getJarPath() throws IOException {
-        Path jarPath;
+		SplashView(VBox root, Label status) {
+			this.root = root;
+			this.status = status;
+		}
+	}
 
-        Path basePath = Paths.get(System.getProperty("user.dir"));
-        Path fileCfg = basePath.resolve("app/"+ Config.MODULE_NAME + ".cfg");
-        Path fileJar = basePath.resolve("app/"+ Config.MODULE_NAME + ".jar");
-        Path ideFileJar = Paths.get("build/libs/" + Config.MODULE_NAME + ".jar").toAbsolutePath();
+	// Dummy placeholders (pakai implementasi kamu)
+	private Path getJarPath() throws IOException {
+		Path jarPath;
 
-        if (Files.exists(fileCfg)) {
-            // baca dulu dari konfigurasi file
-            String fileName = getFileJarFromCfg(fileCfg);
-            jarPath = basePath.resolve("app/" + fileName);
-            if (!Files.exists(jarPath)) {
-                throw new RuntimeException("Tidak menemukan '" + jarPath + "'!");
-            }
-        } else if (Files.exists(fileJar)) {
-            jarPath = fileJar;
-        } else if (Files.exists(ideFileJar)) {
-            jarPath = ideFileJar;
-        } else {
-            throw new RuntimeException("Tidak menemukan '"+ Config.MODULE_NAME+".jar'!  basePath: " + basePath);
-        }
+		Path basePath = Paths.get(System.getProperty("user.dir"));
+		logger.info("basePath: " + basePath.toString());
 
-        return jarPath;
-    }
+		// Path fileCfg = basePath.resolve("app/"+ Config.MODULE_NAME + ".cfg");
+		// Path fileJar = basePath.resolve("app/"+ Config.MODULE_NAME + ".jar");
+		// Path ideFileJar = Paths.get("build/libs/" + Config.MODULE_NAME +
+		// ".jar").toAbsolutePath();
 
-    public static String getFileJarFromCfg(Path cfgFilePath) throws IOException {
-        Properties props = new Properties();
+		Path fileCfg = basePath.resolve("app").resolve(Config.MODULE_NAME + ".cfg");
+		Path fileJar = basePath.resolve("app").resolve(Config.MODULE_NAME + ".jar");
+		Path ideFileJar = Paths.get("build", "libs", Config.MODULE_NAME + ".jar").toAbsolutePath();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(cfgFilePath.toFile()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                line = line.trim();
-                // skip empty line atau komentar
-                if (line.isEmpty() || line.startsWith("#") || line.startsWith(";") || line.startsWith("["))
-                    continue;
+		if (Files.exists(fileCfg)) {
+			// baca dulu dari konfigurasi file
+			String fileName = getFileJarFromCfg(fileCfg);
+			jarPath = basePath.resolve("app/" + fileName);
+			if (!Files.exists(jarPath)) {
+				throw new RuntimeException("Tidak menemukan '" + jarPath + "'!");
+			}
+		} else if (Files.exists(fileJar)) {
+			jarPath = fileJar;
+		} else if (Files.exists(ideFileJar)) {
+			jarPath = ideFileJar;
+		} else {
+			// file jar tidak ketemu, coba cari keatasnya
+			fileJar = basePath.getParent().resolve("app").resolve(Config.MODULE_NAME + ".jar");
+			if (Files.exists(fileJar)) {
+				jarPath = fileJar;
+			} else {
+				throw new RuntimeException("Tidak menemukan '" + Config.MODULE_NAME + ".jar'!  basePath: " + basePath);
+			}
 
-                // split key=value
-                int idx = line.indexOf('=');
-                if (idx > 0) {
-                    String key = line.substring(0, idx).trim();
-                    String value = line.substring(idx + 1).trim();
-                    props.setProperty(key, value);
-                }
-            }
-        }
+		}
 
-        return props.getProperty(Config.MODULE_NAME, Config.MODULE_NAME + ".jar");
+		return jarPath;
+	}
 
-    }
+	public static String getFileJarFromCfg(Path cfgFilePath) throws IOException {
+		Properties props = new Properties();
 
+		try (BufferedReader reader = new BufferedReader(new FileReader(cfgFilePath.toFile()))) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				line = line.trim();
+				// skip empty line atau komentar
+				if (line.isEmpty() || line.startsWith("#") || line.startsWith(";") || line.startsWith("["))
+					continue;
 
+				// split key=value
+				int idx = line.indexOf('=');
+				if (idx > 0) {
+					String key = line.substring(0, idx).trim();
+					String value = line.substring(idx + 1).trim();
+					props.setProperty(key, value);
+				}
+			}
+		}
 
-    private void closeSplash(VBox root, Stage splash, Stage main) {
-        splash.close();
-        main.show();
-    }
+		return props.getProperty(Config.MODULE_NAME, Config.MODULE_NAME + ".jar");
 
-    private Alert createAlert(Throwable e) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText("Error");
-        alert.setContentText(e.getMessage());
-        return alert;
-    }
+	}
+
+	private void closeSplash(VBox root, Stage splash, Stage main) {
+		splash.close();
+		main.show();
+	}
+
+	private Alert createAlert(Throwable e) {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setHeaderText("Error");
+		alert.setContentText(e.getMessage());
+		return alert;
+	}
 }

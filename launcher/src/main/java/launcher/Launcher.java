@@ -27,9 +27,10 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Properties;
 
+import java.util.logging.Level;
 
 public class Launcher extends Application {
-
+    private static final java.util.logging.Logger logger = launcher.Logger.createLogger(Launcher.class.getName());
     private URLClassLoader appClassLoader;
 
     @Override
@@ -59,7 +60,7 @@ public class Launcher extends Application {
     // SPLASH UI
     // =========================
     private SplashView createSplash(Stage stage) {
-        Label title = new Label("JFX Point of Sales");
+        Label title = new Label(Config.TITLE);
         title.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;");
 
         Label status = new Label("Initializing...");
@@ -75,7 +76,7 @@ public class Launcher extends Application {
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(scene);
         stage.setAlwaysOnTop(true);
-        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/bag.png"))));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/" + Config.ICON))));
 
         centerStage(stage);
         stage.show();
@@ -97,56 +98,42 @@ public class Launcher extends Application {
             @Override
             protected Class<?> call() throws Exception {
 
-                updateMessage("Loading updater...");
-                Updater.update(this::updateMessage);
+                Path jarPath = getJarPath();
+                logger.info( "jarPath " + jarPath.toString());
 
-//                runUpdaterSafe(this);
+                updateMessage("Loading updater...");
+                Updater.update(jarPath, this::updateMessage);
 
                 updateMessage("Preparing classloader...");
-                Path jarPath = getJarPath();
                 URL[] urls = { jarPath.toUri().toURL() };
-
                 appClassLoader = new URLClassLoader(urls, Launcher.class.getClassLoader());
                 registerShutdownHook();
 
                 updateMessage("Loading application class...");
-                Class<?> appClass = appClassLoader.loadClass("jfxpos.App");
+                String appname = Config.MODULE_NAME + ".App";
+                Class<?> appClass = appClassLoader.loadClass(appname);
 
                 updateMessage("Reading configuration...");
+                Thread.sleep(300);
                 Method configMethod = appClass.getMethod("readConfiguration");
                 configMethod.invoke(null);
 
                 updateMessage("Starting application...");
+                Thread.sleep(300);
                 return appClass;
             }
         };
     }
 
-//    private void runUpdaterSafe(Task<?> task) {
-//        try {
-//            // ⚠️ pastikan Updater tidak update UI langsung!
-//            Updater.update(task::updateMessage);
-////            Updater.update(msg -> {
-////                // kalau kamu ubah Updater jadi callback-based
-////                Platform.runLater(() -> {
-////                    // optional logging / debug
-////                    System.out.println(msg);
-////                });
-////            });
-//        } catch (Exception e) {
-//            throw new RuntimeException("Updater failed", e);
-//        }
-//    }
 
     private void registerShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 if (appClassLoader != null) {
-                    System.out.println("Closing classloader...");
                     appClassLoader.close();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.log(Level.WARNING, "Error closing app classloader", e);
             }
         }));
     }
@@ -163,7 +150,7 @@ public class Launcher extends Application {
 
         startMethod.invoke(appInstance, primaryStage);
 
-        primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/bag.png"))));
+        primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/" + Config.ICON))));
 
         primaryStage.toFront();
         primaryStage.requestFocus();
@@ -175,7 +162,7 @@ public class Launcher extends Application {
     // ERROR HANDLING
     // =========================
     private void showErrorAndExit(Throwable e, Stage splashStage) {
-        e.printStackTrace();
+        logger.log(Level.SEVERE, "Error in main application", e);
 
         splashStage.setAlwaysOnTop(false);
 
@@ -203,29 +190,29 @@ public class Launcher extends Application {
         Path jarPath;
 
         Path basePath = Paths.get(System.getProperty("user.dir"));
-        Path jfxposCfg = basePath.resolve("app/jfxpos.cfg");
-        Path jfxposJar = basePath.resolve("app/jfxpos.jar");
-        Path ideJar = Paths.get("build/libs/jfxpos.jar").toAbsolutePath();
+        Path fileCfg = basePath.resolve("app/"+ Config.MODULE_NAME + ".cfg");
+        Path fileJar = basePath.resolve("app/"+ Config.MODULE_NAME + ".jar");
+        Path ideFileJar = Paths.get("build/libs/" + Config.MODULE_NAME + ".jar").toAbsolutePath();
 
-        if (Files.exists(jfxposCfg)) {
+        if (Files.exists(fileCfg)) {
             // baca dulu dari konfigurasi file
-            String fileName = getJfxposFile(jfxposCfg);
+            String fileName = getFileJarFromCfg(fileCfg);
             jarPath = basePath.resolve("app/" + fileName);
             if (!Files.exists(jarPath)) {
                 throw new RuntimeException("Tidak menemukan '" + jarPath + "'!");
             }
-        } else if (Files.exists(jfxposJar)) {
-            jarPath = jfxposJar;
-        } else if (Files.exists(ideJar)) {
-            jarPath = ideJar;
+        } else if (Files.exists(fileJar)) {
+            jarPath = fileJar;
+        } else if (Files.exists(ideFileJar)) {
+            jarPath = ideFileJar;
         } else {
-            throw new RuntimeException("Tidak menemukan 'jfxpos.jar'!  basePath: " + basePath);
+            throw new RuntimeException("Tidak menemukan '"+ Config.MODULE_NAME+".jar'!  basePath: " + basePath);
         }
 
         return jarPath;
     }
 
-    public static String getJfxposFile(Path cfgFilePath) throws IOException {
+    public static String getFileJarFromCfg(Path cfgFilePath) throws IOException {
         Properties props = new Properties();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(cfgFilePath.toFile()))) {
@@ -246,10 +233,8 @@ public class Launcher extends Application {
             }
         }
 
-        // ambil nilai jfxpos
-        String jfxpos;
-        jfxpos = props.getProperty("jfxpos", "jfxpos.jar");
-        return jfxpos;
+        return props.getProperty(Config.MODULE_NAME, Config.MODULE_NAME + ".jar");
+
     }
 
 

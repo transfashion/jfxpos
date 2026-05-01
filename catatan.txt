@@ -18,6 +18,15 @@ run
 
 
 
+debug
+==================
+./gradlew :launcher:run --debug-jvm
+kemudian jalankan debugger vscode
+
+atau bisa juga menggunakan perintah
+./gradlew run -Pdebug
+
+
 
 build exe (image)
 =====================

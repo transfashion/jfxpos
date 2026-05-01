@@ -1,23 +1,33 @@
 package launcher;
 
+import java.nio.file.Path;
 import java.util.function.Consumer;
 
-public final class Updater {
 
-	public static void update(Consumer<String> progress) {
+
+public final class Updater {
+	private static final java.util.logging.Logger logger = Logger.createLogger(Updater.class.getName());
+
+	public static void update( Path jarPath, Consumer<String> progress) {
 		try {
+
+			String jarVersion = JarUtils.getVersion(jarPath);
+			if (jarVersion == null) {
+				logger.warning( "Jar version is null");
+			} else {
+				logger.info( "Jar version: " + jarVersion);
+			}
+
 			progress.accept("Check for update");
 			UpdateInfo info = getUpdateInfo();
 
 			if (info != null) {
-				System.out.println("update ditemukan!");
+				logger.info( "update ditemukan!");
 				progress.accept("Download update");
 				downloadUpdate(info);
 
 				progress.accept("Apply update");
 				updateJar(info);
-			} else {
-				System.out.println("Update tidak ditemukan.");
 			}
 
 			progress.accept("Update complete");
@@ -30,20 +40,20 @@ public final class Updater {
 
 
 	static UpdateInfo getUpdateInfo() throws Exception {
-		System.out.println("cek metadata info update dari server, apakah ada pembaruan jar?");
+		logger.info("cek metadata info update dari server");
 		Thread.sleep(3000);
-//		return null;
+
 
         return new UpdateInfo();
 	}
 
 	static void downloadUpdate(UpdateInfo info) throws Exception {
-		System.out.println("download file jar dan meta dari server");
+		logger.info( "download update");
 		Thread.sleep(3000);
 	}
 
 	static void updateJar(UpdateInfo info) throws Exception {
-		System.out.println("update file jar dengan yang baru");
+		logger.info("update file jar dengan yang baru");
 		Thread.sleep(3000);
 	}
 }

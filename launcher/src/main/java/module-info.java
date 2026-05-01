@@ -5,6 +5,7 @@ module launcher {
 	requires java.prefs;
 
 	requires jfxpos;
+    requires transitive java.logging;
 
-	exports launcher;
+    exports launcher;
 }

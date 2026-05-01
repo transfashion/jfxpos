@@ -12,17 +12,13 @@ public class App extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		try {
-			WindowManager.setMainStage(stage);
-			WindowManager.openLogin();
-		} catch (Exception e) {
-			throw e;
-		}
-	}
+        WindowManager.setMainStage(stage);
+        WindowManager.openLogin();
+    }
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+//	public static void main(String[] args) {
+//		launch(args);
+//	}
 
 	public static void readConfiguration() throws Exception {
 		try {

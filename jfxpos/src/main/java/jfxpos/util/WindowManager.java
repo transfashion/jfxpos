@@ -12,6 +12,9 @@ import javafx.stage.Stage;
 import jfxpos.controller.ConfigController;
 import jfxpos.controller.DashboardController;
 import jfxpos.controller.LoginController;
+import jfxpos.controller.TesterController;
+
+import jfxpos.Controller;
 
 public class WindowManager {
 
@@ -20,6 +23,7 @@ public class WindowManager {
 	static final String FXML_DASHBOARD = "dashboard.fxml";
 	static final String FXML_LOGIN = "login.fxml";
 	static final String FXML_CONFIG = "config.fxml";
+	static final String FXML_TESTER = "tester.fxml";
 
 	static Stage stageMain;
 
@@ -61,6 +65,17 @@ public class WindowManager {
 		} catch (Exception ex) {
 			throw ex;
 		}
+	}
+
+	public static void openDialogWindow(String title, String fxmlFileName, Controller controller) throws Exception {
+		String fxml = RESOURCE_DIR + "/" + fxmlFileName;
+
+		FxView<Controller> view = loadView(fxml, controller);
+
+		Stage stage = createDialog(stageMain, view.root, title);
+		controller.setStage(stage);
+
+		stage.showAndWait();
 	}
 
 	public static Stage createDialog(Stage owner, Parent root, String title) {
@@ -124,7 +139,7 @@ public class WindowManager {
 		return stage;
 	}
 
-	public static void openConfig() throws Exception {
+	public static void openConfigWindow() throws Exception {
 		String fxml = RESOURCE_DIR + "/" + FXML_CONFIG;
 
 		ConfigController controller = new ConfigController();
@@ -136,8 +151,16 @@ public class WindowManager {
 		stage.showAndWait();
 	}
 
-	public static void openWindow() {
+	public static void openTesterWindow(Stage owner) throws Exception {
+		String fxml = RESOURCE_DIR + "/" + FXML_TESTER;
 
+		TesterController controller = new TesterController();
+		FxView<TesterController> view = loadView(fxml, controller);
+
+		Stage stage = createDialog(owner, view.root, "Tester");
+		controller.setStage(stage);
+
+		stage.showAndWait();
 	}
 
 }

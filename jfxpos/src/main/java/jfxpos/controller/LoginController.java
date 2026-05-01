@@ -43,7 +43,7 @@ public class LoginController extends Controller {
 	@FXML
 	private void onConfig() {
 		try {
-			WindowManager.openConfig();
+			WindowManager.openConfigWindow();
 		} catch (Exception ex) {
 			ErrorMessage.show(ex);
 		}

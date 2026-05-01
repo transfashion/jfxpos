@@ -3,8 +3,11 @@ package jfxpos.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Window;
 import jfxpos.config.AppConfig;
 import jfxpos.config.AppConfigStore;
+import jfxpos.util.ErrorMessage;
+import jfxpos.util.WindowManager;
 import jfxpos.Controller;
 
 public class ConfigController extends Controller {
@@ -62,6 +65,11 @@ public class ConfigController extends Controller {
 	@FXML
 	private void onTesterClick() {
 		logger.info("Tester Clicked");
+		try {
+			WindowManager.openTesterWindow(this.stage);
+		} catch (Exception ex) {
+			ErrorMessage.show(ex);
+		}
 
 	}
 }

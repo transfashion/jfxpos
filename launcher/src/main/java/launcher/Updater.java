@@ -1,14 +1,8 @@
 package launcher;
 
-import javafx.application.Platform;
-import javafx.scene.control.Label;
 import java.util.function.Consumer;
 
 public final class Updater {
-
-	public static void update(Label statusLabel) {
-		update(toLabel(statusLabel));
-	}
 
 	public static void update(Consumer<String> progress) {
 		try {
@@ -34,16 +28,6 @@ public final class Updater {
 		}
 	}
 
-
-	private static Consumer<String> toLabel(Label label) {
-		return msg -> {
-			if (Platform.isFxApplicationThread()) {
-				label.setText(msg);
-			} else {
-				Platform.runLater(() -> label.setText(msg));
-			}
-		};
-	}
 
 	static UpdateInfo getUpdateInfo() throws Exception {
 		System.out.println("cek metadata info update dari server, apakah ada pembaruan jar?");

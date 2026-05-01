@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="472.0" prefWidth="612.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="472.0" prefWidth="612.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="60.0" layoutY="51.0" text="Setting Token" />
       <TextField fx:id="txtToken" layoutX="154.0" layoutY="47.0" prefHeight="26.0" prefWidth="431.0" promptText="setting token" />
@@ -25,5 +25,6 @@
       <CheckBox fx:id="chkMaximizeMainWindow" layoutX="153.0" layoutY="322.0" mnemonicParsing="false" text="Maximize Main Window" />
       <Label layoutX="75.0" layoutY="221.0" text="Machine ID" />
       <TextField fx:id="txtMachineId" disable="true" layoutX="153.0" layoutY="217.0" prefHeight="26.0" prefWidth="123.0" />
+      <Button layoutX="486.0" layoutY="375.0" mnemonicParsing="false" onAction="#onTesterClick" prefHeight="26.0" prefWidth="99.0" text="Tester" />
    </children>
 </AnchorPane>

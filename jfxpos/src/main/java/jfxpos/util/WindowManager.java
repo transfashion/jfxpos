@@ -136,4 +136,8 @@ public class WindowManager {
 		stage.showAndWait();
 	}
 
+	public static void openWindow() {
+
+	}
+
 }

@@ -1,12 +1,17 @@
 package jfxpos.controller;
 
-import javafx.stage.Stage;
+import javafx.fxml.FXML;
+import jfxpos.Controller;
 
-public class DashboardController {
+public class DashboardController extends Controller {
 
-	Stage stage;
+	public DashboardController() {
+		super(DashboardController.class);
+	}
 
-	public void setStage(Stage stage) {
-		this.stage = stage;
+	@FXML
+	private void onTesterClick() {
+		logger.info("Tester Clicked");
+
 	}
 }

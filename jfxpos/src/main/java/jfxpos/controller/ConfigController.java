@@ -3,13 +3,11 @@ package jfxpos.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import jfxpos.config.AppConfig;
 import jfxpos.config.AppConfigStore;
+import jfxpos.Controller;
 
-public class ConfigController {
-
-	Stage stage;
+public class ConfigController extends Controller {
 
 	@FXML
 	TextField txtToken;
@@ -32,8 +30,8 @@ public class ConfigController {
 	@FXML
 	CheckBox chkMaximizeMainWindow;
 
-	public void setStage(Stage stage) {
-		this.stage = stage;
+	public ConfigController() {
+		super(ConfigController.class);
 	}
 
 	@FXML
@@ -58,6 +56,12 @@ public class ConfigController {
 
 	@FXML
 	private void onSaveSetting() {
+		logger.info("Save Setting");
+	}
+
+	@FXML
+	private void onTesterClick() {
+		logger.info("Tester Clicked");
 
 	}
 }

@@ -6,13 +6,11 @@ import java.util.Properties;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.stage.Stage;
+import jfxpos.Controller;
 import jfxpos.util.ErrorMessage;
 import jfxpos.util.WindowManager;
 
-public class LoginController {
-
-	Stage stage;
+public class LoginController extends Controller {
 
 	@FXML
 	private Label txtVersion;
@@ -20,12 +18,14 @@ public class LoginController {
 	@FXML
 	private Label txtNamedVersion;
 
-	public void setStage(Stage stage) {
-		this.stage = stage;
+	public LoginController() {
+		super(LoginController.class);
 	}
 
 	@FXML
 	private void onLogin() {
+		logger.info("Login");
+
 		try {
 
 			// sementara, anggap berhasil

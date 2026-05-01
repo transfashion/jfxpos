@@ -212,7 +212,8 @@ public class Launcher extends Application {
 			String fileName = getFileJarFromCfg(fileCfg);
 			jarPath = basePath.resolve("app/" + fileName);
 			if (!Files.exists(jarPath)) {
-				throw new RuntimeException("Tidak menemukan '" + jarPath + "'!");
+				logger.severe("not found: " + jarPath);
+				throw new RuntimeException("Tidak menemukan '" + jarPath + "'!\r\n" + jarPath);
 			}
 		} else if (Files.exists(fileJar)) {
 			jarPath = fileJar;
@@ -220,11 +221,10 @@ public class Launcher extends Application {
 			jarPath = ideFileJar;
 		} else {
 			// file jar tidak ketemu, coba cari keatasnya
-			fileJar = basePath.getParent().resolve("app").resolve(Config.MODULE_NAME + ".jar");
-			if (Files.exists(fileJar)) {
-				jarPath = fileJar;
-			} else {
-				throw new RuntimeException("Tidak menemukan '" + Config.MODULE_NAME + ".jar'!  basePath: " + basePath);
+			jarPath = basePath.getParent().resolve("app").resolve(Config.MODULE_NAME + ".jar");
+			if (!Files.exists(jarPath)) {
+				logger.severe("not found: " + jarPath);
+				throw new RuntimeException("Tidak menemukan '" + Config.MODULE_NAME + ".jar'!\r\n" + jarPath);
 			}
 
 		}

@@ -31,7 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Launcher extends Application {
-	public static final boolean isDev = System.getProperty("app.env", "prod") == "prod" ? false : true;
+	public static final boolean isDev = !Objects.equals(System.getProperty("app.env", "prod"), "prod");
 
 	private static final Logger logger = LaunchLogger.createLogger(Launcher.class.getName());
 	private URLClassLoader appClassLoader;
@@ -169,6 +169,8 @@ public class Launcher extends Application {
 	// =========================
 	private void showErrorAndExit(Throwable e, Stage splashStage) {
 		logger.log(Level.SEVERE, "Error in main application", e);
+
+		e.printStackTrace();
 
 		splashStage.setAlwaysOnTop(false);
 

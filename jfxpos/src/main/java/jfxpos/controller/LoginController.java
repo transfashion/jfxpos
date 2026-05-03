@@ -3,76 +3,145 @@ package jfxpos.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.logging.Level;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 import jfxpos.Controller;
+import jfxpos.models.User;
 import jfxpos.util.ErrorMessage;
-import jfxpos.util.WindowManager;
+import jfxpos.util.MessageBox;
+import jfxpos.views.ConfigDialog;
+import jfxpos.views.MainWindow;
 
 public class LoginController extends Controller {
+	final MainWindow window;
 
 	@FXML
-	private Label txtVersion;
+    TextField usernameTextField;
 
 	@FXML
-	private Label txtNamedVersion;
+    PasswordField passwordField;
 
-	public LoginController() {
+	@FXML
+	Label versionLabel;
+
+	@FXML
+	Label namedVersionLabel;
+
+	@FXML
+    Button loginButton;
+
+	@FXML
+	Label configButton;
+
+
+	public LoginController(MainWindow window) {
 		super(LoginController.class);
+		this.window = window;
 	}
 
-	@FXML
-	private void onLogin() {
-		logger.info("Login");
-
-		try {
-
-			// sementara, anggap berhasil
-			boolean loginSucces = true;
-			if (loginSucces) {
-				WindowManager.openDashboard();
-			}
-
-		} catch (Exception ex) {
-			ErrorMessage.show(ex);
-		}
-
-	}
 
 	@FXML
-	private void onConfig() {
-		try {
-			WindowManager.openConfigWindow();
-		} catch (Exception ex) {
-			ErrorMessage.show(ex);
-		}
-	}
-
-	@FXML
-	public void initialize() {
+	void initialize() {
 		Properties p = new Properties();
 
 		try (InputStream is = getClass().getResourceAsStream("/app.properties")) {
 			p.load(is);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.log(Level.WARNING, "Failed to load app.properties", e);
 		}
 
 		String version = p.getProperty("app.version");
 		String namedversion = p.getProperty("app.namedversion");
 
 		if (version == null) {
-			txtVersion.setText("DEV");
+			versionLabel.setText("DEV");
 		} else {
-			txtVersion.setText("v" + version);
+			versionLabel.setText("v" + version);
 		}
 
 		if (namedversion == null) {
-			txtNamedVersion.setText("");
+			namedVersionLabel.setText("");
 		} else {
-			txtNamedVersion.setText("- " + namedversion);
+			namedVersionLabel.setText("- " + namedversion);
 		}
 
 	}
+
+	@FXML
+	void onLoginButtonClick() {
+		logger.info("Login");
+
+		Stage stage = (Stage) loginButton.getScene().getWindow();
+		loginButton.setDisable(true);
+		usernameTextField.setDisable(true);
+		passwordField.setDisable(true);
+
+		try {
+			Task<User> loginTask = createLoginTask();
+			loginTask.setOnSucceeded(e -> {
+                try {
+					User user = loginTask.getValue();
+					if (user==null) {
+//						MessageBox.error(stage, "username atau password salah!", "Login");
+						throw new Exception("User is null");
+//						return;
+					}
+
+                    window.setDashboardView();
+                } catch (Exception ex) {
+					MessageBox.error(stage, ex);
+                } finally {
+					loginButton.setDisable(false);
+					usernameTextField.setDisable(false);
+					passwordField.setDisable(false);
+				}
+			});
+
+			new Thread(loginTask).start();
+		} catch (Exception ex) {
+			ErrorMessage.show(ex);
+		}
+	}
+
+	private Task<User> createLoginTask() {
+		String username = usernameTextField.getText();
+		String password = passwordField.getText();
+
+        return new Task<>() {
+            @Override
+            protected User call() throws Exception {
+                logger.info("username: " + username );
+                logger.info("password: " + password);
+
+                // simulasi load
+                Thread.sleep(2000);
+                if (username.equals("agung") && password.equals("rahasia")) {
+                    logger.info("Login Successful");
+                    return new User();
+                } else {
+					logger.warning("Login not found!");
+                    return null;
+                }
+
+            }
+        };
+	}
+
+	@FXML
+	void onConfigButtonClick() {
+		try {
+			Stage owner = (Stage)configButton.getScene().getWindow();
+			ConfigDialog dlg = new ConfigDialog(owner);
+			dlg.openDialog();
+		} catch (Exception ex) {
+			ErrorMessage.show(ex);
+		}
+	}
+
+
+
 }

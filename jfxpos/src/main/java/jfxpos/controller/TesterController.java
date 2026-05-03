@@ -9,7 +9,8 @@ public class TesterController extends Controller {
 	}
 
 	@FXML
-	private void onCheckUpdate() {
+	private void onCheckForUpdateButtonClick() {
+		logger.info("Check for Update...");
 	}
 
 }

@@ -4,13 +4,17 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import jfxpos.config.AppConfig;
 import jfxpos.config.AppConfigStore;
-import jfxpos.util.WindowManager;
-
 import jfxpos.util.PosLogger;
+import jfxpos.views.MainWindow;
+
+import java.util.Objects;
 import java.util.logging.Logger;
 
-public class App extends Application {
-	public static final boolean isDev = System.getProperty("app.env", "prod") == "prod" ? false : true;
+
+
+public class App extends Application  {
+	public static final boolean isDev = !Objects.equals(System.getProperty("app.env", "prod"), "prod");
+	public static final boolean isProd = Objects.equals(System.getProperty("app.env", "prod"), "prod");
 
 	private static final Logger logger = PosLogger.createLogger(App.class.getName());
 
@@ -18,10 +22,12 @@ public class App extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		WindowManager.setMainStage(stage);
-		WindowManager.openLogin();
+		MainWindow wnd = new MainWindow(stage);
+		wnd.setLoginView();
+		wnd.open();
 	}
 
+	// jangan dihapus, ini dipakai di launcher
 	public static void readConfiguration() throws Exception {
 		try {
 			logger.info("Reading configuration...");

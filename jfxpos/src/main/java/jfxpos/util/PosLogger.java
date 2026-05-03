@@ -11,6 +11,11 @@ import java.util.logging.StreamHandler;
 
 public class PosLogger {
 
+	private static final String RESET = "\u001B[0m";
+	private static final String RED = "\u001B[31m";
+	private static final String YELLOW = "\u001B[33m";
+	private static final String BRIGHT_WHITE = "\u001B[97m";
+
 	public static java.util.logging.Logger createLogger(String className) {
 		java.util.logging.Logger logger = java.util.logging.Logger.getLogger(className);
 
@@ -19,8 +24,19 @@ public class PosLogger {
 
 		// 2. Buat handler baru yang mengirim ke System.out
 		StreamHandler sh = new StreamHandler(System.out, new Formatter() {
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+			final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 					.withZone(ZoneId.systemDefault());
+
+
+			String getColorTextlevel(Level level) {
+				if (level == Level.SEVERE) {
+					return RED + level.toString() + RESET;
+				} else if  (level == Level.WARNING) {
+					return YELLOW + level.toString() + RESET;
+				} else {
+					return level.toString();
+				}
+			}
 
 			@Override
 			public String format(LogRecord record) {
@@ -30,8 +46,8 @@ public class PosLogger {
 					Level level = record.getLevel();
 					if (level == Level.WARNING || level == Level.SEVERE) {
 						return String.format(
-								"[%s] %s.%s - %s%n",
-								record.getLevel(),
+								"[%s] "+ BRIGHT_WHITE + "%s.%s"+ RESET +"\r\n%s%n",
+								getColorTextlevel(record.getLevel()),
 								record.getSourceClassName(),
 								record.getSourceMethodName(),
 								record.getMessage());

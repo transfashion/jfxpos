@@ -3,12 +3,15 @@ package jfxpos.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-import javafx.stage.Window;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
 import jfxpos.config.AppConfig;
 import jfxpos.config.AppConfigStore;
 import jfxpos.util.ErrorMessage;
-import jfxpos.util.WindowManager;
 import jfxpos.Controller;
+import jfxpos.views.TesterDialog;
+
+import java.util.logging.Level;
 
 public class ConfigController extends Controller {
 
@@ -33,6 +36,9 @@ public class ConfigController extends Controller {
 	@FXML
 	CheckBox chkMaximizeMainWindow;
 
+	@FXML
+	Button testerButton;
+
 	public ConfigController() {
 		super(ConfigController.class);
 	}
@@ -48,26 +54,29 @@ public class ConfigController extends Controller {
 	}
 
 	@FXML
-	private void onParseToken() {
+	private void onParseButtonClick() {
 
 	}
 
 	@FXML
-	private void onCancel() {
+	private void onCancelButtonClick() {
 
 	}
 
 	@FXML
-	private void onSaveSetting() {
+	private void onSaveButtonClick() {
 		logger.info("Save Setting");
 	}
 
 	@FXML
-	private void onTesterClick() {
+	private void onTesterButtonClick() {
 		logger.info("Tester Clicked");
 		try {
-			WindowManager.openTesterWindow(this.stage);
+			Stage owner = (Stage)testerButton.getScene().getWindow();
+			TesterDialog dlg = new TesterDialog(owner);
+			dlg.openDialog();
 		} catch (Exception ex) {
+			logger.log(Level.SEVERE, ex.getMessage(), ex);
 			ErrorMessage.show(ex);
 		}
 

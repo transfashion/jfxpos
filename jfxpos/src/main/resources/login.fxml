@@ -15,16 +15,16 @@
    <children>
       <AnchorPane maxHeight="239.0" maxWidth="400.0" minHeight="239.0" minWidth="400.0" prefHeight="239.0" prefWidth="400.0" style="-fx-border-color: #ccc; -fx-border-radius: 10;">
          <children>
-            <Button fx:id="btnLogin" layoutX="122.0" layoutY="163.0" mnemonicParsing="false" onAction="#onLogin" prefHeight="26.0" prefWidth="99.0" text="Login">
+            <Button fx:id="loginButton" layoutX="122.0" layoutY="163.0" mnemonicParsing="false" onAction="#onLoginButtonClick" prefHeight="26.0" prefWidth="99.0" text="Login">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <TextField fx:id="txtUsername" layoutX="122.0" layoutY="85.0" prefHeight="26.0" prefWidth="212.0" />
-            <PasswordField fx:id="txtPassword" layoutX="122.0" layoutY="122.0" prefHeight="26.0" prefWidth="212.0" />
+            <TextField fx:id="usernameTextField" layoutX="122.0" layoutY="85.0" prefHeight="26.0" prefWidth="212.0" />
+            <PasswordField fx:id="passwordField" layoutX="122.0" layoutY="122.0" prefHeight="26.0" prefWidth="212.0" />
             <Label layoutX="45.0" layoutY="89.0" text="Username" />
             <Label layoutX="48.0" layoutY="126.0" text="Password" />
-            <Label fx:id="btnConfiguration" layoutX="248.0" layoutY="167.0" onMouseClicked="#onConfig" style="-fx-text-fill: blue; -fx-underline: true;" text="Configuration">
+            <Label fx:id="configButton" layoutX="248.0" layoutY="167.0" onMouseClicked="#onConfigButtonClick" style="-fx-text-fill: blue; -fx-underline: true;" text="Configuration">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -41,7 +41,7 @@
                         <Font name="System Bold" size="9.0" />
                      </font>
                   </Label>
-                  <Label fx:id="txtVersion" layoutX="171.0" layoutY="10.0" text="v1.0.0">
+                  <Label fx:id="versionLabel" layoutX="171.0" layoutY="10.0" text="v1.0.0">
                      <font>
                         <Font size="9.0" />
                      </font>
@@ -49,7 +49,7 @@
                         <Insets left="5.0" />
                      </padding>
                   </Label>
-                  <Label fx:id="txtNamedVersion" layoutX="80.0" layoutY="10.0" text="- initiative move">
+                  <Label fx:id="namedVersionLabel" layoutX="80.0" layoutY="10.0" text="- initiative move">
                      <font>
                         <Font size="9.0" />
                      </font>

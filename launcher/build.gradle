@@ -4,7 +4,7 @@ import org.gradle.internal.os.OperatingSystem
 plugins {
     id 'application'
     id 'org.openjfx.javafxplugin'
-	id 'org.beryx.jlink' version '3.0.1'
+	id 'org.beryx.jlink' version '4.0.2'
 }
 
 
@@ -44,43 +44,52 @@ jlink {
         if (org.gradle.internal.os.OperatingSystem.current().isWindows()) {
             icon = file('src/main/resources/bag.ico')
 
-			imageOptions += [
+			imageOptions.addAll([
 				'--icon', 'src/main/resources/bag.ico',
 				'--description', project.description,    // metadata
 				'--vendor', project.vendor,              // metadata
 				'--copyright', project.copyright         // metadata
-			]
+			])
 			
-			installerOptions = [
+			installerOptions.set([
                 '--win-dir-chooser',     // pilih lokasi install
                 '--win-shortcut',        // buat shortcut desktop
                 '--win-menu',            // buat start menu
                 '--win-menu-group', 'JFX Point of Sales'
-            ]
+            ])
         }
 
 		if (os.isMacOsX()) {
 			installerType = 'dmg'
 			icon = file('src/main/resources/bag.icns')
 
-			imageOptions += [
+			imageOptions.addAll([
 				'--icon', 'src/main/resources/bag.icns'
-			]
+			])
 		}
 
 
     }
 }
 
-// Copy jfxpos.jar ke direktori app di dalam hasil jpackageImage
+def jfxposJarTask = project(':jfxpos').tasks.named('jar')
+
 tasks.named('jpackageImage') {
     doLast {
         def imageAppDir = layout.buildDirectory.dir("jpackage/jfxpos/app").get().asFile
         copy {
-            from project(':jfxpos').tasks.named('jar').get().archiveFile
+            from jfxposJarTask.get().archiveFile
             into imageAppDir
         }
         println "jfxpos.jar copied to: ${imageAppDir}"
+
+        // Copy seluruh folder jpackageImage ke [project_root]/build/jfxpos
+        def targetDir = file("${rootProject.projectDir}/build/jfxpos")
+        copy {
+            from layout.buildDirectory.dir("jpackage/jfxpos")
+            into targetDir
+        }
+        println "jpackageImage copied to: ${targetDir}"
     }
 }
 

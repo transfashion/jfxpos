@@ -78,15 +78,24 @@ def jfxposJarTask = project(':jfxpos').tasks.named('jar')
 
 tasks.named('jpackageImage') {
     doLast {
-        def imageAppDir = layout.buildDirectory.dir("jpackage/jfxpos/app").get().asFile
-        copy {
-            from jfxposJarTask.get().archiveFile
-            into imageAppDir
+        def os = org.gradle.internal.os.OperatingSystem.current()
+        if (os.isMacOsX()) {
+            def imageAppDir = layout.buildDirectory.dir("jpackage/jfxpos.app/Contents/app").get().asFile
+            copy {
+                from jfxposJarTask.get().archiveFile
+                into imageAppDir
+            }
+            println "jfxpos.jar copied to macOS app bundle: ${imageAppDir}"
+        } else {
+            def imageAppDir = layout.buildDirectory.dir("jpackage/jfxpos/app").get().asFile
+            copy {
+                from jfxposJarTask.get().archiveFile
+                into imageAppDir
+            }
+            println "jfxpos.jar copied to: ${imageAppDir}"
         }
-        println "jfxpos.jar copied to: ${imageAppDir}"
 
         // Copy seluruh folder jpackageImage ke [project_root]/build/jfxpos (.app di macOS)
-        def os = org.gradle.internal.os.OperatingSystem.current()
         if (os.isMacOsX()) {
             def targetDir = file("${rootProject.projectDir}/build/jfxpos.app")
             copy {

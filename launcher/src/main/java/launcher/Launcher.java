@@ -197,13 +197,22 @@ public class Launcher extends Application {
 	private Path getJarPath() throws IOException {
 		Path jarPath;
 
-		Path basePath = Paths.get(System.getProperty("user.dir"));
-		logger.info("basePath: " + basePath.toString());
+		Path basePath = null;
+		String jpackageAppPath = System.getProperty("jpackage.app-path");
+		if (jpackageAppPath != null && !jpackageAppPath.isEmpty()) {
+			Path appPath = Paths.get(jpackageAppPath);
+			if (jpackageAppPath.contains(".app/Contents/MacOS/")) {
+				Path parent = appPath.getParent();
+				basePath = (parent != null) ? parent.getParent() : null;
+			} else {
+				basePath = appPath.getParent();
+			}
+		}
 
-		// Path fileCfg = basePath.resolve("app/"+ Config.MODULE_NAME + ".cfg");
-		// Path fileJar = basePath.resolve("app/"+ Config.MODULE_NAME + ".jar");
-		// Path ideFileJar = Paths.get("build/libs/" + Config.MODULE_NAME +
-		// ".jar").toAbsolutePath();
+		if (basePath == null) {
+			basePath = Paths.get(System.getProperty("user.dir"));
+		}
+		logger.info("basePath: " + basePath.toString());
 
 		Path fileCfg = basePath.resolve("app").resolve(Config.MODULE_NAME + ".cfg");
 		Path fileJar = basePath.resolve("app").resolve(Config.MODULE_NAME + ".jar");
@@ -212,7 +221,7 @@ public class Launcher extends Application {
 		if (Files.exists(fileCfg)) {
 			// baca dulu dari konfigurasi file
 			String fileName = getFileJarFromCfg(fileCfg);
-			jarPath = basePath.resolve("app/" + fileName);
+			jarPath = basePath.resolve("app").resolve(fileName);
 			if (!Files.exists(jarPath)) {
 				logger.severe("not found: " + jarPath);
 				throw new RuntimeException("Tidak menemukan '" + jarPath + "'!\r\n" + jarPath);
@@ -223,7 +232,12 @@ public class Launcher extends Application {
 			jarPath = ideFileJar;
 		} else {
 			// file jar tidak ketemu, coba cari keatasnya
-			jarPath = basePath.getParent().resolve("app").resolve(Config.MODULE_NAME + ".jar");
+			Path parent = basePath.getParent();
+			if (parent == null) {
+				logger.severe("basePath parent is null, cannot resolve app");
+				throw new RuntimeException("Cannot resolve app directory: parent of basePath is null");
+			}
+			jarPath = parent.resolve("app").resolve(Config.MODULE_NAME + ".jar");
 			if (!Files.exists(jarPath)) {
 				logger.severe("not found: " + jarPath);
 				throw new RuntimeException("Tidak menemukan '" + Config.MODULE_NAME + ".jar'!\r\n" + jarPath);

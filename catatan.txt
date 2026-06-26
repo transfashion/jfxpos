@@ -39,3 +39,18 @@ build installer
 
 
 
+
+
+
+Membuat Desktop Entry
+===========================
+
+[Desktop Entry]
+Type=Application
+Name=JFXPOS
+Comment=JavaFX Point of Sale Application
+Exec=/home/agung/Development/transfashion/jfxpos/build/jfxpos/bin/jfxpos
+Icon=/home/agung/Development/transfashion/jfxpos/build/jfxpos/lib/jfxpos.png
+Terminal=false
+Categories=Office;Finance;
+StartupNotify=true

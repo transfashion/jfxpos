@@ -76,7 +76,14 @@ def jfxposJarTask = project(':jfxpos').tasks.named('jar')
 
 tasks.named('jpackageImage') {
     doLast {
-        def imageAppDir = layout.buildDirectory.dir("jpackage/jfxpos/app").get().asFile
+        def os = org.gradle.internal.os.OperatingSystem.current()
+        def appSubDir = "app"
+        if (os.isLinux()) {
+            appSubDir = "lib/app"
+        } else if (os.isMacOsX()) {
+            appSubDir = "jfxpos.app/Contents/app"
+        }
+        def imageAppDir = layout.buildDirectory.dir("jpackage/jfxpos/${appSubDir}").get().asFile
         copy {
             from jfxposJarTask.get().archiveFile
             into imageAppDir
@@ -90,6 +97,15 @@ tasks.named('jpackageImage') {
             into targetDir
         }
         println "jpackageImage copied to: ${targetDir}"
+
+        if (os.isLinux()) {
+            copy {
+                from file("src/main/resources/bag.png")
+                into "${targetDir}/lib"
+                rename "bag.png", "jfxpos.png"
+            }
+            println "Copied and renamed bag.png to ${targetDir}/lib/jfxpos.png"
+        }
     }
 }
 

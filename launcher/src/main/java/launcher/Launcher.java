@@ -198,12 +198,24 @@ public class Launcher extends Application {
 		Path jarPath;
 
 		Path basePath = Paths.get(System.getProperty("user.dir"));
-		logger.info("basePath: " + basePath.toString());
 
-		// Path fileCfg = basePath.resolve("app/"+ Config.MODULE_NAME + ".cfg");
-		// Path fileJar = basePath.resolve("app/"+ Config.MODULE_NAME + ".jar");
-		// Path ideFileJar = Paths.get("build/libs/" + Config.MODULE_NAME +
-		// ".jar").toAbsolutePath();
+		// Deteksi apakah dijalankan dari packaged app (jpackage/jlink)
+		String javaHomeProp = System.getProperty("java.home");
+		if (javaHomeProp != null) {
+			Path javaHome = Paths.get(javaHomeProp);
+			Path temp = javaHome;
+			while (temp != null) {
+				Path checkApp = temp.resolve("app");
+				if (Files.exists(checkApp) && Files.isDirectory(checkApp)) {
+					basePath = temp;
+					logger.info("Found packaged 'app' directory relative to java.home at: " + basePath.toString());
+					break;
+				}
+				temp = temp.getParent();
+			}
+		}
+
+		logger.info("basePath: " + basePath.toString());
 
 		Path fileCfg = basePath.resolve("app").resolve(Config.MODULE_NAME + ".cfg");
 		Path fileJar = basePath.resolve("app").resolve(Config.MODULE_NAME + ".jar");
@@ -212,7 +224,7 @@ public class Launcher extends Application {
 		if (Files.exists(fileCfg)) {
 			// baca dulu dari konfigurasi file
 			String fileName = getFileJarFromCfg(fileCfg);
-			jarPath = basePath.resolve("app/" + fileName);
+			jarPath = basePath.resolve("app").resolve(fileName);
 			if (!Files.exists(jarPath)) {
 				logger.severe("not found: " + jarPath);
 				throw new RuntimeException("Tidak menemukan '" + jarPath + "'!\r\n" + jarPath);

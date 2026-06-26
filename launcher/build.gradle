@@ -77,39 +77,37 @@ jlink {
 def jfxposJarTask = project(':jfxpos').tasks.named('jar')
 
 tasks.named('jpackageImage') {
+    dependsOn(':clean')
     doLast {
         def os = org.gradle.internal.os.OperatingSystem.current()
-        if (os.isMacOsX()) {
-            def imageAppDir = layout.buildDirectory.dir("jpackage/jfxpos.app/Contents/app").get().asFile
-            copy {
-                from jfxposJarTask.get().archiveFile
-                into imageAppDir
-            }
-            println "jfxpos.jar copied to macOS app bundle: ${imageAppDir}"
-        } else {
-            def imageAppDir = layout.buildDirectory.dir("jpackage/jfxpos/app").get().asFile
-            copy {
-                from jfxposJarTask.get().archiveFile
-                into imageAppDir
-            }
-            println "jfxpos.jar copied to: ${imageAppDir}"
+        def appSubDir = "app"
+        if (os.isLinux()) {
+            appSubDir = "lib/app"
+        } else if (os.isMacOsX()) {
+            appSubDir = "jfxpos.app/Contents/app"
         }
+        def imageAppDir = layout.buildDirectory.dir("jpackage/jfxpos/${appSubDir}").get().asFile
+        copy {
+            from jfxposJarTask.get().archiveFile
+            into imageAppDir
+        }
+        println "jfxpos.jar copied to: ${imageAppDir}"
 
-        // Copy seluruh folder jpackageImage ke [project_root]/build/jfxpos (.app di macOS)
-        if (os.isMacOsX()) {
-            def targetDir = file("${rootProject.projectDir}/build/jfxpos.app")
+        // Copy seluruh folder jpackageImage ke [project_root]/build/jfxpos
+        def targetDir = file("${rootProject.projectDir}/build/jfxpos")
+        copy {
+            from layout.buildDirectory.dir("jpackage/jfxpos")
+            into targetDir
+        }
+        println "jpackageImage copied to: ${targetDir}"
+
+        if (os.isLinux()) {
             copy {
-                from layout.buildDirectory.dir("jpackage/jfxpos.app")
-                into targetDir
+                from file("src/main/resources/bag.png")
+                into "${targetDir}/lib"
+                rename "bag.png", "jfxpos.png"
             }
-            println "jpackageImage (.app) copied to: ${targetDir}"
-        } else {
-            def targetDir = file("${rootProject.projectDir}/build/jfxpos")
-            copy {
-                from layout.buildDirectory.dir("jpackage/jfxpos")
-                into targetDir
-            }
-            println "jpackageImage copied to: ${targetDir}"
+            println "Copied and renamed bag.png to ${targetDir}/lib/jfxpos.png"
         }
     }
 }

@@ -7,7 +7,7 @@ import jfxpos.controller.ConfigController;
 
 public class ConfigDialog extends View {
 	static final String Title = "Configuration";
-	static final String FXML = RESOURCE_DIR + "/config2.fxml";
+	static final String FXML = RESOURCE_DIR + "/config.fxml";
 
 	final Stage stage;
 	final ConfigController controller = new ConfigController();

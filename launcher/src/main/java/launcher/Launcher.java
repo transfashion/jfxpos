@@ -197,21 +197,24 @@ public class Launcher extends Application {
 	private Path getJarPath() throws IOException {
 		Path jarPath;
 
-		Path basePath = null;
-		String jpackageAppPath = System.getProperty("jpackage.app-path");
-		if (jpackageAppPath != null && !jpackageAppPath.isEmpty()) {
-			Path appPath = Paths.get(jpackageAppPath);
-			if (jpackageAppPath.contains(".app/Contents/MacOS/")) {
-				Path parent = appPath.getParent();
-				basePath = (parent != null) ? parent.getParent() : null;
-			} else {
-				basePath = appPath.getParent();
+		Path basePath = Paths.get(System.getProperty("user.dir"));
+
+		// Deteksi apakah dijalankan dari packaged app (jpackage/jlink)
+		String javaHomeProp = System.getProperty("java.home");
+		if (javaHomeProp != null) {
+			Path javaHome = Paths.get(javaHomeProp);
+			Path temp = javaHome;
+			while (temp != null) {
+				Path checkApp = temp.resolve("app");
+				if (Files.exists(checkApp) && Files.isDirectory(checkApp)) {
+					basePath = temp;
+					logger.info("Found packaged 'app' directory relative to java.home at: " + basePath.toString());
+					break;
+				}
+				temp = temp.getParent();
 			}
 		}
 
-		if (basePath == null) {
-			basePath = Paths.get(System.getProperty("user.dir"));
-		}
 		logger.info("basePath: " + basePath.toString());
 
 		Path fileCfg = basePath.resolve("app").resolve(Config.MODULE_NAME + ".cfg");

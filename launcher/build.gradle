@@ -36,7 +36,9 @@ jlink {
         imageName = 'jfxpos'
 		installerName = 'jfxpos-setup'
         installerType = 'exe'
-        appVersion = project.version
+        def rawVersion = project.version.toString()
+        def versionParts = rawVersion.split('\\.')
+        appVersion = versionParts.length >= 3 ? "${versionParts[0]}.${versionParts[1]}.${versionParts[2]}" : rawVersion
 		vendor = project.vendor
 
 		def os = OperatingSystem.current()
@@ -83,13 +85,23 @@ tasks.named('jpackageImage') {
         }
         println "jfxpos.jar copied to: ${imageAppDir}"
 
-        // Copy seluruh folder jpackageImage ke [project_root]/build/jfxpos
-        def targetDir = file("${rootProject.projectDir}/build/jfxpos")
-        copy {
-            from layout.buildDirectory.dir("jpackage/jfxpos")
-            into targetDir
+        // Copy seluruh folder jpackageImage ke [project_root]/build/jfxpos (.app di macOS)
+        def os = org.gradle.internal.os.OperatingSystem.current()
+        if (os.isMacOsX()) {
+            def targetDir = file("${rootProject.projectDir}/build/jfxpos.app")
+            copy {
+                from layout.buildDirectory.dir("jpackage/jfxpos.app")
+                into targetDir
+            }
+            println "jpackageImage (.app) copied to: ${targetDir}"
+        } else {
+            def targetDir = file("${rootProject.projectDir}/build/jfxpos")
+            copy {
+                from layout.buildDirectory.dir("jpackage/jfxpos")
+                into targetDir
+            }
+            println "jpackageImage copied to: ${targetDir}"
         }
-        println "jpackageImage copied to: ${targetDir}"
     }
 }
 

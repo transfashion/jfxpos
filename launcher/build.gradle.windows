@@ -36,7 +36,9 @@ jlink {
         imageName = 'jfxpos'
 		installerName = 'jfxpos-setup'
         installerType = 'exe'
-        appVersion = project.version
+        def rawVersion = project.version.toString()
+        def versionParts = rawVersion.split('\\.')
+        appVersion = versionParts.length >= 3 ? "${versionParts[0]}.${versionParts[1]}.${versionParts[2]}" : rawVersion
 		vendor = project.vendor
 
 		def os = OperatingSystem.current()

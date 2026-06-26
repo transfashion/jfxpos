@@ -75,6 +75,7 @@ jlink {
 def jfxposJarTask = project(':jfxpos').tasks.named('jar')
 
 tasks.named('jpackageImage') {
+    dependsOn(':clean')
     doLast {
         def os = org.gradle.internal.os.OperatingSystem.current()
         def appSubDir = "app"

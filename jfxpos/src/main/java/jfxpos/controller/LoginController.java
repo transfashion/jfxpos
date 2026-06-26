@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -69,6 +70,7 @@ public class LoginController extends Controller {
 			namedVersionLabel.setText("- " + namedversion);
 		}
 
+		Platform.runLater(() -> usernameTextField.requestFocus());
 	}
 
 	@FXML
@@ -86,9 +88,8 @@ public class LoginController extends Controller {
                 try {
 					User user = loginTask.getValue();
 					if (user==null) {
-//						MessageBox.error(stage, "username atau password salah!", "Login");
-						throw new Exception("User is null");
-//						return;
+						MessageBox.error(stage, "username atau password salah!", "Login");
+						return;
 					}
 
                     window.setDashboardView();

@@ -10,6 +10,9 @@ import jfxpos.config.AppConfig;
 import jfxpos.config.AppConfigStore;
 import jfxpos.Controller;
 import jfxpos.util.MessageBox;
+import javafx.scene.control.ButtonType;
+import java.util.Optional;
+import java.util.Objects;
 
 import java.util.Properties;
 import java.sql.Connection;
@@ -70,27 +73,31 @@ public class ConfigController extends Controller {
 	@FXML
 	Button databaseTestConnectButton;
 
+	private AppConfig initialConfig;
+
 	public ConfigController() {
 		super(ConfigController.class);
 	}
 
 	@FXML
 	public void initialize() {
-		AppConfig cfg = AppConfigStore.load();
-		serverUrlInput.setText(cfg.serverUrl());
-		siteIdInput.setText(cfg.siteId());
-		secretInput.setText(cfg.secret());
-		machineIdInput.setText(cfg.machineId());
-		printerNameInput.setText(cfg.ticketPrinterName());
-		databaseHostInput.setText(cfg.databaseHost());
-		databasePathInput.setText(cfg.databasePath());
-		databaseUsernameInput.setText(cfg.databaseUsername());
-		databasePasswordInput.setText(cfg.databasePassword());
-		databaseRoleInput.setText(cfg.databaseRole());
-		databasePoolSizeInput.setText(String.valueOf(cfg.databasePoolSize()));
+		initialConfig = AppConfigStore.load();
+		serverUrlInput.setText(initialConfig.serverUrl());
+		siteIdInput.setText(initialConfig.siteId());
+		secretInput.setText(initialConfig.secret());
+		machineIdInput.setText(initialConfig.machineId());
+		printerNameInput.setText(initialConfig.ticketPrinterName());
+		databaseHostInput.setText(initialConfig.databaseHost());
+		databasePathInput.setText(initialConfig.databasePath());
+		databaseUsernameInput.setText(initialConfig.databaseUsername());
+		databasePasswordInput.setText(initialConfig.databasePassword());
+		databaseRoleInput.setText(initialConfig.databaseRole());
+		databasePoolSizeInput.setText(String.valueOf(initialConfig.databasePoolSize()));
 
 		printerTestButton.setOnAction(e -> onPrinterTestButtonClick());
 		databaseTestConnectButton.setOnAction(e -> onDatabaseTestConnectButtonClick());
+
+		setupCloseRequestFilter();
 	}
 
 	@FXML
@@ -101,37 +108,184 @@ public class ConfigController extends Controller {
 	@FXML
 	private void onCancelButtonClick() {
 		Stage stage = (Stage) cancelButton.getScene().getWindow();
-		stage.close();
+		if (isModified()) {
+			boolean confirm = showExitConfirmation(stage);
+			if (confirm) {
+				stage.close();
+			}
+		} else {
+			stage.close();
+		}
+	}
+
+	private void setupCloseRequestFilter() {
+		Runnable configureStage = () -> {
+			if (cancelButton.getScene() != null && cancelButton.getScene().getWindow() instanceof Stage stage) {
+				stage.setOnCloseRequest(event -> {
+					if (isModified()) {
+						boolean confirm = showExitConfirmation(stage);
+						if (!confirm) {
+							event.consume();
+						}
+					}
+				});
+			}
+		};
+
+		if (cancelButton.getScene() != null) {
+			if (cancelButton.getScene().getWindow() != null) {
+				configureStage.run();
+			} else {
+				cancelButton.getScene().windowProperty().addListener((obs, oldW, newW) -> {
+					if (newW != null) {
+						configureStage.run();
+					}
+				});
+			}
+		} else {
+			cancelButton.sceneProperty().addListener((obs, oldS, newS) -> {
+				if (newS != null) {
+					if (newS.getWindow() != null) {
+						configureStage.run();
+					} else {
+						newS.windowProperty().addListener((obsW, oldW, newW) -> {
+							if (newW != null) {
+								configureStage.run();
+							}
+						});
+					}
+				}
+			});
+		}
+	}
+
+	private boolean isModified() {
+		if (initialConfig == null) {
+			return false;
+		}
+		if (!equalsOrEmpty(serverUrlInput.getText(), initialConfig.serverUrl())) return true;
+		if (!equalsOrEmpty(siteIdInput.getText(), initialConfig.siteId())) return true;
+		if (!equalsOrEmpty(secretInput.getText(), initialConfig.secret())) return true;
+		if (!equalsOrEmpty(machineIdInput.getText(), initialConfig.machineId())) return true;
+		if (!equalsOrEmpty(printerNameInput.getText(), initialConfig.ticketPrinterName())) return true;
+		if (!equalsOrEmpty(databaseHostInput.getText(), initialConfig.databaseHost())) return true;
+		if (!equalsOrEmpty(databasePathInput.getText(), initialConfig.databasePath())) return true;
+		if (!equalsOrEmpty(databaseUsernameInput.getText(), initialConfig.databaseUsername())) return true;
+		if (!equalsOrEmpty(databasePasswordInput.getText(), initialConfig.databasePassword())) return true;
+		if (!equalsOrEmpty(databaseRoleInput.getText(), initialConfig.databaseRole())) return true;
+
+		String initialPoolSizeStr = String.valueOf(initialConfig.databasePoolSize());
+		if (!equalsOrEmpty(databasePoolSizeInput.getText(), initialPoolSizeStr)) return true;
+
+		return false;
+	}
+
+	private boolean equalsOrEmpty(String fieldText, String configValue) {
+		String f = fieldText == null ? "" : fieldText.trim();
+		String c = configValue == null ? "" : configValue.trim();
+		return f.equals(c);
+	}
+
+	private boolean showExitConfirmation(Stage stage) {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setTitle("Konfirmasi Keluar");
+		alert.setHeaderText(null);
+		alert.setContentText("ada perubahan pada konfigurasi, apakah akan keluar");
+		if (stage != null) {
+			alert.initOwner(stage);
+		}
+		alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.CANCEL);
+		Optional<ButtonType> result = alert.showAndWait();
+		return result.isPresent() && result.get() == ButtonType.YES;
 	}
 
 	@FXML
 	private void onSaveButtonClick() {
 		logger.info("Save Setting");
-		int poolSize = 3;
-		try {
-			poolSize = Integer.parseInt(databasePoolSizeInput.getText().trim());
-		} catch (NumberFormatException e) {
-			logger.warning("Invalid pool size format, using default: 3");
+		String host = databaseHostInput.getText() != null ? databaseHostInput.getText().trim() : "";
+		String path = databasePathInput.getText() != null ? databasePathInput.getText().trim() : "";
+		String username = databaseUsernameInput.getText() != null ? databaseUsernameInput.getText().trim() : "";
+		String password = databasePasswordInput.getText() != null ? databasePasswordInput.getText().trim() : "";
+		String role = databaseRoleInput.getText() != null ? databaseRoleInput.getText().trim() : "";
+
+		if (host.isEmpty() || path.isEmpty()) {
+			Stage stage = (Stage) saveButton.getScene().getWindow();
+			MessageBox.error(stage, "Host dan Path database tidak boleh kosong!", "Test Connection");
+			return;
 		}
 
-		AppConfig cfg = new AppConfig(
-				serverUrlInput.getText(),
-				siteIdInput.getText(),
-				machineIdInput.getText(),
-				secretInput.getText(),
-				printerNameInput.getText(),
-				databaseHostInput.getText(),
-				databasePathInput.getText(),
-				databaseUsernameInput.getText(),
-				databasePasswordInput.getText(),
-				databaseRoleInput.getText(),
-				poolSize);
-		AppConfigStore.save(cfg);
-		jfxpos.App.config = cfg;
-		jfxpos.util.DbPool.init(cfg);
+		// Disable UI inputs during check
+		saveButton.setDisable(true);
+		cancelButton.setDisable(true);
+		databaseTestConnectButton.setDisable(true);
+		if (saveButton.getScene() != null) {
+			saveButton.getScene().setCursor(javafx.scene.Cursor.WAIT);
+		}
 
-		Stage stage = (Stage) saveButton.getScene().getWindow();
-		stage.close();
+		Task<Void> testTask = new Task<>() {
+			@Override
+			protected Void call() throws Exception {
+				testDatabaseConnection(host, path, username, password, role);
+				return null;
+			}
+		};
+
+		testTask.setOnSucceeded(e -> {
+			// Restore UI state
+			saveButton.setDisable(false);
+			cancelButton.setDisable(false);
+			databaseTestConnectButton.setDisable(false);
+			if (saveButton.getScene() != null) {
+				saveButton.getScene().setCursor(javafx.scene.Cursor.DEFAULT);
+			}
+
+			// Save config and close
+			int poolSize = 3;
+			try {
+				poolSize = Integer.parseInt(databasePoolSizeInput.getText().trim());
+			} catch (NumberFormatException ex) {
+				logger.warning("Invalid pool size format, using default: 3");
+			}
+
+			AppConfig cfg = new AppConfig(
+					serverUrlInput.getText(),
+					siteIdInput.getText(),
+					machineIdInput.getText(),
+					secretInput.getText(),
+					printerNameInput.getText(),
+					host,
+					path,
+					username,
+					password,
+					role,
+					poolSize);
+			AppConfigStore.save(cfg);
+			jfxpos.App.config = cfg;
+			jfxpos.util.DbPool.init(cfg);
+
+			Stage stage = (Stage) saveButton.getScene().getWindow();
+			stage.close();
+		});
+
+		testTask.setOnFailed(e -> {
+			// Restore UI state
+			saveButton.setDisable(false);
+			cancelButton.setDisable(false);
+			databaseTestConnectButton.setDisable(false);
+			if (saveButton.getScene() != null) {
+				saveButton.getScene().setCursor(javafx.scene.Cursor.DEFAULT);
+			}
+
+			Throwable ex = testTask.getException();
+			logger.log(Level.SEVERE, "Database connection check failed during Save", ex);
+
+			// Show connection error message to user
+			Stage stage = (Stage) saveButton.getScene().getWindow();
+			String friendlyMsg = getFriendlyDatabaseErrorMessage(ex);
+			MessageBox.error(stage, "Gagal menyimpan konfigurasi: Koneksi database tidak dapat dibangun.\n\n" + friendlyMsg, ex, "Save Config Failed");
+		});
+
+		new Thread(testTask).start();
 	}
 
 	private void onPrinterTestButtonClick() {
@@ -159,41 +313,16 @@ public class ConfigController extends Controller {
 		Task<Void> testTask = new Task<>() {
 			@Override
 			protected Void call() throws Exception {
-				String url;
-				if (host.contains(":")) {
-					url = "jdbc:firebirdsql://" + host + "/" + path;
-				} else {
-					url = "jdbc:firebirdsql://" + host + ":3050/" + path;
-				}
-
-				logger.info("Testing connection to: " + url);
-
-				// Force driver registration
-				Class.forName("org.firebirdsql.jdbc.FBDriver");
-
-				Properties props = new Properties();
-				props.setProperty("user", username);
-				props.setProperty("password", password);
-				if (!role.isEmpty()) {
-					props.setProperty("roleName", role);
-				}
-
-				// Set login timeout to 5 seconds to avoid freezing for too long
-				DriverManager.setLoginTimeout(5);
-
-				try (Connection conn = DriverManager.getConnection(url, props)) {
-					if (conn != null && !conn.isClosed()) {
-						logger.info("Connection test successful");
-					} else {
-						throw new SQLException("Connection returned is null or closed");
-					}
-				}
+				testDatabaseConnection(host, path, username, password, role);
 				return null;
 			}
 		};
 
 		testTask.setOnSucceeded(e -> {
 			databaseTestConnectButton.setDisable(false);
+			if (databaseTestConnectButton.getScene() != null) {
+				databaseTestConnectButton.getScene().setCursor(javafx.scene.Cursor.DEFAULT);
+			}
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
 			alert.setTitle("Test Connection");
 			alert.setHeaderText(null);
@@ -204,6 +333,9 @@ public class ConfigController extends Controller {
 
 		testTask.setOnFailed(e -> {
 			databaseTestConnectButton.setDisable(false);
+			if (databaseTestConnectButton.getScene() != null) {
+				databaseTestConnectButton.getScene().setCursor(javafx.scene.Cursor.DEFAULT);
+			}
 			Throwable ex = testTask.getException();
 			logger.log(Level.SEVERE, "Database connection test failed", ex);
 
@@ -214,6 +346,36 @@ public class ConfigController extends Controller {
 		});
 
 		new Thread(testTask).start();
+	}
+
+	private void testDatabaseConnection(String host, String path, String username, String password, String role) throws Exception {
+		String url;
+		if (host.contains(":")) {
+			url = "jdbc:firebirdsql://" + host + "/" + path;
+		} else {
+			url = "jdbc:firebirdsql://" + host + ":3050/" + path;
+		}
+
+		logger.info("Testing connection to: " + url);
+
+		// Force driver registration
+		Class.forName("org.firebirdsql.jdbc.FBDriver");
+
+		Properties props = new Properties();
+		props.setProperty("user", username);
+		props.setProperty("password", password);
+		if (!role.isEmpty()) {
+			props.setProperty("roleName", role);
+		}
+
+		// Set login timeout to 5 seconds to avoid freezing for too long
+		DriverManager.setLoginTimeout(5);
+
+		try (Connection conn = DriverManager.getConnection(url, props)) {
+			if (conn == null || conn.isClosed()) {
+				throw new SQLException("Connection returned is null or closed");
+			}
+		}
 	}
 
 	private String getFriendlyDatabaseErrorMessage(Throwable ex) {

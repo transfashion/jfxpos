@@ -27,7 +27,8 @@
 		"search.exclude": {
 			"**/build": true,
 			"**/bin": true
-		}
+		},
+		"java.compile.nullAnalysis.mode": "automatic"
 	},
 	"launch": {
 		"configurations": [

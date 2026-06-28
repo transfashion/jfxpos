@@ -7,6 +7,10 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
+dependencies {
+    implementation 'org.firebirdsql.jdbc:jaybird:6.0.5'
+}
+
 jar {
     archiveFileName = 'jfxpos.jar'
     manifest {

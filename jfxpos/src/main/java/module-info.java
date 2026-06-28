@@ -5,6 +5,8 @@ module jfxpos {
 	requires transitive java.logging;
 
 	requires java.prefs;
+	requires java.sql;
+	requires org.firebirdsql.jaybird;
 
 	exports jfxpos;
 	exports jfxpos.config;

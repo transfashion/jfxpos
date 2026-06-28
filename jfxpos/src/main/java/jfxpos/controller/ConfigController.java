@@ -3,10 +3,19 @@ package jfxpos.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+import javafx.concurrent.Task;
 import jfxpos.config.AppConfig;
 import jfxpos.config.AppConfigStore;
 import jfxpos.Controller;
+import jfxpos.util.MessageBox;
+
+import java.util.Properties;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.logging.Level;
 
 public class ConfigController extends Controller {
 
@@ -128,6 +137,80 @@ public class ConfigController extends Controller {
 	}
 
 	private void onDatabaseTestConnectButtonClick() {
-		logger.info("Database Test Connection clicked. Host: " + databaseHostInput.getText());
+		String host = databaseHostInput.getText() != null ? databaseHostInput.getText().trim() : "";
+		String path = databasePathInput.getText() != null ? databasePathInput.getText().trim() : "";
+		String username = databaseUsernameInput.getText() != null ? databaseUsernameInput.getText().trim() : "";
+		String password = databasePasswordInput.getText() != null ? databasePasswordInput.getText().trim() : "";
+		String role = databaseRoleInput.getText() != null ? databaseRoleInput.getText().trim() : "";
+
+		if (host.isEmpty() || path.isEmpty()) {
+			Stage stage = (Stage) databaseTestConnectButton.getScene().getWindow();
+			MessageBox.error(stage, "Host dan Path database tidak boleh kosong!", "Test Connection");
+			return;
+		}
+
+		databaseTestConnectButton.setDisable(true);
+
+		Task<Void> testTask = new Task<>() {
+			@Override
+			protected Void call() throws Exception {
+				String url;
+				if (host.contains(":")) {
+					url = "jdbc:firebirdsql://" + host + "/" + path;
+				} else {
+					url = "jdbc:firebirdsql://" + host + ":3050/" + path;
+				}
+
+				logger.info("Testing connection to: " + url);
+
+				// Force driver registration
+				Class.forName("org.firebirdsql.jdbc.FBDriver");
+
+				Properties props = new Properties();
+				props.setProperty("user", username);
+				props.setProperty("password", password);
+				if (!role.isEmpty()) {
+					props.setProperty("roleName", role);
+				}
+
+				// Set login timeout to 5 seconds to avoid freezing for too long
+				DriverManager.setLoginTimeout(5);
+
+				try (Connection conn = DriverManager.getConnection(url, props)) {
+					if (conn != null && !conn.isClosed()) {
+						logger.info("Connection test successful");
+					} else {
+						throw new SQLException("Connection returned is null or closed");
+					}
+				}
+				return null;
+			}
+		};
+
+		testTask.setOnSucceeded(e -> {
+			databaseTestConnectButton.setDisable(false);
+			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			alert.setTitle("Test Connection");
+			alert.setHeaderText(null);
+			alert.setContentText("Koneksi ke database berhasil!");
+			alert.initOwner((Stage) databaseTestConnectButton.getScene().getWindow());
+			alert.showAndWait();
+		});
+
+		testTask.setOnFailed(e -> {
+			databaseTestConnectButton.setDisable(false);
+			Throwable ex = testTask.getException();
+			logger.log(Level.SEVERE, "Database connection test failed", ex);
+
+			// Show error dialog
+			Stage stage = (Stage) databaseTestConnectButton.getScene().getWindow();
+			if (ex instanceof Exception) {
+				MessageBox.error(stage, (Exception) ex, "Test Connection Failed");
+			} else {
+				MessageBox.error(stage, ex.getMessage() != null ? ex.getMessage() : ex.toString(), "Test Connection Failed");
+			}
+		});
+
+		new Thread(testTask).start();
 	}
 }

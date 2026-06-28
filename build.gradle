@@ -32,6 +32,7 @@ project(':launcher') {
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'eclipse'
     
     java {
         toolchain {
@@ -42,6 +43,17 @@ subprojects {
 	// agar saat compilasi, muncul di root project's build/libs (perlu untuk proses development)
     tasks.withType(Jar) {
         destinationDirectory = file("${rootProject.projectDir}/build/libs")
+    }
+
+    eclipse {
+        classpath {
+            file {
+                whenMerged { classpath ->
+                    classpath.entries.findAll { it.path.contains('org.eclipse.buildship.core.gradleclasspathcontainer') }
+                            .each { it.entryAttributes['module'] = 'true' }
+                }
+            }
+        }
     }
 }
 

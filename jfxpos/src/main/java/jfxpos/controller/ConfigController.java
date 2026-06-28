@@ -12,7 +12,6 @@ import jfxpos.Controller;
 import jfxpos.util.MessageBox;
 import javafx.scene.control.ButtonType;
 import java.util.Optional;
-import java.util.Objects;
 
 import java.util.Properties;
 import java.sql.Connection;
@@ -163,19 +162,30 @@ public class ConfigController extends Controller {
 		if (initialConfig == null) {
 			return false;
 		}
-		if (!equalsOrEmpty(serverUrlInput.getText(), initialConfig.serverUrl())) return true;
-		if (!equalsOrEmpty(siteIdInput.getText(), initialConfig.siteId())) return true;
-		if (!equalsOrEmpty(secretInput.getText(), initialConfig.secret())) return true;
-		if (!equalsOrEmpty(machineIdInput.getText(), initialConfig.machineId())) return true;
-		if (!equalsOrEmpty(printerNameInput.getText(), initialConfig.ticketPrinterName())) return true;
-		if (!equalsOrEmpty(databaseHostInput.getText(), initialConfig.databaseHost())) return true;
-		if (!equalsOrEmpty(databasePathInput.getText(), initialConfig.databasePath())) return true;
-		if (!equalsOrEmpty(databaseUsernameInput.getText(), initialConfig.databaseUsername())) return true;
-		if (!equalsOrEmpty(databasePasswordInput.getText(), initialConfig.databasePassword())) return true;
-		if (!equalsOrEmpty(databaseRoleInput.getText(), initialConfig.databaseRole())) return true;
+		if (!equalsOrEmpty(serverUrlInput.getText(), initialConfig.serverUrl()))
+			return true;
+		if (!equalsOrEmpty(siteIdInput.getText(), initialConfig.siteId()))
+			return true;
+		if (!equalsOrEmpty(secretInput.getText(), initialConfig.secret()))
+			return true;
+		if (!equalsOrEmpty(machineIdInput.getText(), initialConfig.machineId()))
+			return true;
+		if (!equalsOrEmpty(printerNameInput.getText(), initialConfig.ticketPrinterName()))
+			return true;
+		if (!equalsOrEmpty(databaseHostInput.getText(), initialConfig.databaseHost()))
+			return true;
+		if (!equalsOrEmpty(databasePathInput.getText(), initialConfig.databasePath()))
+			return true;
+		if (!equalsOrEmpty(databaseUsernameInput.getText(), initialConfig.databaseUsername()))
+			return true;
+		if (!equalsOrEmpty(databasePasswordInput.getText(), initialConfig.databasePassword()))
+			return true;
+		if (!equalsOrEmpty(databaseRoleInput.getText(), initialConfig.databaseRole()))
+			return true;
 
 		String initialPoolSizeStr = String.valueOf(initialConfig.databasePoolSize());
-		if (!equalsOrEmpty(databasePoolSizeInput.getText(), initialPoolSizeStr)) return true;
+		if (!equalsOrEmpty(databasePoolSizeInput.getText(), initialPoolSizeStr))
+			return true;
 
 		return false;
 	}
@@ -282,7 +292,9 @@ public class ConfigController extends Controller {
 			// Show connection error message to user
 			Stage stage = (Stage) saveButton.getScene().getWindow();
 			String friendlyMsg = getFriendlyDatabaseErrorMessage(ex);
-			MessageBox.error(stage, "Gagal menyimpan konfigurasi: Koneksi database tidak dapat dibangun.\n\n" + friendlyMsg, ex, "Save Config Failed");
+			MessageBox.error(stage,
+					"Gagal menyimpan konfigurasi: Koneksi database tidak dapat dibangun.\n\n" + friendlyMsg, ex,
+					"Save Config Failed");
 		});
 
 		new Thread(testTask).start();
@@ -348,7 +360,8 @@ public class ConfigController extends Controller {
 		new Thread(testTask).start();
 	}
 
-	private void testDatabaseConnection(String host, String path, String username, String password, String role) throws Exception {
+	private void testDatabaseConnection(String host, String path, String username, String password, String role)
+			throws Exception {
 		String url;
 		if (host.contains(":")) {
 			url = "jdbc:firebirdsql://" + host + "/" + path;

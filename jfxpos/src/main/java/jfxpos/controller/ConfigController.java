@@ -1,43 +1,65 @@
 package jfxpos.controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import jfxpos.config.AppConfig;
 import jfxpos.config.AppConfigStore;
-import jfxpos.util.ErrorMessage;
 import jfxpos.Controller;
-import jfxpos.views.TesterDialog;
-
-import java.util.logging.Level;
 
 public class ConfigController extends Controller {
 
 	@FXML
-	TextField txtToken;
+	TextField tokenInput;
 
 	@FXML
-	TextField txtServerUrl;
+	Button parseButton;
 
 	@FXML
-	TextField txtSiteId;
+	TextField serverUrlInput;
 
 	@FXML
-	TextField txtKey;
+	TextField siteIdInput;
 
 	@FXML
-	TextField txtMachineId;
+	TextField secretInput;
 
 	@FXML
-	TextField txtTicketPrinter;
+	TextField machineIdInput;
 
 	@FXML
-	CheckBox chkMaximizeMainWindow;
+	TextField printerNameInput;
 
 	@FXML
-	Button testerButton;
+	Button printerTestButton;
+
+	@FXML
+	Button saveButton;
+
+	@FXML
+	Button cancelButton;
+
+	@FXML
+	TextField databaseHostInput;
+
+	@FXML
+	TextField databasePathInput;
+
+	@FXML
+	TextField databaseUsernameInput;
+
+	@FXML
+	TextField databasePasswordInput;
+
+	@FXML
+	TextField databaseRoleInput;
+
+	@FXML
+	TextField databasePoolSizeInput;
+
+	@FXML
+	Button databaseTestConnectButton;
 
 	public ConfigController() {
 		super(ConfigController.class);
@@ -46,39 +68,66 @@ public class ConfigController extends Controller {
 	@FXML
 	public void initialize() {
 		AppConfig cfg = AppConfigStore.load();
-		txtServerUrl.setText(cfg.serverUrl());
-		txtSiteId.setText(cfg.siteId());
-		txtKey.setText(cfg.key());
-		txtMachineId.setText(cfg.machineId());
-		txtTicketPrinter.setText(cfg.ticketPrinterName());
+		serverUrlInput.setText(cfg.serverUrl());
+		siteIdInput.setText(cfg.siteId());
+		secretInput.setText(cfg.secret());
+		machineIdInput.setText(cfg.machineId());
+		printerNameInput.setText(cfg.ticketPrinterName());
+		databaseHostInput.setText(cfg.databaseHost());
+		databasePathInput.setText(cfg.databasePath());
+		databaseUsernameInput.setText(cfg.databaseUsername());
+		databasePasswordInput.setText(cfg.databasePassword());
+		databaseRoleInput.setText(cfg.databaseRole());
+		databasePoolSizeInput.setText(String.valueOf(cfg.databasePoolSize()));
+
+		printerTestButton.setOnAction(e -> onPrinterTestButtonClick());
+		databaseTestConnectButton.setOnAction(e -> onDatabaseTestConnectButtonClick());
 	}
 
 	@FXML
 	private void onParseButtonClick() {
-
+		logger.info("Parse button clicked");
 	}
 
 	@FXML
 	private void onCancelButtonClick() {
-
+		Stage stage = (Stage) cancelButton.getScene().getWindow();
+		stage.close();
 	}
 
 	@FXML
 	private void onSaveButtonClick() {
 		logger.info("Save Setting");
-	}
-
-	@FXML
-	private void onTesterButtonClick() {
-		logger.info("Tester Clicked");
+		int poolSize = 3;
 		try {
-			Stage owner = (Stage)testerButton.getScene().getWindow();
-			TesterDialog dlg = new TesterDialog(owner);
-			dlg.openDialog();
-		} catch (Exception ex) {
-			logger.log(Level.SEVERE, ex.getMessage(), ex);
-			ErrorMessage.show(ex);
+			poolSize = Integer.parseInt(databasePoolSizeInput.getText().trim());
+		} catch (NumberFormatException e) {
+			logger.warning("Invalid pool size format, using default: 3");
 		}
 
+		AppConfig cfg = new AppConfig(
+				serverUrlInput.getText(),
+				siteIdInput.getText(),
+				machineIdInput.getText(),
+				secretInput.getText(),
+				printerNameInput.getText(),
+				databaseHostInput.getText(),
+				databasePathInput.getText(),
+				databaseUsernameInput.getText(),
+				databasePasswordInput.getText(),
+				databaseRoleInput.getText(),
+				poolSize);
+		AppConfigStore.save(cfg);
+
+		Stage stage = (Stage) saveButton.getScene().getWindow();
+		stage.close();
+	}
+
+	private void onPrinterTestButtonClick() {
+		logger.info("Test Print clicked. Printer: " + printerNameInput.getText());
+	}
+
+	private void onDatabaseTestConnectButtonClick() {
+		logger.info("Database Test Connection clicked. Host: " + databaseHostInput.getText());
 	}
 }

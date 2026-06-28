@@ -4,6 +4,12 @@ public record AppConfig(
 		String serverUrl,
 		String siteId,
 		String machineId,
-		String key,
-		String ticketPrinterName) {
+		String secret,
+		String ticketPrinterName,
+		String databaseHost,
+		String databasePath,
+		String databaseUsername,
+		String databasePassword,
+		String databaseRole,
+		int databasePoolSize) {
 }

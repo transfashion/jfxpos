@@ -14,3 +14,6 @@ CREATE TABLE USERS (
 -- Catatan: password sebaiknya di-hash sebelum dimasukkan ke database.
 INSERT INTO USERS (USERNAME, PASSWORD, ROLE) 
 VALUES ('admin', '$2a$12$eImiTXuWVxfM37uY4JANj.1Q2e8oDk0wX.HpyXmCgM1k2bM3o4yS2', 'ADMIN');
+
+INSERT INTO USERS (USERNAME, PASSWORD, ROLE) 
+VALUES ('agung', '$2a$12$GO8N8p58dfapsuvVjFNRlut0u15zBiEwfbWabzOFWxZYwXGlEttaC', 'ADMIN');

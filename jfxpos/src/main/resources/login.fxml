@@ -16,9 +16,9 @@
       <AnchorPane maxHeight="239.0" maxWidth="400.0" minHeight="239.0" minWidth="400.0" prefHeight="239.0" prefWidth="400.0" style="-fx-border-color: #ccc; -fx-border-radius: 10;">
          <children>
             <Label layoutX="45.0" layoutY="89.0" text="Username" />
-            <TextField fx:id="usernameTextField" layoutX="122.0" layoutY="85.0" prefHeight="26.0" prefWidth="212.0" />
+            <TextField fx:id="usernameInput" layoutX="122.0" layoutY="85.0" prefHeight="26.0" prefWidth="212.0" />
             <Label layoutX="48.0" layoutY="126.0" text="Password" />
-            <PasswordField fx:id="passwordField" layoutX="122.0" layoutY="122.0" prefHeight="26.0" prefWidth="212.0" />
+            <PasswordField fx:id="passwordInput" layoutX="122.0" layoutY="122.0" prefHeight="26.0" prefWidth="212.0" />
             <Button fx:id="loginButton" layoutX="122.0" layoutY="163.0" mnemonicParsing="false" onAction="#onLoginButtonClick" prefHeight="26.0" prefWidth="99.0" text="Login">
                <cursor>
                   <Cursor fx:constant="HAND" />

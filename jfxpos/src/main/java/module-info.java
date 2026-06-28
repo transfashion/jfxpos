@@ -7,6 +7,7 @@ module jfxpos {
 	requires java.prefs;
 	requires java.sql;
 	requires org.firebirdsql.jaybird;
+	requires com.zaxxer.hikari;
 
 	exports jfxpos;
 	exports jfxpos.config;

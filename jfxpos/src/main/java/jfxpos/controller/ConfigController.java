@@ -127,6 +127,8 @@ public class ConfigController extends Controller {
 				databaseRoleInput.getText(),
 				poolSize);
 		AppConfigStore.save(cfg);
+		jfxpos.App.config = cfg;
+		jfxpos.util.DbPool.init(cfg);
 
 		Stage stage = (Stage) saveButton.getScene().getWindow();
 		stage.close();
@@ -150,6 +152,9 @@ public class ConfigController extends Controller {
 		}
 
 		databaseTestConnectButton.setDisable(true);
+		if (databaseTestConnectButton.getScene() != null) {
+			databaseTestConnectButton.getScene().setCursor(javafx.scene.Cursor.WAIT);
+		}
 
 		Task<Void> testTask = new Task<>() {
 			@Override

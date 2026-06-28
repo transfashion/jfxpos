@@ -9,6 +9,7 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import jfxpos.Controller;
 import jfxpos.config.AppConfigStore;
@@ -75,9 +76,56 @@ public class LoginController extends Controller {
 		String lastUser = AppConfigStore.getLastUsername();
 		if (lastUser != null && !lastUser.isEmpty()) {
 			usernameInput.setText(lastUser);
-			Platform.runLater(() -> passwordInput.requestFocus());
+		}
+		setupFocusTracker();
+
+		usernameInput.setOnAction(e -> {
+			String username = usernameInput.getText();
+			if (username != null && !username.trim().isEmpty()) {
+				passwordInput.requestFocus();
+			}
+		});
+
+		passwordInput.setOnAction(e -> {
+			String password = passwordInput.getText();
+			if (password != null && !password.isEmpty()) {
+				loginButton.requestFocus();
+			}
+		});
+
+		loginButton.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				loginButton.fire();
+			}
+		});
+	}
+
+	private void setupFocusTracker() {
+		usernameInput.sceneProperty().addListener((observable, oldScene, newScene) -> {
+			if (newScene != null) {
+				if (newScene.getWindow() != null) {
+					registerShowingListener(newScene.getWindow());
+				} else {
+					newScene.windowProperty().addListener((obs, oldWindow, newWindow) -> {
+						if (newWindow != null) {
+							registerShowingListener(newWindow);
+						}
+					});
+				}
+			}
+		});
+	}
+
+	private void registerShowingListener(javafx.stage.Window window) {
+		Runnable requestFocusTask = () -> Platform.runLater(() -> usernameInput.requestFocus());
+		if (window.isShowing()) {
+			Platform.runLater(requestFocusTask);
 		} else {
-			Platform.runLater(() -> usernameInput.requestFocus());
+			window.showingProperty().addListener((o, oldShowing, newShowing) -> {
+				if (newShowing) {
+					Platform.runLater(requestFocusTask);
+				}
+			});
 		}
 	}
 

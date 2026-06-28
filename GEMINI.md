@@ -39,18 +39,22 @@ Untuk menjaga kualitas dan pemeliharaan kode (*maintainability*), ikuti aturan k
 
 ### C. Kontrak Data (Data Contract)
 *   Gunakan mekanisme **Data Contract** untuk mendefinisikan nama tabel dan kolom/field database.
-*   Hal ini untuk menjaga konsistensi penamaan, menghindari *magic string* di query SQL, serta mempermudah perubahan skema database tanpa memecahkan kode di banyak tempat.
-*   Contoh implementasi kontrak data:
+*   **Wajib digabungkan di dalam kelas Model terkait** sebagai kelas bersarang statis (`public static final class Contract`). Hal ini dilakukan agar struktur schema DB dan model data berada di satu tempat yang kohesif, mengurangi jumlah file, dan memudahkan pemeliharaan kode.
+*   Contoh implementasi kontrak data di dalam Model (misal kelas `User`):
     ```java
-    public final class UserContract {
-        public static final String TABLE_NAME = "USERS";
-        
-        public static final class Columns {
-            public static final String ID = "USER_ID";
-            public static final String USERNAME = "USERNAME";
-            public static final String PASSWORD = "PASSWORD";
-            public static final String ROLE = "ROLE";
+    public class User extends Model {
+        public static final class Contract {
+            public static final String TABLE_NAME = "USERS";
+            
+            public static final class Columns {
+                public static final String ID = "USER_ID";
+                public static final String USERNAME = "USERNAME";
+                public static final String PASSWORD = "PASSWORD";
+                public static final String ROLE = "ROLE";
+            }
         }
+        
+        // fields, getters, setters...
     }
     ```
 

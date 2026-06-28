@@ -4,6 +4,19 @@ import jfxpos.Model;
 import java.time.LocalDateTime;
 
 public class User extends Model {
+	public static final class Contract {
+		public static final String TABLE_NAME = "USERS";
+
+		public static final class Columns {
+			public static final String ID = "USER_ID";
+			public static final String USERNAME = "USERNAME";
+			public static final String PASSWORD = "PASSWORD";
+			public static final String ROLE = "ROLE";
+			public static final String IS_ACTIVE = "IS_ACTIVE";
+			public static final String CREATED_AT = "CREATED_AT";
+		}
+	}
+
 	private int id;
 	private String username;
 	private String password;

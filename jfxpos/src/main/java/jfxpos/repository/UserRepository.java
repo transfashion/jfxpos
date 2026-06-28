@@ -1,7 +1,6 @@
 package jfxpos.repository;
 
 import jfxpos.models.User;
-import jfxpos.models.UserContract;
 import jfxpos.util.DbPool;
 import jfxpos.util.PosLogger;
 
@@ -23,7 +22,7 @@ public class UserRepository {
 		}
 
 		String sql = String.format("SELECT * FROM %s WHERE %s = ?",
-				UserContract.TABLE_NAME, UserContract.Columns.USERNAME);
+				User.Contract.TABLE_NAME, User.Contract.Columns.USERNAME);
 
 		try (Connection conn = DbPool.getConnection();
 				PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -31,13 +30,13 @@ public class UserRepository {
 			ps.setString(1, username.trim());
 			try (ResultSet rs = ps.executeQuery()) {
 				if (rs.next()) {
-					int id = rs.getInt(UserContract.Columns.ID);
-					String user = rs.getString(UserContract.Columns.USERNAME);
-					String password = rs.getString(UserContract.Columns.PASSWORD);
-					String role = rs.getString(UserContract.Columns.ROLE);
-					boolean isActive = rs.getBoolean(UserContract.Columns.IS_ACTIVE);
+					int id = rs.getInt(User.Contract.Columns.ID);
+					String user = rs.getString(User.Contract.Columns.USERNAME);
+					String password = rs.getString(User.Contract.Columns.PASSWORD);
+					String role = rs.getString(User.Contract.Columns.ROLE);
+					boolean isActive = rs.getBoolean(User.Contract.Columns.IS_ACTIVE);
 
-					Timestamp ts = rs.getTimestamp(UserContract.Columns.CREATED_AT);
+					Timestamp ts = rs.getTimestamp(User.Contract.Columns.CREATED_AT);
 					LocalDateTime createdAt = ts != null ? ts.toLocalDateTime() : null;
 
 					return new User(id, user, password, role, isActive, createdAt);

@@ -204,13 +204,66 @@ public class ConfigController extends Controller {
 
 			// Show error dialog
 			Stage stage = (Stage) databaseTestConnectButton.getScene().getWindow();
-			if (ex instanceof Exception) {
-				MessageBox.error(stage, (Exception) ex, "Test Connection Failed");
-			} else {
-				MessageBox.error(stage, ex.getMessage() != null ? ex.getMessage() : ex.toString(), "Test Connection Failed");
-			}
+			String friendlyMsg = getFriendlyDatabaseErrorMessage(ex);
+			MessageBox.error(stage, friendlyMsg, ex, "Test Connection Failed");
 		});
 
 		new Thread(testTask).start();
+	}
+
+	private String getFriendlyDatabaseErrorMessage(Throwable ex) {
+		if (ex == null) {
+			return "Terjadi kesalahan tidak dikenal saat menguji koneksi.";
+		}
+
+		String message = ex.getMessage();
+		if (message == null) {
+			message = ex.toString();
+		}
+
+		String lowerMsg = message.toLowerCase();
+
+		// Check for username/password error
+		if (lowerMsg.contains("user name and password are not defined")
+				|| lowerMsg.contains("username atau password")
+				|| lowerMsg.contains("authentication failure")
+				|| lowerMsg.contains("invalid authorization")
+				|| lowerMsg.contains("credentials")
+				|| lowerMsg.contains("protocoldescriptor")
+				|| lowerMsg.contains("createwireoperations")
+				|| lowerMsg.contains("335544472")) {
+			return "Gagal masuk: Username atau password database salah.";
+		}
+
+		// Check for host/connection/network issues
+		if (lowerMsg.contains("unable to complete network request")
+				|| lowerMsg.contains("connection refused")
+				|| lowerMsg.contains("host")
+				|| lowerMsg.contains("unknownhost")
+				|| lowerMsg.contains("socket")
+				|| lowerMsg.contains("connect timed out")
+				|| lowerMsg.contains("timeout")
+				|| lowerMsg.contains("335544721")) {
+			return "Gagal terhubung: Tidak dapat menjangkau server database.\n"
+					+ "Silakan periksa Host/IP, pastikan server Firebird aktif di port 3050, dan terhubung ke jaringan.";
+		}
+
+		// Check for database file/path issues
+		if (lowerMsg.contains("i/o error for file")
+				|| lowerMsg.contains("failed to locate database")
+				|| lowerMsg.contains("not a valid database")
+				|| lowerMsg.contains("does not exist")
+				|| lowerMsg.contains("database tidak ditemukan")
+				|| lowerMsg.contains("335544344")) {
+			return "Gagal memuat database: File database tidak ditemukan atau path database di server salah.";
+		}
+
+		// Check for driver errors
+		if (ex instanceof ClassNotFoundException || lowerMsg.contains("driver")) {
+			return "Driver database (Firebird JDBC) tidak ditemukan atau gagal dimuat.";
+		}
+
+		// Fallback to the original error message but cleaner
+		return "Gagal terhubung ke database.\nDetail error: " + message;
 	}
 }

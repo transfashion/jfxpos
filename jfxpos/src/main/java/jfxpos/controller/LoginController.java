@@ -21,10 +21,10 @@ public class LoginController extends Controller {
 	final MainWindow window;
 
 	@FXML
-    TextField usernameTextField;
+	TextField usernameInput;
 
 	@FXML
-    PasswordField passwordField;
+	PasswordField passwordInput;
 
 	@FXML
 	Label versionLabel;
@@ -33,17 +33,15 @@ public class LoginController extends Controller {
 	Label namedVersionLabel;
 
 	@FXML
-    Button loginButton;
+	Button loginButton;
 
 	@FXML
 	Label configButton;
-
 
 	public LoginController(MainWindow window) {
 		super(LoginController.class);
 		this.window = window;
 	}
-
 
 	@FXML
 	void initialize() {
@@ -70,7 +68,7 @@ public class LoginController extends Controller {
 			namedVersionLabel.setText("- " + namedversion);
 		}
 
-		Platform.runLater(() -> usernameTextField.requestFocus());
+		Platform.runLater(() -> usernameInput.requestFocus());
 	}
 
 	@FXML
@@ -79,26 +77,26 @@ public class LoginController extends Controller {
 
 		Stage stage = (Stage) loginButton.getScene().getWindow();
 		loginButton.setDisable(true);
-		usernameTextField.setDisable(true);
-		passwordField.setDisable(true);
+		usernameInput.setDisable(true);
+		passwordInput.setDisable(true);
 
 		try {
 			Task<User> loginTask = createLoginTask();
 			loginTask.setOnSucceeded(e -> {
-                try {
+				try {
 					User user = loginTask.getValue();
-					if (user==null) {
+					if (user == null) {
 						MessageBox.error(stage, "username atau password salah!", "Login");
 						return;
 					}
 
-                    window.setDashboardView();
-                } catch (Exception ex) {
+					window.setDashboardView();
+				} catch (Exception ex) {
 					MessageBox.error(stage, ex);
-                } finally {
+				} finally {
 					loginButton.setDisable(false);
-					usernameTextField.setDisable(false);
-					passwordField.setDisable(false);
+					usernameInput.setDisable(false);
+					passwordInput.setDisable(false);
 				}
 			});
 
@@ -109,40 +107,38 @@ public class LoginController extends Controller {
 	}
 
 	private Task<User> createLoginTask() {
-		String username = usernameTextField.getText();
-		String password = passwordField.getText();
+		String username = usernameInput.getText();
+		String password = passwordInput.getText();
 
-        return new Task<>() {
-            @Override
-            protected User call() throws Exception {
-                logger.info("username: " + username );
-                logger.info("password: " + password);
+		return new Task<>() {
+			@Override
+			protected User call() throws Exception {
+				logger.info("username: " + username);
+				logger.info("password: " + password);
 
-                // simulasi load
-                Thread.sleep(2000);
-                if (username.equals("agung") && password.equals("rahasia")) {
-                    logger.info("Login Successful");
-                    return new User();
-                } else {
+				// simulasi load
+				Thread.sleep(2000);
+				if (username.equals("agung") && password.equals("rahasia")) {
+					logger.info("Login Successful");
+					return new User();
+				} else {
 					logger.warning("Login not found!");
-                    return null;
-                }
+					return null;
+				}
 
-            }
-        };
+			}
+		};
 	}
 
 	@FXML
 	void onConfigButtonClick() {
 		try {
-			Stage owner = (Stage)configButton.getScene().getWindow();
+			Stage owner = (Stage) configButton.getScene().getWindow();
 			ConfigDialog dlg = new ConfigDialog(owner);
 			dlg.openDialog();
 		} catch (Exception ex) {
 			ErrorMessage.show(ex);
 		}
 	}
-
-
 
 }

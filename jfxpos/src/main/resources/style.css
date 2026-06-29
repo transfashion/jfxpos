@@ -1,0 +1,31 @@
+.hyperlink:focused {
+	-fx-background-color: transparent !important;
+	-fx-border-color: transparent !important;
+}
+
+
+.button {
+	-fx-font-size: 18px;
+	-fx-cursor: hand;
+}
+
+
+
+.console-buttons .button {
+	-fx-font-size: 24px;
+
+}
+
+.status-bar .label {
+	-fx-font-size: 14px;
+}
+
+
+.status-bar .hyperlink {
+	-fx-font-size: 14px;
+}
+
+
+.group-box .button {
+	-fx-font-size: 12px;
+}

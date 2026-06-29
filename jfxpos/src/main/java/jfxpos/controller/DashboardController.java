@@ -1,20 +1,27 @@
 package jfxpos.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
 import jfxpos.Controller;
 import jfxpos.util.ErrorMessage;
+import jfxpos.views.AuthorizeDialog;
 
 public class DashboardController extends Controller {
+
+	@FXML
+	private Button voidButton;
 
 	public DashboardController() {
 		super(DashboardController.class);
 	}
 
 	@FXML
-	private void onTesterClick() {
-		logger.info("Tester Clicked");
+	private void onVoidClick() {
 		try {
-//			WindowManager.openTesterWindow(this.stage);
+			Stage owner = (Stage) voidButton.getScene().getWindow();
+			AuthorizeDialog dlg = new AuthorizeDialog(owner);
+			dlg.openDialog();
 		} catch (Exception ex) {
 			ErrorMessage.show(ex);
 		}

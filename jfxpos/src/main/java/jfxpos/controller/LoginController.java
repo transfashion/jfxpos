@@ -19,10 +19,10 @@ import jfxpos.util.BCrypt;
 import jfxpos.util.ErrorMessage;
 import jfxpos.util.MessageBox;
 import jfxpos.views.ConfigDialog;
-import jfxpos.views.Dashboard;
+import jfxpos.views.DashboardWindow;
 
 public class LoginController extends Controller {
-	final Dashboard window;
+	final DashboardWindow window;
 	private final UserRepository userRepository = new UserRepository();
 
 	@FXML
@@ -43,7 +43,7 @@ public class LoginController extends Controller {
 	@FXML
 	Label configButton;
 
-	public LoginController(Dashboard window) {
+	public LoginController(DashboardWindow window) {
 		super(LoginController.class);
 		this.window = window;
 	}

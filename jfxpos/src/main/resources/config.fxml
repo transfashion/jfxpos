@@ -66,6 +66,7 @@
                               <Button fx:id="saveButton" maxWidth="80.0" mnemonicParsing="false" onAction="#onSaveButtonClick" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="12" />
                               <Button fx:id="cancelButton" maxWidth="80.0" mnemonicParsing="false" onAction="#onCancelButtonClick" text="Cancel" GridPane.columnIndex="2" GridPane.rowIndex="12" />
                               <PasswordField fx:id="secretInput" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                              <Button fx:id="testButton" mnemonicParsing="false" onAction="#onTestButtonClick" prefHeight="26.0" prefWidth="68.0" text="Test" GridPane.columnIndex="6" GridPane.halignment="RIGHT" GridPane.rowIndex="12" />
                            </children>
                         </GridPane>
                         <AnchorPane prefHeight="50.0" />

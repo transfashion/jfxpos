@@ -5,7 +5,7 @@ import javafx.stage.Stage;
 import jfxpos.config.AppConfig;
 import jfxpos.config.AppConfigStore;
 import jfxpos.util.PosLogger;
-import jfxpos.views.Dashboard;
+import jfxpos.views.DashboardWindow;
 
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -20,7 +20,7 @@ public class App extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		Dashboard wnd = new Dashboard(stage);
+		DashboardWindow wnd = new DashboardWindow(stage);
 		wnd.setLoginView();
 		wnd.open();
 	}

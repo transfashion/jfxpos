@@ -8,15 +8,15 @@ import jfxpos.View;
 import jfxpos.controller.DashboardController;
 import jfxpos.controller.LoginController;
 
-public class Dashboard extends View {
+public class DashboardWindow extends View {
 	static final String Title = "JFX Point of Sales";
 	static final String FXML_LOGIN = RESOURCE_DIR + "/login.fxml";
 	static final String FXML_DASHBOARD = RESOURCE_DIR + "/dashboard.fxml";
 
 	final Stage stage;
 
-	public Dashboard(Stage stage) {
-		super(Dashboard.class);
+	public DashboardWindow(Stage stage) {
+		super(DashboardWindow.class);
 
 		setStage(stage);
 		stage.setTitle(Title);

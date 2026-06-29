@@ -12,6 +12,8 @@ import jfxpos.Controller;
 import jfxpos.util.MessageBox;
 import javafx.scene.control.ButtonType;
 import java.util.Optional;
+import jfxpos.util.ErrorMessage;
+import jfxpos.views.TesterDialog;
 
 import java.util.Properties;
 import java.sql.Connection;
@@ -50,6 +52,9 @@ public class ConfigController extends Controller {
 
 	@FXML
 	Button cancelButton;
+
+	@FXML
+	Button testButton;
 
 	@FXML
 	TextField databaseHostInput;
@@ -114,6 +119,17 @@ public class ConfigController extends Controller {
 			}
 		} else {
 			stage.close();
+		}
+	}
+
+	@FXML
+	private void onTestButtonClick() {
+		try {
+			Stage owner = (Stage) testButton.getScene().getWindow();
+			TesterDialog dlg = new TesterDialog(owner);
+			dlg.openDialog();
+		} catch (Exception ex) {
+			ErrorMessage.show(ex);
 		}
 	}
 

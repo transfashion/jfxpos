@@ -140,7 +140,7 @@
                         <TextField focusTraversable="false" layoutX="86.0" layoutY="7.0" prefHeight="25.0" prefWidth="286.0" />
                         <Button focusTraversable="false" layoutX="86.0" layoutY="51.0" mnemonicParsing="false" text="Preview" />
                         <Button focusTraversable="false" layoutX="154.0" layoutY="51.0" mnemonicParsing="false" text="Re-Print" />
-                        <Button fx:id="voidButton" focusTraversable="false" layoutX="238.0" layoutY="51.0" mnemonicParsing="false" text="Void" />
+                        <Button fx:id="voidButton" focusTraversable="false" layoutX="238.0" layoutY="51.0" mnemonicParsing="false" onAction="#onVoidClick" text="Void" />
                      </children>
                   </AnchorPane>
                </children>

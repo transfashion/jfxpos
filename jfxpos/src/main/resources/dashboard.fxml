@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox minHeight="700.0" minWidth="1024.0" prefHeight="700.0" prefWidth="1024.0" stylesheets="@dashboard.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox>
          <children>
@@ -44,28 +44,28 @@
                <HBox.margin>
                   <Insets left="5.0" />
                </HBox.margin></Label>
-            <Hyperlink styleClass="hyperlink" text="Show Running Parameters">
+            <Hyperlink focusTraversable="false" styleClass="hyperlink" text="Show Running Parameters">
             </Hyperlink>
             <Pane prefWidth="200.0" HBox.hgrow="ALWAYS" />
             <Label text="http://localhost">
             </Label>
          </children>
       </HBox>
-      <HBox>
+      <HBox minWidth="964.0" prefWidth="964.0">
          <children>
-            <VBox prefWidth="140.0" spacing="20.0">
+            <VBox minWidth="140.0" prefWidth="140.0" spacing="20.0">
                <children>
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Sign In" />
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Update Data" />
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Update Jar" />
+                  <Button focusTraversable="false" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Sign In" />
+                  <Button focusTraversable="false" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Update Data" />
+                  <Button focusTraversable="false" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Update Jar" />
                </children>
                <HBox.margin>
                   <Insets />
                </HBox.margin>
             </VBox>
-            <Pane prefWidth="400.0" HBox.hgrow="ALWAYS">
+            <Pane minWidth="400.0" prefWidth="400.0" HBox.hgrow="ALWAYS">
                <HBox.margin>
-                  <Insets left="30.0" />
+                  <Insets left="30.0" right="30.0" />
                </HBox.margin>
                <children>
                   <VBox prefWidth="400.0">
@@ -85,13 +85,13 @@
                   </VBox>
                </children>
             </Pane>
-            <AnchorPane prefWidth="300.0" style="-fx-border-color: #CCCCCC; -fx-border-radius: 6; -fx-background-radius: 6;">
+            <AnchorPane minWidth="300.0" prefWidth="300.0" style="-fx-border-color: #CCCCCC; -fx-border-radius: 6; -fx-background-radius: 6;">
                <children>
                   <VBox alignment="TOP_CENTER" spacing="20.0" styleClass="console-buttons" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <Label alignment="TOP_CENTER" contentDisplay="TOP" maxWidth="1.7976931348623157E308" text="Versi POS" />
-                        <Button alignment="TOP_LEFT" contentDisplay="TOP" mnemonicParsing="false" text="Console #1" />
-                        <Button mnemonicParsing="false" text="Console #2" />
+                        <Button alignment="TOP_LEFT" contentDisplay="TOP" mnemonicParsing="false" text="POS Console #1" />
+                        <Button mnemonicParsing="false" text="POS Console #2" />
                      </children>
                   </VBox>
                </children>
@@ -104,50 +104,50 @@
             <Insets top="40.0" />
          </VBox.margin>
       </HBox>
-      <HBox prefWidth="200.0" spacing="15.0">
+      <HBox minWidth="964.0" prefWidth="964.0" spacing="15.0">
          <VBox.margin>
             <Insets top="20.0" />
          </VBox.margin>
          <children>
-            <VBox prefWidth="370.0" style="-fx-border-color: #CCCCCC; -fx-border-radius: 6; -fx-background-radius: 6;" styleClass="group-box">
+            <VBox prefHeight="117.0" prefWidth="450.0" style="-fx-border-color: #CCCCCC; -fx-border-radius: 6; -fx-background-radius: 6;" styleClass="group-box">
                <children>
                   <Label style="-fx-background-color: -fx-background;" text="Closing" translateX="10.0" translateY="-10.0">
                      <padding>
                         <Insets left="5.0" right="5.0" />
                      </padding>
                   </Label>
-                  <AnchorPane prefHeight="97.0" prefWidth="368.0">
+                  <AnchorPane minHeight="100.0" minWidth="448.0" prefHeight="100.0" prefWidth="448.0">
                      <children>
                         <Label layoutX="38.0" layoutY="11.0" text="Date" />
-                        <DatePicker layoutX="86.0" layoutY="7.0" prefHeight="25.0" prefWidth="117.0" promptText="Closing Date" />
-                        <CheckBox layoutX="221.0" layoutY="12.0" mnemonicParsing="false" selected="true" text="Only this machine" />
-                        <Button layoutX="155.0" layoutY="51.0" mnemonicParsing="false" text="Create Closing Report" />
-                        <Button layoutX="86.0" layoutY="51.0" mnemonicParsing="false" text="Preview" />
+                        <DatePicker focusTraversable="false" layoutX="86.0" layoutY="7.0" prefHeight="26.0" prefWidth="131.0" promptText="Closing Date" />
+                        <CheckBox focusTraversable="false" layoutX="238.0" layoutY="12.0" mnemonicParsing="false" selected="true" text="Only this machine" />
+                        <Button focusTraversable="false" layoutX="155.0" layoutY="51.0" mnemonicParsing="false" text="Create Closing Report" />
+                        <Button focusTraversable="false" layoutX="86.0" layoutY="51.0" mnemonicParsing="false" text="Preview" />
                      </children>
                   </AnchorPane>
                </children>
             </VBox>
-            <VBox prefWidth="330.0" style="-fx-border-color: #CCCCCC; -fx-border-radius: 6; -fx-background-radius: 6;" styleClass="group-box" HBox.hgrow="ALWAYS">
+            <VBox style="-fx-border-color: #CCCCCC; -fx-border-radius: 6; -fx-background-radius: 6;" styleClass="group-box" HBox.hgrow="ALWAYS">
                <children>
                   <Label style="-fx-background-color: -fx-background;" text="Transaction" translateX="10.0" translateY="-10.0">
                      <padding>
                         <Insets left="5.0" right="5.0" />
                      </padding>
                   </Label>
-                  <AnchorPane prefHeight="97.0" prefWidth="597.0">
+                  <AnchorPane minHeight="100.0" minWidth="441.0" prefHeight="100.0" prefWidth="441.0">
                      <children>
                         <Label layoutX="38.0" layoutY="11.0" text="Bon" />
-                        <TextField layoutX="86.0" layoutY="7.0" prefHeight="25.0" prefWidth="286.0" />
-                        <Button layoutX="86.0" layoutY="51.0" mnemonicParsing="false" text="Preview" />
-                        <Button layoutX="154.0" layoutY="51.0" mnemonicParsing="false" text="Re-Print" />
-                        <Button layoutX="238.0" layoutY="51.0" mnemonicParsing="false" text="Void" />
+                        <TextField focusTraversable="false" layoutX="86.0" layoutY="7.0" prefHeight="25.0" prefWidth="286.0" />
+                        <Button focusTraversable="false" layoutX="86.0" layoutY="51.0" mnemonicParsing="false" text="Preview" />
+                        <Button focusTraversable="false" layoutX="154.0" layoutY="51.0" mnemonicParsing="false" text="Re-Print" />
+                        <Button fx:id="voidButton" focusTraversable="false" layoutX="238.0" layoutY="51.0" mnemonicParsing="false" text="Void" />
                      </children>
                   </AnchorPane>
                </children>
             </VBox>
          </children>
       </HBox>
-      <VBox style="-fx-border-color: #CCCCCC; -fx-border-radius: 6; -fx-background-radius: 6;">
+      <VBox minWidth="964.0" prefWidth="964.0" style="-fx-border-color: #CCCCCC; -fx-border-radius: 6; -fx-background-radius: 6;">
          <children>
             <Label style="-fx-background-color: -fx-background;" text="Send Data" translateX="-10.0" translateY="-10.0">
                <padding>
@@ -156,7 +156,13 @@
             </Label>
             <HBox spacing="15.0">
                <children>
-                  <Button mnemonicParsing="false" text="Send Data" />
+                  <VBox prefWidth="197.0" spacing="8.0">
+                     <children>
+                        <DatePicker focusTraversable="false" prefHeight="37.0" promptText="Date to send" style="-fx-font-size: 18px;" />
+                        <CheckBox focusTraversable="false" mnemonicParsing="false" text="re-send all data" />
+                     </children>
+                  </VBox>
+                  <Button focusTraversable="false" mnemonicParsing="false" text="Send Data" />
                   <VBox spacing="5.0" HBox.hgrow="ALWAYS" />
                   <Pane prefWidth="150.0" />
                </children>
@@ -169,18 +175,21 @@
             <Insets bottom="20.0" left="20.0" right="20.0" />
          </padding>
       </VBox>
-      <HBox alignment="CENTER">
+      <HBox alignment="CENTER" minWidth="964.0" prefWidth="964.0">
          <VBox.margin>
             <Insets top="50.0" />
          </VBox.margin>
          <children>
-            <Button mnemonicParsing="false" prefWidth="140.0" text="Sign Off" />
-            <Pane prefWidth="200.0" HBox.hgrow="ALWAYS" />
-            <TextField prefWidth="150.0" promptText="Key" />
+            <Button focusTraversable="false" mnemonicParsing="false" prefWidth="140.0" text="Sign Off" />
+            <Pane HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets left="30.0" right="30.0" />
+               </HBox.margin></Pane>
+            <TextField focusTraversable="false" prefWidth="150.0" promptText="Key" />
          </children>
       </HBox>
    </children>
    <padding>
-      <Insets bottom="10.0" left="30.0" right="10.0" top="25.0" />
+      <Insets bottom="10.0" left="30.0" right="30.0" top="25.0" />
    </padding>
 </VBox>

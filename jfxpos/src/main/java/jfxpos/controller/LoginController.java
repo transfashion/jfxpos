@@ -19,10 +19,10 @@ import jfxpos.util.BCrypt;
 import jfxpos.util.ErrorMessage;
 import jfxpos.util.MessageBox;
 import jfxpos.views.ConfigDialog;
-import jfxpos.views.MainWindow;
+import jfxpos.views.Dashboard;
 
 public class LoginController extends Controller {
-	final MainWindow window;
+	final Dashboard window;
 	private final UserRepository userRepository = new UserRepository();
 
 	@FXML
@@ -43,7 +43,7 @@ public class LoginController extends Controller {
 	@FXML
 	Label configButton;
 
-	public LoginController(MainWindow window) {
+	public LoginController(Dashboard window) {
 		super(LoginController.class);
 		this.window = window;
 	}
@@ -204,7 +204,8 @@ public class LoginController extends Controller {
 			protected User call() throws Exception {
 				logger.info("Verifying credentials for username: " + username);
 
-				// Initialize database connection pool on first login attempt if not already initialized
+				// Initialize database connection pool on first login attempt if not already
+				// initialized
 				if (!jfxpos.util.DbPool.isInitialized()) {
 					logger.info("Initializing database connection pool on first login...");
 					jfxpos.util.DbPool.init(jfxpos.App.config);

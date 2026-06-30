@@ -7,6 +7,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import jfxpos.Controller;
+import jfxpos.util.MessageBox;
 
 public class SaleController extends Controller {
 
@@ -23,7 +24,7 @@ public class SaleController extends Controller {
 	private Label timeLabel;
 
 	@FXML
-	private TextField barcodeInput;
+	private TextField lineInput;
 
 	@FXML
 	private Label itemDescriptionLabel;
@@ -123,9 +124,31 @@ public class SaleController extends Controller {
 		if (escButton != null) {
 			escButton.setOnAction(e -> {
 				if (escButton.getScene() != null && escButton.getScene().getWindow() instanceof Stage stage) {
-					stage.close();
+					if (confirmClose()) {
+						stage.close();
+					}
 				}
 			});
+		}
+	}
+
+	public boolean confirmClose() {
+		Stage stage = null;
+		if (escButton != null && escButton.getScene() != null) {
+			stage = (Stage) escButton.getScene().getWindow();
+		}
+		return MessageBox.confirm(stage, "Apakah akan menutup console ini?");
+	}
+
+	public void requestFocus() {
+		if (lineInput != null) {
+			javafx.application.Platform.runLater(() -> lineInput.requestFocus());
+		}
+	}
+
+	public void fireEscButton() {
+		if (escButton != null) {
+			escButton.fire();
 		}
 	}
 }

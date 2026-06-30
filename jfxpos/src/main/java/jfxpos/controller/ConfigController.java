@@ -213,16 +213,7 @@ public class ConfigController extends Controller {
 	}
 
 	private boolean showExitConfirmation(Stage stage) {
-		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-		alert.setTitle("Konfirmasi Keluar");
-		alert.setHeaderText(null);
-		alert.setContentText("ada perubahan pada konfigurasi, apakah akan keluar");
-		if (stage != null) {
-			alert.initOwner(stage);
-		}
-		alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.CANCEL);
-		Optional<ButtonType> result = alert.showAndWait();
-		return result.isPresent() && result.get() == ButtonType.YES;
+		return MessageBox.confirm(stage, "ada perubahan pada konfigurasi, apakah akan keluar", "Konfirmasi Keluar");
 	}
 
 	@FXML

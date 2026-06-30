@@ -19,6 +19,24 @@ public class SaleDialog extends View {
 		controller.setConsoleNumber(consoleNumber);
 		stage = createDialogStage(Title + " - Console #" + consoleNumber, scene, owner);
 		stage.setResizable(true);
+
+		// Request focus on lineInput whenever the dialog is shown
+		stage.setOnShown(e -> controller.requestFocus());
+
+		// Execute escButton when Escape key is pressed
+		scene.addEventFilter(javafx.scene.input.KeyEvent.KEY_PRESSED, event -> {
+			if (event.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
+				controller.fireEscButton();
+				event.consume();
+			}
+		});
+
+		// Intercept stage close request (e.g. clicking 'X' close button) to ask for confirmation
+		stage.setOnCloseRequest(event -> {
+			if (!controller.confirmClose()) {
+				event.consume();
+			}
+		});
 	}
 
 	@Override

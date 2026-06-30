@@ -100,8 +100,19 @@ public class SaleController extends Controller {
 	@FXML
 	private Button escButton;
 
+	private int consoleNumber;
+
 	public SaleController() {
 		super(SaleController.class);
+	}
+
+	public void setConsoleNumber(int consoleNumber) {
+		this.consoleNumber = consoleNumber;
+		logger.info("SaleController configured for Console #" + consoleNumber);
+	}
+
+	public int getConsoleNumber() {
+		return consoleNumber;
 	}
 
 	@FXML

@@ -12,11 +12,12 @@ public class SaleDialog extends View {
 	final Stage stage;
 	final SaleController controller = new SaleController();
 
-	public SaleDialog(Stage owner) throws Exception {
+	public SaleDialog(Stage owner, int consoleNumber) throws Exception {
 		super(SaleDialog.class);
 
 		Scene scene = loadFxml(FXML, controller);
-		stage = createDialogStage(Title, scene, owner);
+		controller.setConsoleNumber(consoleNumber);
+		stage = createDialogStage(Title + " - Console #" + consoleNumber, scene, owner);
 		stage.setResizable(true);
 	}
 

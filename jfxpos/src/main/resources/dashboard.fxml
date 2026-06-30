@@ -90,8 +90,8 @@
                   <VBox alignment="TOP_CENTER" spacing="20.0" styleClass="console-buttons" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <Label alignment="TOP_CENTER" contentDisplay="TOP" maxWidth="1.7976931348623157E308" text="Versi POS" />
-                        <Button alignment="TOP_LEFT" contentDisplay="TOP" onAction="#posConsoleButtonClick" text="POS Console #_1" />
-                        <Button onAction="#posConsoleButtonClick" text="POS Console #_2" />
+                        <Button fx:id="posConsole1Button" alignment="TOP_LEFT" contentDisplay="TOP" onAction="#posConsoleButtonClick" text="POS Console #_1" />
+                        <Button fx:id="posConsole2Button" onAction="#posConsoleButtonClick" text="POS Console #_2" />
                      </children>
                   </VBox>
                </children>

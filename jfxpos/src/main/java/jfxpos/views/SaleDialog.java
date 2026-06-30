@@ -56,6 +56,26 @@ public class SaleDialog extends View {
 			} else if (event.getCode() == javafx.scene.input.KeyCode.F1) {
 				controller.fireF1Button();
 				event.consume();
+			} else if (event.getCode() == javafx.scene.input.KeyCode.UP || event.getCode() == javafx.scene.input.KeyCode.DOWN) {
+				if (!controller.isItemTableFocused()) {
+					controller.focusItemTable();
+					event.consume();
+				}
+			} else if (event.getCode() == javafx.scene.input.KeyCode.LEFT) {
+				if (!controller.isLineInputFocused()) {
+					controller.handleLeftArrow();
+					event.consume();
+				}
+			} else if (event.getCode() == javafx.scene.input.KeyCode.RIGHT) {
+				if (!controller.isLineInputFocused()) {
+					controller.handleRightArrow();
+					event.consume();
+				}
+			} else if (event.getCode() == javafx.scene.input.KeyCode.BACK_SPACE) {
+				if (!controller.isLineInputFocused()) {
+					controller.handleBackspace();
+					event.consume();
+				}
 			}
 		});
 

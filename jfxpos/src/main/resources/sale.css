@@ -72,12 +72,17 @@
 
 
 
-
+.lineinput-image {
+	-fx-border-width: 0 0 0 0;
+	-fx-background-color: #dddddd;
+	-fx-margin: 0 0 0 0;
+}
 
 
 .input-barcode {
 	-fx-font-size: 1.8em;
 	-fx-padding: 2 5 2 5;
+	-fx-margin: 0 0 0 0;
 }
 
 .input-result-descr {

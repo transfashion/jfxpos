@@ -51,8 +51,19 @@
                   </HBox>
                   <HBox alignment="BOTTOM_LEFT" minWidth="-Infinity" prefWidth="620.0" spacing="2.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: transparent transparent #e2e2e2 transparent;">
                      <children>
-                        <ImageView fitHeight="29.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" />
-                        <TextField fx:id="lineInput" minWidth="-Infinity" prefHeight="25.0" prefWidth="170.0" promptText="search" style="-fx-border-color: transparent; -fx-background-insets: 0; -fx-background-radius: 0; -fx-background-color: #dddddd;" styleClass="input-barcode" />
+                        <Pane minHeight="-Infinity" minWidth="-Infinity" prefHeight="29.0" prefWidth="35.0" styleClass="lineinput-image">
+                           <children>
+                              <ImageView fx:id="searchModeImage" fitHeight="29.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" styleClass="lineinput-image" translateX="5.0" />
+                           </children>
+                        </Pane>
+                        <Pane minWidth="-Infinity" prefWidth="170.0">
+                           <children>
+                              <TextField fx:id="lineInput" minWidth="-Infinity" prefHeight="25.0" prefWidth="170.0" promptText="search" style="-fx-border-color: transparent; -fx-background-insets: 0; -fx-background-radius: 0; -fx-background-color: #dddddd;" styleClass="input-barcode" />
+                           </children>
+                           <HBox.margin>
+                              <Insets left="-2.0" />
+                           </HBox.margin>
+                        </Pane>
                         <Label fx:id="itemDescriptionLabel" styleClass="input-result-descr" text="Item Description satu dua tiga, si gembul bermain bola. bola ditendang jauh, si gembul lari ketatap tembok.">
                            <HBox.margin>
                               <Insets bottom="3.0" left="8.0" />

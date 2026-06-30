@@ -2,8 +2,8 @@ package jfxpos.models;
 
 public enum InputSearchMode {
 
-	BARCODE("Input Barcode", "imgbarcode"),
-	ART("Search Article", "imgarticle");
+	BARCODE("Input Barcode", "search-barcode.png"),
+	ART("Search Article", "search-article.png");
 
 	// Variabel untuk menyimpan properti
 	private final String prompt;

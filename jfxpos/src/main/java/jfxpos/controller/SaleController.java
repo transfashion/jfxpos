@@ -6,6 +6,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import jfxpos.Controller;
 import jfxpos.util.MessageBox;
 
@@ -22,6 +24,9 @@ public class SaleController extends Controller {
 
 	@FXML
 	private Label timeLabel;
+
+	@FXML
+	private ImageView searchModeImage;
 
 	@FXML
 	private TextField lineInput;
@@ -128,7 +133,17 @@ public class SaleController extends Controller {
 		// Set initial prompt text
 		if (lineInput != null) {
 			lineInput.setPromptText(currentSearchMode.getPrompt());
+			lineInput.focusedProperty().addListener((obs, oldVal, newVal) -> {
+				if (newVal) {
+					javafx.application.Platform.runLater(() -> {
+						lineInput.deselect();
+						lineInput.end();
+					});
+				}
+			});
 		}
+
+		updateSearchModeImage();
 
 		// Rotate search mode on F1 button click
 		if (f1Button != null) {
@@ -147,6 +162,23 @@ public class SaleController extends Controller {
 		}
 	}
 
+	private void updateSearchModeImage() {
+		if (searchModeImage != null && currentSearchMode.getImage() != null) {
+			try {
+				String imagePath = "/" + currentSearchMode.getImage();
+				java.io.InputStream is = getClass().getResourceAsStream(imagePath);
+				if (is != null) {
+					Image img = new Image(is);
+					searchModeImage.setImage(img);
+				} else {
+					logger.warning("Search mode image not found: " + imagePath);
+				}
+			} catch (Exception e) {
+				logger.severe("Failed to load search mode image: " + e.getMessage());
+			}
+		}
+	}
+
 	private void rotateSearchMode() {
 		jfxpos.models.InputSearchMode[] modes = jfxpos.models.InputSearchMode.values();
 		int nextOrdinal = (currentSearchMode.ordinal() + 1) % modes.length;
@@ -154,6 +186,7 @@ public class SaleController extends Controller {
 		if (lineInput != null) {
 			lineInput.setPromptText(currentSearchMode.getPrompt());
 		}
+		updateSearchModeImage();
 		logger.info("Search mode changed to: " + currentSearchMode);
 	}
 
@@ -175,10 +208,60 @@ public class SaleController extends Controller {
 		return lineInput != null && lineInput.isFocused();
 	}
 
+	public boolean isItemTableFocused() {
+		return itemTable != null && itemTable.isFocused();
+	}
+
+	public void focusItemTable() {
+		if (itemTable != null) {
+			itemTable.requestFocus();
+			if (itemTable.getSelectionModel().getSelectedIndex() < 0 && !itemTable.getItems().isEmpty()) {
+				itemTable.getSelectionModel().select(0);
+			}
+		}
+	}
+
 	public void appendLineInput(String text) {
 		if (lineInput != null) {
 			lineInput.appendText(text);
 			lineInput.positionCaret(lineInput.getText().length());
+		}
+	}
+
+	public void handleLeftArrow() {
+		if (lineInput != null) {
+			lineInput.requestFocus();
+			javafx.application.Platform.runLater(() -> {
+				int pos = lineInput.getCaretPosition();
+				if (pos > 0) {
+					lineInput.positionCaret(pos - 1);
+				}
+			});
+		}
+	}
+
+	public void handleRightArrow() {
+		if (lineInput != null) {
+			lineInput.requestFocus();
+			javafx.application.Platform.runLater(() -> {
+				int pos = lineInput.getCaretPosition();
+				if (pos < lineInput.getText().length()) {
+					lineInput.positionCaret(pos + 1);
+				}
+			});
+		}
+	}
+
+	public void handleBackspace() {
+		if (lineInput != null) {
+			lineInput.requestFocus();
+			javafx.application.Platform.runLater(() -> {
+				int pos = lineInput.getCaretPosition();
+				String text = lineInput.getText();
+				if (pos > 0 && text != null && !text.isEmpty()) {
+					lineInput.deleteText(pos - 1, pos);
+				}
+			});
 		}
 	}
 

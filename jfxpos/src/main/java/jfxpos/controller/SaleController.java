@@ -276,4 +276,13 @@ public class SaleController extends Controller {
 			escButton.fire();
 		}
 	}
+
+	public void updateDateTime(String dateText, String timeText) {
+		if (dateLabel != null) {
+			dateLabel.setText(dateText);
+		}
+		if (timeLabel != null) {
+			timeLabel.setText(timeText);
+		}
+	}
 }

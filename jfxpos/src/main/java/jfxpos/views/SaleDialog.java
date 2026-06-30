@@ -85,6 +85,23 @@ public class SaleDialog extends View {
 				event.consume();
 			}
 		});
+
+		// Timeline to update date and time every 1 minute
+		java.time.format.DateTimeFormatter dateFormatter = java.time.format.DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy", new java.util.Locale("id", "ID"));
+		java.time.format.DateTimeFormatter timeFormatter = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
+
+		javafx.animation.Timeline clock = new javafx.animation.Timeline(
+			new javafx.animation.KeyFrame(javafx.util.Duration.ZERO, e -> {
+				java.time.LocalDateTime now = java.time.LocalDateTime.now();
+				controller.updateDateTime(now.format(dateFormatter), now.format(timeFormatter));
+			}),
+			new javafx.animation.KeyFrame(javafx.util.Duration.minutes(1))
+		);
+		clock.setCycleCount(javafx.animation.Animation.INDEFINITE);
+		clock.play();
+
+		// Stop timeline when stage is hidden to avoid memory/resource leaks
+		stage.setOnHidden(event -> clock.stop());
 	}
 
 	@Override

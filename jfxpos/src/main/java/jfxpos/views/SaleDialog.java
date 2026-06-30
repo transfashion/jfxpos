@@ -87,7 +87,7 @@ public class SaleDialog extends View {
 		});
 
 		// Timeline to update date and time every 1 minute
-		java.time.format.DateTimeFormatter dateFormatter = java.time.format.DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy", new java.util.Locale("id", "ID"));
+		java.time.format.DateTimeFormatter dateFormatter = java.time.format.DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy", java.util.Locale.of("id", "ID"));
 		java.time.format.DateTimeFormatter timeFormatter = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
 
 		javafx.animation.Timeline clock = new javafx.animation.Timeline(

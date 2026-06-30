@@ -11,9 +11,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="262.0" minWidth="510.0" prefHeight="262.0" prefWidth="510.0" stylesheets="@jfxpos.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="262.0" minWidth="510.0" prefHeight="262.0" prefWidth="510.0" stylesheets="@.root.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label styleClass="label-title" text="Authorize" />
       <GridPane hgap="10.0" vgap="14.0">
         <columnConstraints>
           <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="264.0" minWidth="100.0" prefWidth="125.0" />

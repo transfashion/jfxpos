@@ -102,6 +102,7 @@ public class SaleController extends Controller {
 	private Button escButton;
 
 	private int consoleNumber;
+	private jfxpos.models.InputSearchMode currentSearchMode = jfxpos.models.InputSearchMode.BARCODE;
 
 	public SaleController() {
 		super(SaleController.class);
@@ -116,9 +117,23 @@ public class SaleController extends Controller {
 		return consoleNumber;
 	}
 
+	public jfxpos.models.InputSearchMode getCurrentSearchMode() {
+		return currentSearchMode;
+	}
+
 	@FXML
 	public void initialize() {
 		logger.info("Initializing SaleController...");
+
+		// Set initial prompt text
+		if (lineInput != null) {
+			lineInput.setPromptText(currentSearchMode.getPrompt());
+		}
+
+		// Rotate search mode on F1 button click
+		if (f1Button != null) {
+			f1Button.setOnAction(e -> rotateSearchMode());
+		}
 
 		// Close dialog on ESC button click
 		if (escButton != null) {
@@ -132,6 +147,16 @@ public class SaleController extends Controller {
 		}
 	}
 
+	private void rotateSearchMode() {
+		jfxpos.models.InputSearchMode[] modes = jfxpos.models.InputSearchMode.values();
+		int nextOrdinal = (currentSearchMode.ordinal() + 1) % modes.length;
+		currentSearchMode = modes[nextOrdinal];
+		if (lineInput != null) {
+			lineInput.setPromptText(currentSearchMode.getPrompt());
+		}
+		logger.info("Search mode changed to: " + currentSearchMode);
+	}
+
 	public boolean confirmClose() {
 		Stage stage = null;
 		if (escButton != null && escButton.getScene() != null) {
@@ -143,6 +168,23 @@ public class SaleController extends Controller {
 	public void requestFocus() {
 		if (lineInput != null) {
 			javafx.application.Platform.runLater(() -> lineInput.requestFocus());
+		}
+	}
+
+	public boolean isLineInputFocused() {
+		return lineInput != null && lineInput.isFocused();
+	}
+
+	public void appendLineInput(String text) {
+		if (lineInput != null) {
+			lineInput.appendText(text);
+			lineInput.positionCaret(lineInput.getText().length());
+		}
+	}
+
+	public void fireF1Button() {
+		if (f1Button != null) {
+			f1Button.fire();
 		}
 	}
 

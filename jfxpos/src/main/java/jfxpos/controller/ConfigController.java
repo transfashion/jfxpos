@@ -10,8 +10,6 @@ import jfxpos.config.AppConfig;
 import jfxpos.config.AppConfigStore;
 import jfxpos.Controller;
 import jfxpos.util.MessageBox;
-import javafx.scene.control.ButtonType;
-import java.util.Optional;
 import jfxpos.util.ErrorMessage;
 import jfxpos.views.TesterDialog;
 

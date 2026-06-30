@@ -1,0 +1,95 @@
+.store-name {
+	-fx-font-size: 2.4em;
+	-fx-font-weight: bold;
+}
+
+.store-info-bar .label {
+	-fx-font-size: 1em;
+}
+
+
+.datetime-info .tanggal {
+	-fx-font-size: 1.4em;
+}
+
+.datetime-info .jam {
+	-fx-font-size: 2.4em;
+	-fx-font-weight: bold;
+	-fx-text-fill: #aaaaaa;
+}
+
+
+.rounded-box {
+	-fx-border-color: #cccccc;
+	-fx-border-radius: 6px;
+	-fx-background-radius: 6px;
+}
+
+
+.rounded-box .group-title {
+	-fx-font-size: 1.3em;
+	-fx-background-color: -fx-background;
+
+}
+
+.summary-info .HBox {
+	-fx-border-color: transparent transparent #e2e2e2 transparent;
+	-fx-border-width: 0 0 1 0;
+	-fx-border-style: none none dashed none;
+}
+
+
+.summary-info .subtotal-label {
+	-fx-font-size: 1.4em;
+	-fx-font-weight: bold;
+}
+
+.summary-info .subtotal-value {
+	-fx-font-size: 3.2em;
+	-fx-font-weight: bold;
+}
+
+.summary-info .subtotal-qty {
+	-fx-font-size: 1.8em;
+	-fx-font-weight: bold;
+}
+
+
+.customer-info .button {
+	-fx-font-size: 1.6em;
+}
+
+
+
+
+
+
+
+
+
+.input-barcode {
+	-fx-font-size: 1.8em;
+	-fx-padding: 2 5 2 5;
+}
+
+.input-result-descr {
+	-fx-font-size: 1.6em;
+}
+
+.input-result-price {
+	-fx-font-size: 1.6em;
+	-fx-font-weight: bold;
+}
+
+
+
+.item-datagrid {
+	-fx-font-size: 1.4em;
+}
+
+.fbutton-code {
+	-fx-font-size: 1.3em;
+	-fx-font-weight: bold;
+}
+
+.fbutton-descr {}

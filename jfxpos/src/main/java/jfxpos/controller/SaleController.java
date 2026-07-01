@@ -10,6 +10,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import jfxpos.Controller;
 import jfxpos.util.MessageBox;
+import jfxpos.views.CustdisplayWindow;
+import jfxpos.controller.CustdisplayController;
 
 public class SaleController extends Controller {
 
@@ -150,6 +152,16 @@ public class SaleController extends Controller {
 			f1Button.setOnAction(e -> rotateSearchMode());
 		}
 
+		// Update customer display total on F10 button click
+		if (f10Button != null) {
+			f10Button.setOnAction(e -> {
+				CustdisplayController custdisplay = getCustdisplayController();
+				if (custdisplay != null && subtotalValueLabel != null) {
+					custdisplay.setTotal(subtotalValueLabel.getText());
+				}
+			});
+		}
+
 		// Close dialog on ESC button click
 		if (escButton != null) {
 			escButton.setOnAction(e -> {
@@ -284,5 +296,10 @@ public class SaleController extends Controller {
 		if (timeLabel != null) {
 			timeLabel.setText(timeText);
 		}
+	}
+
+	private CustdisplayController getCustdisplayController() {
+		CustdisplayWindow window = CustdisplayWindow.getInstance();
+		return window != null ? window.getController() : null;
 	}
 }

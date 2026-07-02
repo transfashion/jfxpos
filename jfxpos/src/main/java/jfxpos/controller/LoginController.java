@@ -213,7 +213,9 @@ public class LoginController extends Controller {
 
 				// Verify connection is working
 				try (java.sql.Connection conn = jfxpos.util.DbPool.getConnection()) {
-					logger.info("Database connection verified successfully.");
+					if (conn != null) {
+						logger.info("Database connection verified successfully.");
+					}
 				} catch (java.sql.SQLException e) {
 					logger.log(Level.SEVERE, "Database connection failed during login", e);
 					throw new Exception("koneksi gagal, periksa configurasi database", e);

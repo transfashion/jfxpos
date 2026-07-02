@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import jfxpos.models.Trx;
 import jfxpos.Controller;
 import jfxpos.util.MessageBox;
-import jfxpos.views.CustdisplayWindow;
+import jfxpos.views.CustDisplayWindow;
 
 public class SaleController extends Controller {
 
@@ -188,9 +188,7 @@ public class SaleController extends Controller {
 										int cid = newTrx.customerIdProperty().get();
 										return cid == 0 ? "" : String.valueOf(cid);
 									},
-									newTrx.customerIdProperty()
-							)
-					);
+									newTrx.customerIdProperty()));
 				}
 				if (customerTypeLabel != null) {
 					customerTypeLabel.textProperty().bind(
@@ -199,9 +197,7 @@ public class SaleController extends Controller {
 										int ctid = newTrx.customerTypeIdProperty().get();
 										return ctid == 0 ? "" : String.valueOf(ctid);
 									},
-									newTrx.customerTypeIdProperty()
-							)
-					);
+									newTrx.customerTypeIdProperty()));
 				}
 				if (customerNameLabel != null) {
 					customerNameLabel.textProperty().bind(
@@ -210,9 +206,7 @@ public class SaleController extends Controller {
 										String cname = newTrx.customerNameProperty().get();
 										return cname == null ? "" : cname;
 									},
-									newTrx.customerNameProperty()
-							)
-					);
+									newTrx.customerNameProperty()));
 				}
 				if (customerDiscountLabel != null) {
 					customerDiscountLabel.textProperty().bind(
@@ -549,8 +543,8 @@ public class SaleController extends Controller {
 		}
 	}
 
-	private CustdisplayController getCustdisplayController() {
-		CustdisplayWindow window = CustdisplayWindow.getInstance();
+	private CustDisplayController getCustDisplayController() {
+		CustDisplayWindow window = CustDisplayWindow.getInstance();
 		return window != null ? window.getController() : null;
 	}
 }

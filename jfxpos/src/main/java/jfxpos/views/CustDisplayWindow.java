@@ -5,38 +5,38 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import jfxpos.App;
 import jfxpos.View;
-import jfxpos.controller.CustdisplayController;
+import jfxpos.controller.CustDisplayController;
 
-public class CustdisplayWindow extends View {
+public class CustDisplayWindow extends View {
 	static final String Title = "Customer Display";
 	static final String FXML = RESOURCE_DIR + "/custdisplay.fxml";
 
-	private static CustdisplayWindow instance;
+	private static CustDisplayWindow instance;
 
 	final Stage stage;
-	final CustdisplayController controller;
+	final CustDisplayController controller;
 
-	public static CustdisplayWindow getInstance() {
+	public static CustDisplayWindow getInstance() {
 		return instance;
 	}
 
-	public CustdisplayController getController() {
+	public CustDisplayController getController() {
 		return this.controller;
 	}
 
-	public CustdisplayWindow() throws Exception {
+	public CustDisplayWindow() throws Exception {
 		this(new Stage());
 	}
 
-	public CustdisplayWindow(Stage stage) throws Exception {
-		super(CustdisplayWindow.class);
+	public CustDisplayWindow(Stage stage) throws Exception {
+		super(CustDisplayWindow.class);
 		this.stage = stage;
 
 		if (App.isProd) {
 			stage.initStyle(StageStyle.UNDECORATED);
 		}
 
-		this.controller = new CustdisplayController();
+		this.controller = new CustDisplayController();
 		instance = this;
 
 		stage.setOnHidden(e -> {

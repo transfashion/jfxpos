@@ -16,7 +16,7 @@ public class DashboardWindow extends View {
 	static final String FXML_DASHBOARD = RESOURCE_DIR + "/dashboard.fxml";
 
 	final Stage stage;
-	private CustdisplayWindow custdisplayWindow;
+	private CustDisplayWindow custdisplayWindow;
 
 	public DashboardWindow(Stage stage) {
 		super(DashboardWindow.class);
@@ -65,7 +65,7 @@ public class DashboardWindow extends View {
 
 	private void showCustomerDisplay() throws Exception {
 		if (custdisplayWindow == null) {
-			custdisplayWindow = new CustdisplayWindow();
+			custdisplayWindow = new CustDisplayWindow();
 		}
 
 		if (Screen.getScreens().size() > 1) {

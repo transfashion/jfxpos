@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -13,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
@@ -21,10 +22,10 @@
                <content>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <padding>
-                        <Insets bottom="10.0" left="10.0" right="40.0" top="20.0" />
+                        <Insets bottom="10.0" left="10.0" right="40.0" top="35.0" />
                      </padding>
                      <children>
-                        <GridPane hgap="10.0" vgap="5.0">
+                        <GridPane hgap="10.0" vgap="15.0">
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -46,8 +47,6 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
                               <Label text="Token" GridPane.halignment="RIGHT" />
@@ -55,18 +54,20 @@
                               <Button fx:id="parseButton" mnemonicParsing="false" onAction="#onParseButtonClick" prefWidth="80.0" text="Parse" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <TextField fx:id="serverUrlInput" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="3" />
                               <Label text="Server URL" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-                              <Label text="Site ID" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-                              <Label text="Secret" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-                              <TextField fx:id="siteIdInput" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                              <TextField fx:id="machineIdInput" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                              <Label text="Machine ID" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                              <Label text="Dept ID" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                              <Label text="Secret" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                              <TextField GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                              <TextField fx:id="machineIdInput" GridPane.columnIndex="5" GridPane.rowIndex="5" />
+                              <Label text="Device ID" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
                               <TextField fx:id="printerNameInput" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="7" />
                               <Button fx:id="printerTestButton" mnemonicParsing="false" text="Test Print" GridPane.columnIndex="5" GridPane.rowIndex="7" />
                               <Label text="Printer" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
-                              <Button fx:id="saveButton" maxWidth="80.0" mnemonicParsing="false" onAction="#onSaveButtonClick" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-                              <Button fx:id="cancelButton" maxWidth="80.0" mnemonicParsing="false" onAction="#onCancelButtonClick" text="Cancel" GridPane.columnIndex="2" GridPane.rowIndex="12" />
-                              <PasswordField fx:id="secretInput" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                              <Button fx:id="testButton" mnemonicParsing="false" onAction="#onTestButtonClick" prefHeight="26.0" prefWidth="68.0" text="Test" GridPane.columnIndex="6" GridPane.halignment="RIGHT" GridPane.rowIndex="12" />
+                              <Button fx:id="saveButton" maxWidth="80.0" mnemonicParsing="false" onAction="#onSaveButtonClick" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                              <Button fx:id="cancelButton" maxWidth="80.0" mnemonicParsing="false" onAction="#onCancelButtonClick" text="Cancel" GridPane.columnIndex="2" GridPane.rowIndex="10" />
+                              <PasswordField fx:id="secretInput" GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                              <Button fx:id="testButton" mnemonicParsing="false" onAction="#onTestButtonClick" prefHeight="26.0" prefWidth="68.0" text="Test" GridPane.columnIndex="6" GridPane.halignment="RIGHT" GridPane.rowIndex="10" />
+                              <TextField fx:id="siteIdInput" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5" />
+                              <Label text="Site ID" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
                            </children>
                         </GridPane>
                         <AnchorPane prefHeight="50.0" />
@@ -78,7 +79,7 @@
                <content>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <GridPane hgap="10.0" vgap="5.0">
+                        <GridPane hgap="10.0" vgap="15.0">
                           <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -118,7 +119,7 @@
                         </GridPane>
                      </children>
                      <padding>
-                        <Insets bottom="10.0" left="10.0" right="40.0" top="20.0" />
+                        <Insets bottom="10.0" left="10.0" right="40.0" top="35.0" />
                      </padding>
                   </VBox>
                </content>
@@ -126,4 +127,8 @@
         </tabs>
       </TabPane>
    </children>
+   <stylesheets>
+      <URL value="@.root.css" />
+      <URL value="@config.css" />
+   </stylesheets>
 </AnchorPane>

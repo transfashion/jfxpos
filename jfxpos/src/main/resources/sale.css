@@ -1,3 +1,11 @@
+.devid-info {
+	-fx-font-size: 3.6em;
+	-fx-font-weight: bold;
+	-fx-text-fill: #aaaaaa;
+	-fx-background-color: #333333;
+
+}
+
 .store-name {
 	-fx-font-size: 2.4em;
 	-fx-font-weight: bold;
@@ -64,12 +72,17 @@
 
 
 
-
+.lineinput-image {
+	-fx-border-width: 0 0 0 0;
+	-fx-background-color: #dddddd;
+	-fx-margin: 0 0 0 0;
+}
 
 
 .input-barcode {
 	-fx-font-size: 1.8em;
 	-fx-padding: 2 5 2 5;
+	-fx-margin: 0 0 0 0;
 }
 
 .input-result-descr {
@@ -87,9 +100,25 @@
 	-fx-font-size: 1.4em;
 }
 
-.fbutton-code {
-	-fx-font-size: 1.3em;
+
+.fbutton-bar .button {
+	-fx-pref-width: 78px;
+	-fx-pref-height: 50px;
+
+	-fx-min-width: -fx-pref-width;
+	-fx-min-height: -fx-pref-height;
+
+	-fx-max-width: 85px;
+	-fx-max-height: -fx-pref-height;
+
+	-fx-padding: 0 0 0 0;
+}
+
+.fbutton-bar .code {
+	-fx-font-size: 0.8em;
 	-fx-font-weight: bold;
 }
 
-.fbutton-descr {}
+.fbutton-bar .descr {
+	-fx-font-size: 0.65em;
+}

@@ -11,6 +11,15 @@ public class SaleDialog extends View {
 
 	final Stage stage;
 	final SaleController controller = new SaleController();
+	private boolean LINE_INPUT_MODE = true;
+
+	public boolean isLINE_INPUT_MODE() {
+		return LINE_INPUT_MODE;
+	}
+
+	public void setLINE_INPUT_MODE(boolean LINE_INPUT_MODE) {
+		this.LINE_INPUT_MODE = LINE_INPUT_MODE;
+	}
 
 	public SaleDialog(Stage owner, int consoleNumber) throws Exception {
 		super(SaleDialog.class);
@@ -23,11 +32,50 @@ public class SaleDialog extends View {
 		// Request focus on lineInput whenever the dialog is shown
 		stage.setOnShown(e -> controller.requestFocus());
 
+		// Redirect key typed to lineInput if LINE_INPUT_MODE is active and focus is elsewhere
+		scene.addEventFilter(javafx.scene.input.KeyEvent.KEY_TYPED, event -> {
+			if (LINE_INPUT_MODE && !controller.isLineInputFocused()) {
+				String character = event.getCharacter();
+				if (character != null && character.length() == 1) {
+					char c = character.charAt(0);
+					// Filter printable characters (exclude control characters)
+					if (c >= 32 && c != 127) {
+						controller.requestFocus();
+						controller.appendLineInput(character);
+						event.consume();
+					}
+				}
+			}
+		});
+
 		// Execute escButton when Escape key is pressed
 		scene.addEventFilter(javafx.scene.input.KeyEvent.KEY_PRESSED, event -> {
 			if (event.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
 				controller.fireEscButton();
 				event.consume();
+			} else if (event.getCode() == javafx.scene.input.KeyCode.F1) {
+				controller.fireF1Button();
+				event.consume();
+			} else if (event.getCode() == javafx.scene.input.KeyCode.UP || event.getCode() == javafx.scene.input.KeyCode.DOWN) {
+				if (!controller.isItemTableFocused()) {
+					controller.focusItemTable();
+					event.consume();
+				}
+			} else if (event.getCode() == javafx.scene.input.KeyCode.LEFT) {
+				if (!controller.isLineInputFocused()) {
+					controller.handleLeftArrow();
+					event.consume();
+				}
+			} else if (event.getCode() == javafx.scene.input.KeyCode.RIGHT) {
+				if (!controller.isLineInputFocused()) {
+					controller.handleRightArrow();
+					event.consume();
+				}
+			} else if (event.getCode() == javafx.scene.input.KeyCode.BACK_SPACE) {
+				if (!controller.isLineInputFocused()) {
+					controller.handleBackspace();
+					event.consume();
+				}
 			}
 		});
 
@@ -37,6 +85,23 @@ public class SaleDialog extends View {
 				event.consume();
 			}
 		});
+
+		// Timeline to update date and time every 1 minute
+		java.time.format.DateTimeFormatter dateFormatter = java.time.format.DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy", java.util.Locale.of("id", "ID"));
+		java.time.format.DateTimeFormatter timeFormatter = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
+
+		javafx.animation.Timeline clock = new javafx.animation.Timeline(
+			new javafx.animation.KeyFrame(javafx.util.Duration.ZERO, e -> {
+				java.time.LocalDateTime now = java.time.LocalDateTime.now();
+				controller.updateDateTime(now.format(dateFormatter), now.format(timeFormatter));
+			}),
+			new javafx.animation.KeyFrame(javafx.util.Duration.minutes(1))
+		);
+		clock.setCycleCount(javafx.animation.Animation.INDEFINITE);
+		clock.play();
+
+		// Stop timeline when stage is hidden to avoid memory/resource leaks
+		stage.setOnHidden(event -> clock.stop());
 	}
 
 	@Override

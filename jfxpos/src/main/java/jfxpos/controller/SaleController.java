@@ -11,6 +11,8 @@ import javafx.scene.image.ImageView;
 import jfxpos.Controller;
 import jfxpos.util.MessageBox;
 import jfxpos.views.CustdisplayWindow;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 
 public class SaleController extends Controller {
 
@@ -156,6 +158,11 @@ public class SaleController extends Controller {
 			f2Button.setOnAction(e -> openChannelDialog());
 		}
 
+		// Show message box on F7 button click
+		if (f7Button != null) {
+			f7Button.setOnAction(e -> createNewTransaction());
+		}
+
 		// Update customer display total on F10 button click
 		if (f10Button != null) {
 			f10Button.setOnAction(e -> {
@@ -291,6 +298,20 @@ public class SaleController extends Controller {
 		if (f2Button != null) {
 			f2Button.fire();
 		}
+	}
+
+	public void fireF7Button() {
+		if (f7Button != null) {
+			f7Button.fire();
+		}
+	}
+
+	public void createNewTransaction() {
+		Stage owner = null;
+		if (f7Button.getScene() != null) {
+			owner = (Stage) f7Button.getScene().getWindow();
+		}
+		MessageBox.info(owner, "F7 di eksekusi");
 	}
 
 	private void openChannelDialog() {

@@ -19,9 +19,21 @@ import jfxpos.views.CustDisplayWindow;
 
 public class SaleController extends Controller {
 
+	private static SaleController activeController;
+
 	private Stage currentWindow;
 	private final ObjectProperty<Trx> currentTrx = new SimpleObjectProperty<>();
 	private final jfxpos.repository.ChannelRepository channelRepo = new jfxpos.repository.ChannelRepository();
+
+	private final javafx.beans.value.ChangeListener<BigDecimal> grandTotalListener = (obs, oldVal, newVal) -> {
+		if (activeController == this) {
+			CustDisplayController custDisplay = getCustDisplayController();
+			if (custDisplay != null) {
+				String formatted = newVal == null ? "0" : String.format("%,.0f", newVal);
+				custDisplay.setGrandTotal(formatted);
+			}
+		}
+	};
 
 	@FXML
 	private Label storeNameLabel;
@@ -147,6 +159,7 @@ public class SaleController extends Controller {
 		// Bind components to currentTrx properties dynamically
 		currentTrx.addListener((obs, oldTrx, newTrx) -> {
 			if (oldTrx != null) {
+				oldTrx.grandTotalProperty().removeListener(grandTotalListener);
 				if (grandTotalValueLabel != null) {
 					grandTotalValueLabel.textProperty().unbind();
 				}
@@ -170,6 +183,10 @@ public class SaleController extends Controller {
 				}
 			}
 			if (newTrx != null) {
+				newTrx.grandTotalProperty().addListener(grandTotalListener);
+				if (activeController == this) {
+					grandTotalListener.changed(newTrx.grandTotalProperty(), null, newTrx.getGrandTotal());
+				}
 				if (grandTotalValueLabel != null) {
 					grandTotalValueLabel.textProperty().bind(
 							Bindings.format("%,.0f", newTrx.grandTotalProperty()));
@@ -213,6 +230,12 @@ public class SaleController extends Controller {
 							Bindings.format("%,.0f", newTrx.customerDiscountProperty()));
 				}
 			} else {
+				if (activeController == this) {
+					CustDisplayController custDisplay = getCustDisplayController();
+					if (custDisplay != null) {
+						custDisplay.setGrandTotal("0");
+					}
+				}
 				if (grandTotalValueLabel != null) {
 					grandTotalValueLabel.setText("0");
 				}
@@ -467,7 +490,24 @@ public class SaleController extends Controller {
 		return currentWindow;
 	}
 
+	public boolean isHasPendingTransaction() {
+		Trx current = currentTrx.get();
+		if (current != null) {
+			BigDecimal grandTotal = current.getGrandTotal();
+			return grandTotal != null && grandTotal.compareTo(BigDecimal.ZERO) != 0;
+		}
+		return false;
+	}
+
 	public void createNewTransaction() {
+		if (isHasPendingTransaction()) {
+			boolean confirm = MessageBox.confirm(getCurrentWindow(), 
+					"Sedang ada transaksi di console saat ini, apakah yakin akan create transaksi baru?");
+			if (!confirm) {
+				return;
+			}
+		}
+
 		Trx newTrx = new Trx();
 		newTrx.setSubtotal(BigDecimal.ZERO);
 		newTrx.setQty(0);
@@ -476,7 +516,7 @@ public class SaleController extends Controller {
 			java.util.List<jfxpos.models.Channel> channels = channelRepo.findAll();
 			if (channels != null && !channels.isEmpty()) {
 				jfxpos.models.Channel smallestIdChannel = channels.stream()
-						.min(java.util.Comparator.comparingInt(jfxpos.models.Channel::getId))
+						.min(java.util.Comparator.comparingInt(c -> c.getId()))
 						.orElse(null);
 				if (smallestIdChannel != null) {
 					newTrx.setChannelId(smallestIdChannel.getId());
@@ -522,13 +562,18 @@ public class SaleController extends Controller {
 	}
 
 	private void openCheckoutDialog() {
-		// CustdisplayController custdisplay = getCustdisplayController();
+		Trx trx = currentTrx.get();
+		trx.setGrandTotal(BigDecimal.valueOf(10000));
 
 	}
 
 	private void closeSaleDialog() {
 		if (escButton.getScene() != null && escButton.getScene().getWindow() instanceof Stage stage) {
-			if (confirmClose()) {
+			if (isHasPendingTransaction()) {
+				if (confirmClose()) {
+					stage.close();
+				}
+			} else {
 				stage.close();
 			}
 		}
@@ -540,6 +585,21 @@ public class SaleController extends Controller {
 		}
 		if (timeLabel != null) {
 			timeLabel.setText(timeText);
+		}
+	}
+
+	public void onFocused() {
+		activeController = this;
+		updateCustDisplay();
+	}
+
+	public void updateCustDisplay() {
+		CustDisplayController custDisplay = getCustDisplayController();
+		if (custDisplay != null) {
+			Trx trx = currentTrx.get();
+			BigDecimal grandTotal = (trx != null) ? trx.getGrandTotal() : BigDecimal.ZERO;
+			String formatted = grandTotal == null ? "0" : String.format("%,.0f", grandTotal);
+			custDisplay.setGrandTotal(formatted);
 		}
 	}
 

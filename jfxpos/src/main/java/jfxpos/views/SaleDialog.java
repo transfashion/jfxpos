@@ -29,8 +29,18 @@ public class SaleDialog extends View {
 		stage = createDialogStage(Title + " - Console #" + consoleNumber, scene, owner);
 		stage.setResizable(true);
 
-		// Request focus on lineInput whenever the dialog is shown
-		stage.setOnShown(e -> controller.requestFocus());
+		// Request focus on lineInput and notify controller when shown
+		stage.setOnShown(e -> {
+			controller.requestFocus();
+			controller.onFocused();
+		});
+
+		// Notify controller when stage gains focus
+		stage.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+			if (isNowFocused) {
+				controller.onFocused();
+			}
+		});
 
 		// Redirect key typed to lineInput if LINE_INPUT_MODE is active and focus is elsewhere
 		scene.addEventFilter(javafx.scene.input.KeyEvent.KEY_TYPED, event -> {

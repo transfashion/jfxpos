@@ -7,15 +7,15 @@ import jfxpos.Controller;
 public class CustDisplayController extends Controller {
 
 	@FXML
-	private Label totalLabel;
+	private Label grandTotalValueLabel;
 
 	public CustDisplayController() {
 		super(CustDisplayController.class);
 	}
 
-	public void setTotal(String total) {
-		if (totalLabel != null) {
-			javafx.application.Platform.runLater(() -> totalLabel.setText(total));
+	public void setGrandTotal(String grandTotal) {
+		if (grandTotalValueLabel != null) {
+			javafx.application.Platform.runLater(() -> grandTotalValueLabel.setText(grandTotal));
 		}
 	}
 }

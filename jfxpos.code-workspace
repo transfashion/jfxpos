@@ -37,7 +37,16 @@
 				"name": "Attach Gradle",
 				"request": "attach",
 				"hostName": "localhost",
-				"port": 5005
+				"port": 5005,
+				"projectName": "launcher"
+			},
+			{
+				"type": "java",
+				"name": "Launch JFX POS",
+				"request": "launch",
+				"mainClass": "launcher.Launcher",
+				"projectName": "launcher",
+				"vmArgs": "--enable-native-access=javafx.graphics"
 			}
 		]
 	}

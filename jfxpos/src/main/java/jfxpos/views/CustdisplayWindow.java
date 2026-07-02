@@ -1,9 +1,9 @@
 package jfxpos.views;
 
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import jfxpos.App;
 import jfxpos.View;
 import jfxpos.controller.CustdisplayController;
 
@@ -31,7 +31,11 @@ public class CustdisplayWindow extends View {
 	public CustdisplayWindow(Stage stage) throws Exception {
 		super(CustdisplayWindow.class);
 		this.stage = stage;
-		stage.initStyle(StageStyle.UNDECORATED);
+
+		if (App.isProd) {
+			stage.initStyle(StageStyle.UNDECORATED);
+		}
+
 		this.controller = new CustdisplayController();
 		instance = this;
 
@@ -76,7 +80,9 @@ public class CustdisplayWindow extends View {
 
 	@Override
 	public void open() {
-		stage.setMaximized(true);
+		if (App.isProd) {
+			stage.setMaximized(true);
+		}
 		stage.show();
 	}
 }

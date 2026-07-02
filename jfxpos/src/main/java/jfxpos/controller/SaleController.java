@@ -11,7 +11,6 @@ import javafx.scene.image.ImageView;
 import jfxpos.Controller;
 import jfxpos.util.MessageBox;
 import jfxpos.views.CustdisplayWindow;
-import jfxpos.controller.CustdisplayController;
 
 public class SaleController extends Controller {
 

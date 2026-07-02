@@ -78,6 +78,10 @@ public class DashboardWindow extends View {
 			custStage.setWidth(bounds.getWidth());
 			custStage.setHeight(bounds.getHeight());
 			custdisplayWindow.open();
+		} else {
+			if (App.isDev) {
+				custdisplayWindow.open();
+			}
 		}
 	}
 

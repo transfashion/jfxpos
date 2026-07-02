@@ -59,8 +59,35 @@ public class SaleDialog extends View {
 			} else if (event.getCode() == javafx.scene.input.KeyCode.F2) {
 				controller.fireF2Button();
 				event.consume();
+			} else if (event.getCode() == javafx.scene.input.KeyCode.F3) {
+				controller.fireF3Button();
+				event.consume();
+			} else if (event.getCode() == javafx.scene.input.KeyCode.F4) {
+				controller.fireF4Button();
+				event.consume();
+			} else if (event.getCode() == javafx.scene.input.KeyCode.F5) {
+				controller.fireF5Button();
+				event.consume();
+			} else if (event.getCode() == javafx.scene.input.KeyCode.F6) {
+				controller.fireF6Button();
+				event.consume();
 			} else if (event.getCode() == javafx.scene.input.KeyCode.F7) {
 				controller.fireF7Button();
+				event.consume();
+			} else if (event.getCode() == javafx.scene.input.KeyCode.F8) {
+				controller.fireF8Button();
+				event.consume();
+			} else if (event.getCode() == javafx.scene.input.KeyCode.F9) {
+				controller.fireF9Button();
+				event.consume();
+			} else if (event.getCode() == javafx.scene.input.KeyCode.F10) {
+				controller.fireF10Button();
+				event.consume();
+			} else if (event.getCode() == javafx.scene.input.KeyCode.F11) {
+				controller.fireF11Button();
+				event.consume();
+			} else if (event.getCode() == javafx.scene.input.KeyCode.F12) {
+				controller.fireF12Button();
 				event.consume();
 			} else if (event.getCode() == javafx.scene.input.KeyCode.UP || event.getCode() == javafx.scene.input.KeyCode.DOWN) {
 				if (!controller.isItemTableFocused()) {

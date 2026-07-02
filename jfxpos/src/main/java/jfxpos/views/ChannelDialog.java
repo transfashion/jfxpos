@@ -29,4 +29,8 @@ public class ChannelDialog extends View {
 	public Channel getSelectedChannel() {
 		return controller.getSelectedChannel();
 	}
+
+	public void selectChannelById(int channelId) {
+		controller.selectChannelById(channelId);
+	}
 }

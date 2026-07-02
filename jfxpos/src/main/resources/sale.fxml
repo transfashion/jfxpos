@@ -35,7 +35,7 @@
                                     <Label fx:id="storeInfoLabel" text="POS.COR.PIM.PIM" />
                                  </children>
                               </HBox>
-                              <Label text="REGULER" translateY="-1.0" />
+                              <Label fx:id="channelNameLabel" text="REGULER" translateY="-1.0" />
                            </children>
                         </VBox>
                         <VBox alignment="TOP_RIGHT" prefWidth="200.0" styleClass="datetime-info">
@@ -105,16 +105,16 @@
                         </Label>
                         <HBox alignment="BOTTOM_LEFT" minWidth="-Infinity" prefWidth="468.0" styleClass="HBox">
                            <children>
-                              <Label styleClass="subtotal-label" text="Subtotal" />
+                              <Label styleClass="subtotal-label" text="Grand Total" />
                               <Pane HBox.hgrow="ALWAYS" />
-                              <Label fx:id="subtotalValueLabel" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="300.0" styleClass="subtotal-value" text="999,999,999" />
+                              <Label fx:id="grandTotalValueLabel" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="300.0" styleClass="subtotal-value" text="999,999,999" />
                            </children>
                         </HBox>
                         <HBox alignment="BOTTOM_LEFT" styleClass="HBox">
                            <children>
                               <Label alignment="BASELINE_LEFT" styleClass="subtotal-label" text="Qty" />
                               <Pane HBox.hgrow="ALWAYS" />
-                              <Label fx:id="subtotalQtyLabel" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="300.0" styleClass="subtotal-qty" text="2" />
+                              <Label fx:id="grandTotalQtyLabel" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="300.0" styleClass="subtotal-qty" text="2" />
                            </children>
                            <VBox.margin>
                               <Insets top="10.0" />
@@ -147,7 +147,7 @@
                            <children>
                               <Label fx:id="customerNameLabel" text="AGUNG NUGROHO DWI WIBOWO" />
                               <Region HBox.hgrow="ALWAYS" />
-                              <Label text="none" />
+                              <Label fx:id="customerDiscountLabel" text="none" />
                            </children>
                         </HBox>
                         <HBox spacing="10.0">

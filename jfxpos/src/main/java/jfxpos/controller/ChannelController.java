@@ -104,4 +104,15 @@ public class ChannelController extends Controller {
 	public Channel getSelectedChannel() {
 		return selectedChannel;
 	}
+
+	public void selectChannelById(int channelId) {
+		if (channelTable != null) {
+			for (Channel channel : channelTable.getItems()) {
+				if (channel.getId() == channelId) {
+					channelTable.getSelectionModel().select(channel);
+					break;
+				}
+			}
+		}
+	}
 }

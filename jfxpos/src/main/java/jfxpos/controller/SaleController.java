@@ -8,19 +8,29 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.binding.Bindings;
+import java.math.BigDecimal;
+import jfxpos.models.Trx;
 import jfxpos.Controller;
 import jfxpos.util.MessageBox;
 import jfxpos.views.CustdisplayWindow;
-import javafx.event.EventHandler;
-import javafx.event.ActionEvent;
 
 public class SaleController extends Controller {
+
+	private Stage currentWindow;
+	private final ObjectProperty<Trx> currentTrx = new SimpleObjectProperty<>();
+	private final jfxpos.repository.ChannelRepository channelRepo = new jfxpos.repository.ChannelRepository();
 
 	@FXML
 	private Label storeNameLabel;
 
 	@FXML
 	private Label storeInfoLabel;
+
+	@FXML
+	private Label channelNameLabel;
 
 	@FXML
 	private Label dateLabel;
@@ -44,10 +54,10 @@ public class SaleController extends Controller {
 	private TableView<?> itemTable;
 
 	@FXML
-	private Label subtotalValueLabel;
+	private Label grandTotalValueLabel;
 
 	@FXML
-	private Label subtotalQtyLabel;
+	private Label grandTotalQtyLabel;
 
 	@FXML
 	private Label customerIdLabel;
@@ -57,6 +67,9 @@ public class SaleController extends Controller {
 
 	@FXML
 	private Label customerNameLabel;
+
+	@FXML
+	private Label customerDiscountLabel;
 
 	@FXML
 	private Button btnSearchCustomer;
@@ -131,7 +144,104 @@ public class SaleController extends Controller {
 
 	@FXML
 	public void initialize() {
-		logger.info("Initializing SaleController...");
+		// Bind components to currentTrx properties dynamically
+		currentTrx.addListener((obs, oldTrx, newTrx) -> {
+			if (oldTrx != null) {
+				if (grandTotalValueLabel != null) {
+					grandTotalValueLabel.textProperty().unbind();
+				}
+				if (grandTotalQtyLabel != null) {
+					grandTotalQtyLabel.textProperty().unbind();
+				}
+				if (channelNameLabel != null) {
+					channelNameLabel.textProperty().unbind();
+				}
+				if (customerIdLabel != null) {
+					customerIdLabel.textProperty().unbind();
+				}
+				if (customerTypeLabel != null) {
+					customerTypeLabel.textProperty().unbind();
+				}
+				if (customerNameLabel != null) {
+					customerNameLabel.textProperty().unbind();
+				}
+				if (customerDiscountLabel != null) {
+					customerDiscountLabel.textProperty().unbind();
+				}
+			}
+			if (newTrx != null) {
+				if (grandTotalValueLabel != null) {
+					grandTotalValueLabel.textProperty().bind(
+							Bindings.format("%,.0f", newTrx.grandTotalProperty()));
+				}
+				if (grandTotalQtyLabel != null) {
+					grandTotalQtyLabel.textProperty().bind(
+							Bindings.format("%,d", newTrx.qtyProperty()));
+				}
+				if (channelNameLabel != null) {
+					channelNameLabel.textProperty().bind(newTrx.channelNameProperty());
+				}
+				if (customerIdLabel != null) {
+					customerIdLabel.textProperty().bind(
+							Bindings.createStringBinding(
+									() -> {
+										int cid = newTrx.customerIdProperty().get();
+										return cid == 0 ? "" : String.valueOf(cid);
+									},
+									newTrx.customerIdProperty()
+							)
+					);
+				}
+				if (customerTypeLabel != null) {
+					customerTypeLabel.textProperty().bind(
+							Bindings.createStringBinding(
+									() -> {
+										int ctid = newTrx.customerTypeIdProperty().get();
+										return ctid == 0 ? "" : String.valueOf(ctid);
+									},
+									newTrx.customerTypeIdProperty()
+							)
+					);
+				}
+				if (customerNameLabel != null) {
+					customerNameLabel.textProperty().bind(
+							Bindings.createStringBinding(
+									() -> {
+										String cname = newTrx.customerNameProperty().get();
+										return cname == null ? "" : cname;
+									},
+									newTrx.customerNameProperty()
+							)
+					);
+				}
+				if (customerDiscountLabel != null) {
+					customerDiscountLabel.textProperty().bind(
+							Bindings.format("%,.0f", newTrx.customerDiscountProperty()));
+				}
+			} else {
+				if (grandTotalValueLabel != null) {
+					grandTotalValueLabel.setText("0");
+				}
+				if (grandTotalQtyLabel != null) {
+					grandTotalQtyLabel.setText("0");
+				}
+				if (channelNameLabel != null) {
+					channelNameLabel.setText("");
+				}
+				if (customerIdLabel != null) {
+					customerIdLabel.setText("");
+				}
+				if (customerTypeLabel != null) {
+					customerTypeLabel.setText("");
+				}
+				if (customerNameLabel != null) {
+					customerNameLabel.setText("");
+				}
+				if (customerDiscountLabel != null) {
+					customerDiscountLabel.setText("0");
+				}
+			}
+		});
 
 		// Set initial prompt text
 		if (lineInput != null) {
@@ -147,6 +257,7 @@ public class SaleController extends Controller {
 		}
 
 		updateSearchModeImage();
+		createNewTransaction();
 
 		// Rotate search mode on F1 button click
 		if (f1Button != null) {
@@ -165,23 +276,12 @@ public class SaleController extends Controller {
 
 		// Update customer display total on F10 button click
 		if (f10Button != null) {
-			f10Button.setOnAction(e -> {
-				CustdisplayController custdisplay = getCustdisplayController();
-				if (custdisplay != null && subtotalValueLabel != null) {
-					custdisplay.setTotal(subtotalValueLabel.getText());
-				}
-			});
+			f10Button.setOnAction(e -> openCheckoutDialog());
 		}
 
 		// Close dialog on ESC button click
 		if (escButton != null) {
-			escButton.setOnAction(e -> {
-				if (escButton.getScene() != null && escButton.getScene().getWindow() instanceof Stage stage) {
-					if (confirmClose()) {
-						stage.close();
-					}
-				}
-			});
+			escButton.setOnAction(e -> closeSaleDialog());
 		}
 	}
 
@@ -300,38 +400,143 @@ public class SaleController extends Controller {
 		}
 	}
 
+	public void fireF3Button() {
+		if (f3Button != null) {
+			f3Button.fire();
+		}
+	}
+
+	public void fireF4Button() {
+		if (f4Button != null) {
+			f4Button.fire();
+		}
+	}
+
+	public void fireF5Button() {
+		if (f5Button != null) {
+			f5Button.fire();
+		}
+	}
+
+	public void fireF6Button() {
+		if (f6Button != null) {
+			f6Button.fire();
+		}
+	}
+
 	public void fireF7Button() {
 		if (f7Button != null) {
 			f7Button.fire();
 		}
 	}
 
-	public void createNewTransaction() {
-		Stage owner = null;
-		if (f7Button.getScene() != null) {
-			owner = (Stage) f7Button.getScene().getWindow();
+	public void fireF8Button() {
+		if (f8Button != null) {
+			f8Button.fire();
 		}
-		MessageBox.info(owner, "F7 di eksekusi");
 	}
 
-	private void openChannelDialog() {
-		try {
-			Stage owner = (Stage) f2Button.getScene().getWindow();
-			jfxpos.views.ChannelDialog dialog = new jfxpos.views.ChannelDialog(owner);
-			dialog.openDialog();
-			jfxpos.models.Channel selected = dialog.getSelectedChannel();
-			if (selected != null) {
-				logger.info("Selected Channel: " + selected.getChannelName());
-				MessageBox.info(owner, "Channel Terpilih: " + selected.getChannelName());
-			}
-		} catch (Exception e) {
-			logger.severe("Failed to open ChannelDialog: " + e.getMessage());
+	public void fireF9Button() {
+		if (f9Button != null) {
+			f9Button.fire();
+		}
+	}
+
+	public void fireF10Button() {
+		if (f10Button != null) {
+			f10Button.fire();
+		}
+	}
+
+	public void fireF11Button() {
+		if (f11Button != null) {
+			f11Button.fire();
+		}
+	}
+
+	public void fireF12Button() {
+		if (f12Button != null) {
+			f12Button.fire();
 		}
 	}
 
 	public void fireEscButton() {
 		if (escButton != null) {
 			escButton.fire();
+		}
+	}
+
+	private Stage getCurrentWindow() {
+		if (currentWindow == null && f1Button != null && f1Button.getScene() != null) {
+			currentWindow = (Stage) f1Button.getScene().getWindow();
+		}
+		return currentWindow;
+	}
+
+	public void createNewTransaction() {
+		Trx newTrx = new Trx();
+		newTrx.setSubtotal(BigDecimal.ZERO);
+		newTrx.setQty(0);
+
+		try {
+			java.util.List<jfxpos.models.Channel> channels = channelRepo.findAll();
+			if (channels != null && !channels.isEmpty()) {
+				jfxpos.models.Channel smallestIdChannel = channels.stream()
+						.min(java.util.Comparator.comparingInt(jfxpos.models.Channel::getId))
+						.orElse(null);
+				if (smallestIdChannel != null) {
+					newTrx.setChannelId(smallestIdChannel.getId());
+					newTrx.setChannelName(smallestIdChannel.getChannelName());
+				}
+			}
+		} catch (Exception e) {
+			logger.severe("Failed to load default channel for new transaction: " + e.getMessage());
+		}
+
+		currentTrx.set(newTrx);
+		if (lineInput != null) {
+			lineInput.clear();
+		}
+		if (itemDescriptionLabel != null) {
+			itemDescriptionLabel.setText("");
+		}
+		if (itemPriceLabel != null) {
+			itemPriceLabel.setText("");
+		}
+		logger.info("New transaction started");
+	}
+
+	private void openChannelDialog() {
+		try {
+			jfxpos.views.ChannelDialog dialog = new jfxpos.views.ChannelDialog(getCurrentWindow());
+			Trx trx = currentTrx.get();
+			if (trx != null && trx.getChannelId() != null) {
+				dialog.selectChannelById(trx.getChannelId());
+			}
+			dialog.openDialog();
+			jfxpos.models.Channel selected = dialog.getSelectedChannel();
+			if (selected != null) {
+				logger.info("Selected Channel: " + selected.getChannelName());
+				if (trx != null) {
+					trx.setChannelId(selected.getId());
+					trx.setChannelName(selected.getChannelName());
+				}
+			}
+		} catch (Exception e) {
+			logger.severe("Failed to open ChannelDialog: " + e.getMessage());
+		}
+	}
+
+	private void openCheckoutDialog() {
+		// CustdisplayController custdisplay = getCustdisplayController();
+
+	}
+
+	private void closeSaleDialog() {
+		if (escButton.getScene() != null && escButton.getScene().getWindow() instanceof Stage stage) {
+			if (confirmClose()) {
+				stage.close();
+			}
 		}
 	}
 

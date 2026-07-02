@@ -27,13 +27,26 @@ public class Trx extends Model {
 			public static final String TRX_DOC = "TRX_DOC";
 			public static final String TRX_DATE = "TRX_DATE";
 			public static final String TRX_TIME = "TRX_TIME";
-			public static final String TOTAL_QTY = "TOTAL_QTY";
-			public static final String SUBTOTAL = "SUBTOTAL";
-			public static final String TOTAL_DISCOUNT = "TOTAL_DISCOUNT";
-			public static final String TOTAL_TAX = "TOTAL_TAX";
-			public static final String GRAND_TOTAL = "GRAND_TOTAL";
+			public static final String CUSTOMER_ID = "CUSTOMER_ID";
+			public static final String CUSTOMER_DISCOUNT = "CUSTOMER_DISCOUNT";
+			public static final String CUSTOMER_NAME = "CUSTOMER_NAME";
+			public static final String CUSTOMERTYPE_ID = "CUSTOMERTYPE_ID";
+			public static final String QTY = "QTY";
+			public static final String SUBTOTAL_GROSS = "SUBTOTAL_GROSS";
+			public static final String SUBTOTAL_DISCOUNT = "SUBTOTAL_DISCOUNT";
+			public static final String SUBTOTAL_NETT = "SUBTOTAL_NETT";
+			public static final String PROMOPAYM_VALUE = "PROMOPAYM_VALUE";
+			public static final String TOTAL = "TOTAL";
+			public static final String TOTAL_FP = "TOTAL_FP";
+			public static final String TOTAL_MD = "TOTAL_MD";
 			public static final String TOTAL_PAID = "TOTAL_PAID";
 			public static final String TOTAL_RETURN = "TOTAL_RETURN";
+			public static final String SALES_GROSS = "SALES_GROSS";
+			public static final String TAX_VALUE = "TAX_VALUE";
+			public static final String SALES_NETT = "SALES_NETT";
+			public static final String DONASI = "DONASI";
+			public static final String DELIVERY = "DELIVERY";
+			public static final String GRANDTOTAL = "GRANDTOTAL";
 			public static final String CHANNEL_ID = "CHANNEL_ID";
 			public static final String CASHIER_ID = "CASHIER_ID";
 			public static final String SITE_ID = "SITE_ID";
@@ -41,7 +54,6 @@ public class Trx extends Model {
 			public static final String STRUCT_ID = "STRUCT_ID";
 			public static final String IS_ACTIVE = "IS_ACTIVE";
 			public static final String CREATED_AT = "CREATED_AT";
-			public static final String MODIFIED_AT = "MODIFIED_AT";
 			public static final String DATATIMESTAMP = "DATATIMESTAMP";
 		}
 	}
@@ -50,7 +62,7 @@ public class Trx extends Model {
 	private final StringProperty trxDoc = new SimpleStringProperty(this, "trxDoc");
 	private final ObjectProperty<LocalDate> trxDate = new SimpleObjectProperty<>(this, "trxDate");
 	private final ObjectProperty<LocalTime> trxTime = new SimpleObjectProperty<>(this, "trxTime");
-	private final IntegerProperty totalQty = new SimpleIntegerProperty(this, "totalQty");
+	private final IntegerProperty qty = new SimpleIntegerProperty(this, "qty");
 	private final ObjectProperty<BigDecimal> subtotal = new SimpleObjectProperty<>(this, "subtotal", BigDecimal.ZERO);
 	private final ObjectProperty<BigDecimal> totalDiscount = new SimpleObjectProperty<>(this, "totalDiscount",
 			BigDecimal.ZERO);
@@ -60,17 +72,18 @@ public class Trx extends Model {
 	private final ObjectProperty<BigDecimal> totalPaid = new SimpleObjectProperty<>(this, "totalPaid", BigDecimal.ZERO);
 	private final ObjectProperty<BigDecimal> totalReturn = new SimpleObjectProperty<>(this, "totalReturn",
 			BigDecimal.ZERO);
-	private final IntegerProperty channelId = new SimpleIntegerProperty(this, "channelId");
-	private final StringProperty channelName = new SimpleStringProperty(this, "channelName");
+	private final IntegerProperty channelId = new SimpleIntegerProperty(this, "channelId", 0);
+	private final StringProperty channelName = new SimpleStringProperty(this, "channelName", "NONE");
+	private final IntegerProperty customerId = new SimpleIntegerProperty(this, "customerId");
+	private final StringProperty customerName = new SimpleStringProperty(this, "customerName", "NONE");
+	private final IntegerProperty customerTypeId = new SimpleIntegerProperty(this, "customerTypeId");
+	private final ObjectProperty<BigDecimal> customerDiscount = new SimpleObjectProperty<>(this, "customerDiscount",
+			BigDecimal.ZERO);
 
 	private final IntegerProperty cashierId = new SimpleIntegerProperty(this, "cashierId");
 	private final IntegerProperty siteId = new SimpleIntegerProperty(this, "siteId");
 	private final IntegerProperty unitId = new SimpleIntegerProperty(this, "unitId");
 	private final IntegerProperty structId = new SimpleIntegerProperty(this, "structId");
-	private final BooleanProperty isActive = new SimpleBooleanProperty(this, "isActive", true);
-	private final ObjectProperty<LocalDateTime> createdAt = new SimpleObjectProperty<>(this, "createdAt");
-	private final ObjectProperty<LocalDateTime> modifiedAt = new SimpleObjectProperty<>(this, "modifiedAt");
-	private final ObjectProperty<LocalDateTime> dataTimestamp = new SimpleObjectProperty<>(this, "dataTimestamp");
 
 	// Relationships
 	private List<TrxItem> items = new ArrayList<>();
@@ -127,16 +140,16 @@ public class Trx extends Model {
 		return trxTime;
 	}
 
-	public int getTotalQty() {
-		return totalQty.get();
+	public int getQty() {
+		return qty.get();
 	}
 
-	public void setTotalQty(int totalQty) {
-		this.totalQty.set(totalQty);
+	public void setQty(int qty) {
+		this.qty.set(qty);
 	}
 
-	public IntegerProperty totalQtyProperty() {
-		return totalQty;
+	public IntegerProperty qtyProperty() {
+		return qty;
 	}
 
 	public BigDecimal getSubtotal() {
@@ -283,52 +296,52 @@ public class Trx extends Model {
 		return structId;
 	}
 
-	public boolean isActive() {
-		return isActive.get();
+	public Integer getCustomerId() {
+		return customerId.get();
 	}
 
-	public void setActive(boolean active) {
-		this.isActive.set(active);
+	public void setCustomerId(Integer customerId) {
+		this.customerId.set(customerId != null ? customerId : 0);
 	}
 
-	public BooleanProperty isActiveProperty() {
-		return isActive;
+	public IntegerProperty customerIdProperty() {
+		return customerId;
 	}
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt.get();
+	public String getCustomerName() {
+		return customerName.get();
 	}
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt.set(createdAt);
+	public void setCustomerName(String customerName) {
+		this.customerName.set(customerName);
 	}
 
-	public ObjectProperty<LocalDateTime> createdAtProperty() {
-		return createdAt;
+	public StringProperty customerNameProperty() {
+		return customerName;
 	}
 
-	public LocalDateTime getModifiedAt() {
-		return modifiedAt.get();
+	public Integer getCustomerTypeId() {
+		return customerTypeId.get();
 	}
 
-	public void setModifiedAt(LocalDateTime modifiedAt) {
-		this.modifiedAt.set(modifiedAt);
+	public void setCustomerTypeId(Integer customerTypeId) {
+		this.customerTypeId.set(customerTypeId != null ? customerTypeId : 0);
 	}
 
-	public ObjectProperty<LocalDateTime> modifiedAtProperty() {
-		return modifiedAt;
+	public IntegerProperty customerTypeIdProperty() {
+		return customerTypeId;
 	}
 
-	public LocalDateTime getDataTimestamp() {
-		return dataTimestamp.get();
+	public BigDecimal getCustomerDiscount() {
+		return customerDiscount.get();
 	}
 
-	public void setDataTimestamp(LocalDateTime dataTimestamp) {
-		this.dataTimestamp.set(dataTimestamp);
+	public void setCustomerDiscount(BigDecimal customerDiscount) {
+		this.customerDiscount.set(customerDiscount != null ? customerDiscount : BigDecimal.ZERO);
 	}
 
-	public ObjectProperty<LocalDateTime> dataTimestampProperty() {
-		return dataTimestamp;
+	public ObjectProperty<BigDecimal> customerDiscountProperty() {
+		return customerDiscount;
 	}
 
 	public List<TrxItem> getItems() {

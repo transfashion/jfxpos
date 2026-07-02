@@ -6,7 +6,7 @@ Dokumen ini berisi pedoman, struktur, dan aturan arsitektur untuk pengembangan a
 
 ## 1. Arsitektur & Teknologi
 
-*   **Platform & Bahasa**: Java Desktop Application dengan **JavaFX** menggunakan **Java 21**.
+*   **Platform & Bahasa**: Java Desktop Application dengan **JavaFX** menggunakan **Java 25**.
 *   **Build Tool / Framework**: **Gradle** (Multi-module project).
 *   **Struktur Modul**:
     1.  `launcher`: Titik awal (*start point*) aplikasi. Modul ini bertanggung jawab untuk proses pemeriksaan dan pembaruan otomatis (*autoupdate*), khususnya mengunduh/mengganti file `jfxpos.jar` utama sebelum menjalankan aplikasi POS.
@@ -65,4 +65,4 @@ Untuk menjaga kualitas dan pemeliharaan kode (*maintainability*), ikuti aturan k
 Saat menambahkan fitur baru atau melakukan perubahan:
 1.  **Konfigurasi**: Jika memerlukan parameter koneksi database baru atau modifikasi pooling, perbarui record `AppConfig` di `jfxpos.config`, form FXML, serta `ConfigController` secara sinkron.
 2.  **Modularitas**: Pastikan kelas penanganan *autoupdater* tetap berada di modul `launcher` dan tidak bergantung pada komponen UI atau pustaka internal dari `jfxpos`.
-3.  **Kepatuhan Kode**: Selalu gunakan standard Java modern (Java 21), seperti records, pattern matching, dan penanganan resource otomatis (*try-with-resources*) untuk menutup koneksi database yang diperoleh dari pool.
+3.  **Kepatuhan Kode**: Selalu gunakan standard Java modern (Java 25), seperti records, pattern matching, dan penanganan resource otomatis (*try-with-resources*) untuk menutup koneksi database yang diperoleh dari pool.

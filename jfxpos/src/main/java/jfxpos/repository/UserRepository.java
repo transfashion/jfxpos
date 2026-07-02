@@ -39,7 +39,13 @@ public class UserRepository {
 					Timestamp ts = rs.getTimestamp(User.Contract.Columns.CREATED_AT);
 					LocalDateTime createdAt = ts != null ? ts.toLocalDateTime() : null;
 
-					return new User(id, user, password, role, isActive, createdAt);
+					Timestamp tsModified = rs.getTimestamp(User.Contract.Columns.MODIFIED_AT);
+					LocalDateTime modifiedAt = tsModified != null ? tsModified.toLocalDateTime() : null;
+
+					Timestamp tsData = rs.getTimestamp(User.Contract.Columns.DATATIMESTAMP);
+					LocalDateTime dataTimestamp = tsData != null ? tsData.toLocalDateTime() : null;
+
+					return new User(id, user, password, role, isActive, createdAt, modifiedAt, dataTimestamp);
 				}
 			}
 		} catch (SQLException e) {

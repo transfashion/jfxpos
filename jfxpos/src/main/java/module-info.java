@@ -16,4 +16,5 @@ module jfxpos {
 	opens jfxpos.config to javafx.fxml;
 	opens jfxpos.controller to javafx.fxml;
 	opens jfxpos.util to javafx.fxml;
+	opens jfxpos.models to javafx.base, javafx.fxml;
 }

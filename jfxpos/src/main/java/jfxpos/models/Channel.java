@@ -3,15 +3,13 @@ package jfxpos.models;
 import jfxpos.Model;
 import java.time.LocalDateTime;
 
-public class User extends Model {
+public class Channel extends Model {
 	public static final class Contract {
-		public static final String TABLE_NAME = "USERS";
+		public static final String TABLE_NAME = "CHANNEL";
 
 		public static final class Columns {
-			public static final String ID = "USER_ID";
-			public static final String USERNAME = "USERNAME";
-			public static final String PASSWORD = "PASSWORD";
-			public static final String ROLE = "ROLE";
+			public static final String ID = "CHANNEL_ID";
+			public static final String CHANNEL_NAME = "CHANNEL_NAME";
 			public static final String IS_ACTIVE = "IS_ACTIVE";
 			public static final String CREATED_AT = "CREATED_AT";
 			public static final String MODIFIED_AT = "MODIFIED_AT";
@@ -20,31 +18,18 @@ public class User extends Model {
 	}
 
 	private int id;
-	private String username;
-	private String password;
-	private String role;
+	private String channelName;
 	private boolean isActive;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 	private LocalDateTime dataTimestamp;
 
-	public User() {
+	public Channel() {
 	}
 
-	public User(int id, String username, String password, String role, boolean isActive, LocalDateTime createdAt) {
+	public Channel(int id, String channelName, boolean isActive, LocalDateTime createdAt, LocalDateTime modifiedAt, LocalDateTime dataTimestamp) {
 		this.id = id;
-		this.username = username;
-		this.password = password;
-		this.role = role;
-		this.isActive = isActive;
-		this.createdAt = createdAt;
-	}
-
-	public User(int id, String username, String password, String role, boolean isActive, LocalDateTime createdAt, LocalDateTime modifiedAt, LocalDateTime dataTimestamp) {
-		this.id = id;
-		this.username = username;
-		this.password = password;
-		this.role = role;
+		this.channelName = channelName;
 		this.isActive = isActive;
 		this.createdAt = createdAt;
 		this.modifiedAt = modifiedAt;
@@ -59,28 +44,12 @@ public class User extends Model {
 		this.id = id;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getChannelName() {
+		return channelName;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
+	public void setChannelName(String channelName) {
+		this.channelName = channelName;
 	}
 
 	public boolean isActive() {

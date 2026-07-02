@@ -56,6 +56,9 @@ public class SaleDialog extends View {
 			} else if (event.getCode() == javafx.scene.input.KeyCode.F1) {
 				controller.fireF1Button();
 				event.consume();
+			} else if (event.getCode() == javafx.scene.input.KeyCode.F2) {
+				controller.fireF2Button();
+				event.consume();
 			} else if (event.getCode() == javafx.scene.input.KeyCode.UP || event.getCode() == javafx.scene.input.KeyCode.DOWN) {
 				if (!controller.isItemTableFocused()) {
 					controller.focusItemTable();

@@ -151,6 +151,11 @@ public class SaleController extends Controller {
 			f1Button.setOnAction(e -> rotateSearchMode());
 		}
 
+		// Open channel selection on F2 button click
+		if (f2Button != null) {
+			f2Button.setOnAction(e -> openChannelDialog());
+		}
+
 		// Update customer display total on F10 button click
 		if (f10Button != null) {
 			f10Button.setOnAction(e -> {
@@ -279,6 +284,27 @@ public class SaleController extends Controller {
 	public void fireF1Button() {
 		if (f1Button != null) {
 			f1Button.fire();
+		}
+	}
+
+	public void fireF2Button() {
+		if (f2Button != null) {
+			f2Button.fire();
+		}
+	}
+
+	private void openChannelDialog() {
+		try {
+			Stage owner = (Stage) f2Button.getScene().getWindow();
+			jfxpos.views.ChannelDialog dialog = new jfxpos.views.ChannelDialog(owner);
+			dialog.openDialog();
+			jfxpos.models.Channel selected = dialog.getSelectedChannel();
+			if (selected != null) {
+				logger.info("Selected Channel: " + selected.getChannelName());
+				MessageBox.info(owner, "Channel Terpilih: " + selected.getChannelName());
+			}
+		} catch (Exception e) {
+			logger.severe("Failed to open ChannelDialog: " + e.getMessage());
 		}
 	}
 

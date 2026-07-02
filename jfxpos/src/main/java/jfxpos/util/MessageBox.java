@@ -84,4 +84,23 @@ public class MessageBox {
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == ButtonType.YES;
     }
+
+    public static void info(Stage stage, String msg) {
+        info(stage, msg, "Informasi");
+    }
+
+    public static void info(Stage stage, String msg, String title) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+
+        if (stage != null) {
+            alert.initOwner(stage);
+            alert.initModality(Modality.WINDOW_MODAL);
+        }
+
+        alert.showAndWait();
+    }
 }
+

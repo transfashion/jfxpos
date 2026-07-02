@@ -127,6 +127,9 @@ jar {
 
 
 tasks.withType(JavaExec).configureEach {
+    jvmArgs += [
+        '--enable-native-access=javafx.graphics'
+    ]
     if (project.hasProperty("debug")) {
         jvmArgs += [
             "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"

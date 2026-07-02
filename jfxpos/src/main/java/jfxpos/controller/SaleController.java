@@ -202,7 +202,7 @@ public class SaleController extends Controller {
 					customerIdLabel.textProperty().bind(
 							Bindings.createStringBinding(
 									() -> {
-										int cid = newTrx.customerIdProperty().get();
+										long cid = newTrx.customerIdProperty().get();
 										return cid == 0 ? "" : String.valueOf(cid);
 									},
 									newTrx.customerIdProperty()));
@@ -289,6 +289,16 @@ public class SaleController extends Controller {
 		// Show message box on F7 button click
 		if (f7Button != null) {
 			f7Button.setOnAction(e -> createNewTransaction());
+		}
+
+		// Register customer on button click
+		if (btnRegisterCustomer != null) {
+			btnRegisterCustomer.setOnAction(e -> openCustRegisterDialog());
+		}
+
+		// Clear customer on button click
+		if (btnClearCustomer != null) {
+			btnClearCustomer.setOnAction(e -> clearCustomerData());
 		}
 
 		// Update customer display total on F10 button click
@@ -558,6 +568,74 @@ public class SaleController extends Controller {
 			}
 		} catch (Exception e) {
 			logger.severe("Failed to open ChannelDialog: " + e.getMessage());
+		}
+	}
+
+	private void openCustRegisterDialog() {
+		try {
+			jfxpos.views.CustRegisterDialog dialog = new jfxpos.views.CustRegisterDialog(getCurrentWindow());
+			Trx trx = currentTrx.get();
+			if (trx != null) {
+				Long cid = trx.getCustomerId();
+				if (cid != null && cid != 0) {
+					dialog.setCustomerId(String.valueOf(cid));
+				}
+				String cname = trx.getCustomerName();
+				if (cname != null && !"NONE".equals(cname)) {
+					dialog.setCustomerName(cname);
+				}
+				Integer cgender = trx.getCustomerGender();
+				if (cgender != null && cgender != 0) {
+					dialog.setCustomerGender(String.valueOf(cgender));
+				}
+				java.time.LocalDate cbirth = trx.getCustomerBirthdate();
+				if (cbirth != null) {
+					dialog.setCustomerBirthdate(cbirth);
+				}
+			}
+			dialog.openDialog();
+			if (dialog.isSaved()) {
+				String newId = dialog.getCustomerId();
+				String newName = dialog.getCustomerName();
+				String newGender = dialog.getCustomerGender();
+				java.time.LocalDate newBirth = dialog.getCustomerBirthdate();
+				logger.info("Registered Customer: ID=" + newId + ", Name=" + newName + ", Gender=" + newGender + ", Birthdate=" + newBirth);
+				if (trx != null) {
+					trx.setCustomerId(Long.parseLong(newId));
+					trx.setCustomerName(newName);
+					trx.setCustomerGender(newGender != null && !newGender.isEmpty() ? Integer.parseInt(newGender) : 0);
+					trx.setCustomerBirthdate(newBirth);
+				}
+			}
+		} catch (Exception e) {
+			logger.severe("Failed to open CustRegisterDialog: " + e.getMessage());
+		}
+	}
+
+	private void clearCustomerData() {
+		Trx trx = currentTrx.get();
+		if (trx != null) {
+			Long cid = trx.getCustomerId();
+			String cname = trx.getCustomerName();
+			boolean hasCustomer = (cid != null && cid != 0L) || (cname != null && !"NONE".equalsIgnoreCase(cname));
+
+			if (hasCustomer) {
+				boolean confirm = MessageBox.confirm(getCurrentWindow(), 
+						"Apakah Anda yakin ingin menghapus data customer dari transaksi ini?", 
+						"Konfirmasi Hapus Customer");
+				if (!confirm) {
+					return;
+				}
+			}
+
+			trx.setCustomerId(0L);
+			trx.setCustomerName("NONE");
+			trx.setCustomerGender(0);
+			trx.setCustomerBirthdate(null);
+			trx.setCustomerTypeId(0);
+			trx.setCustomerTypeName("");
+			trx.setCustomerDiscount(java.math.BigDecimal.ZERO);
+			logger.info("Customer data cleared from transaction");
 		}
 	}
 

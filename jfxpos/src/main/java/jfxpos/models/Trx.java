@@ -4,14 +4,11 @@ import jfxpos.Model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -31,6 +28,8 @@ public class Trx extends Model {
 			public static final String CUSTOMER_DISCOUNT = "CUSTOMER_DISCOUNT";
 			public static final String CUSTOMER_NAME = "CUSTOMER_NAME";
 			public static final String CUSTOMERTYPE_ID = "CUSTOMERTYPE_ID";
+			public static final String CUSTOMER_GENDER = "CUSTOMER_GENDER";
+			public static final String CUSTOMER_BIRTHDATE = "CUSTOMER_BIRTHDATE";
 			public static final String QTY = "QTY";
 			public static final String SUBTOTAL_GROSS = "SUBTOTAL_GROSS";
 			public static final String SUBTOTAL_DISCOUNT = "SUBTOTAL_DISCOUNT";
@@ -74,9 +73,13 @@ public class Trx extends Model {
 			BigDecimal.ZERO);
 	private final IntegerProperty channelId = new SimpleIntegerProperty(this, "channelId", 0);
 	private final StringProperty channelName = new SimpleStringProperty(this, "channelName", "NONE");
-	private final IntegerProperty customerId = new SimpleIntegerProperty(this, "customerId");
+	private final LongProperty customerId = new SimpleLongProperty(this, "customerId");
 	private final StringProperty customerName = new SimpleStringProperty(this, "customerName", "NONE");
 	private final IntegerProperty customerTypeId = new SimpleIntegerProperty(this, "customerTypeId");
+	private final StringProperty customerTypeName = new SimpleStringProperty(this, "customerTypeName", "");
+	private final IntegerProperty customerGender = new SimpleIntegerProperty(this, "customerGender", 0);
+	private final ObjectProperty<LocalDate> customerBirthdate = new SimpleObjectProperty<>(this, "customerBirthdate");
+
 	private final ObjectProperty<BigDecimal> customerDiscount = new SimpleObjectProperty<>(this, "customerDiscount",
 			BigDecimal.ZERO);
 
@@ -296,15 +299,15 @@ public class Trx extends Model {
 		return structId;
 	}
 
-	public Integer getCustomerId() {
+	public Long getCustomerId() {
 		return customerId.get();
 	}
 
-	public void setCustomerId(Integer customerId) {
-		this.customerId.set(customerId != null ? customerId : 0);
+	public void setCustomerId(Long customerId) {
+		this.customerId.set(customerId != null ? customerId : 0L);
 	}
 
-	public IntegerProperty customerIdProperty() {
+	public LongProperty customerIdProperty() {
 		return customerId;
 	}
 
@@ -320,6 +323,30 @@ public class Trx extends Model {
 		return customerName;
 	}
 
+	public Integer getCustomerGender() {
+		return customerGender.get();
+	}
+
+	public void setCustomerGender(Integer customerGender) {
+		this.customerGender.set(customerGender != null ? customerGender : 0);
+	}
+
+	public IntegerProperty customerGenderProperty() {
+		return customerGender;
+	}
+
+	public LocalDate getCustomerBirthdate() {
+		return customerBirthdate.get();
+	}
+
+	public void setCustomerBirthdate(LocalDate customerBirthdate) {
+		this.customerBirthdate.set(customerBirthdate);
+	}
+
+	public ObjectProperty<LocalDate> customerBirthdateProperty() {
+		return customerBirthdate;
+	}
+
 	public Integer getCustomerTypeId() {
 		return customerTypeId.get();
 	}
@@ -330,6 +357,18 @@ public class Trx extends Model {
 
 	public IntegerProperty customerTypeIdProperty() {
 		return customerTypeId;
+	}
+
+	public String getCustomerTypeName() {
+		return customerTypeName.get();
+	}
+
+	public void setCustomerTypeName(String customerTypeName) {
+		this.customerTypeName.set(customerTypeName);
+	}
+
+	public StringProperty customerTypeNameProperty() {
+		return customerTypeName;
 	}
 
 	public BigDecimal getCustomerDiscount() {

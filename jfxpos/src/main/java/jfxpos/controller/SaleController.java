@@ -309,6 +309,11 @@ public class SaleController extends Controller {
 			btnRegisterCustomer.setOnAction(e -> openCustRegisterDialog());
 		}
 
+		// Search customer on button click
+		if (btnSearchCustomer != null) {
+			btnSearchCustomer.setOnAction(e -> openCustSearchDialog());
+		}
+
 		// Clear customer on button click
 		if (btnClearCustomer != null) {
 			btnClearCustomer.setOnAction(e -> clearCustomerData());
@@ -622,6 +627,28 @@ public class SaleController extends Controller {
 			}
 		} catch (Exception e) {
 			logger.severe("Failed to open CustRegisterDialog: " + e.getMessage());
+		}
+	}
+
+	private void openCustSearchDialog() {
+		try {
+			jfxpos.views.CustSearchDialog dialog = new jfxpos.views.CustSearchDialog(getCurrentWindow());
+			dialog.openDialog();
+			jfxpos.models.Customer selected = dialog.getSelectedCustomer();
+			if (selected != null) {
+				logger.info("Selected Customer: ID=" + selected.getCustomerId() + ", Name=" + selected.getCustomerName());
+				Trx trx = currentTrx.get();
+				if (trx != null) {
+					trx.setCustomerId((long) selected.getCustomerId());
+					trx.setCustomerName(selected.getCustomerName());
+					trx.setCustomerTypeId(selected.getCustomerTypeId());
+					trx.setCustomerTypeName(selected.getCustomerTypeName());
+					trx.setCustomerGender(selected.getCustomerGender());
+					trx.setCustomerBirthdate(selected.getCustomerBirthdate());
+				}
+			}
+		} catch (Exception e) {
+			logger.severe("Failed to open CustSearchDialog: " + e.getMessage());
 		}
 	}
 

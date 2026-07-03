@@ -11,6 +11,7 @@ import jfxpos.config.AppConfigStore;
 import jfxpos.Controller;
 import jfxpos.util.MessageBox;
 import jfxpos.util.ErrorMessage;
+import jfxpos.util.JfxposApi;
 import jfxpos.views.TesterDialog;
 
 import java.util.Properties;
@@ -307,6 +308,7 @@ public class ConfigController extends Controller {
 			AppConfigStore.save(cfg);
 			jfxpos.App.config = cfg;
 			jfxpos.util.DbPool.init(cfg);
+			JfxposApi.init(cfg);
 
 			Stage stage = (Stage) saveButton.getScene().getWindow();
 			stage.close();
@@ -504,25 +506,8 @@ public class ConfigController extends Controller {
 		String siteCode = siteCodeInput.getText() != null ? siteCodeInput.getText().trim() : "";
 		String structCode = structCodeInput.getText() != null ? structCodeInput.getText().trim() : "";
 
-		String timestamp = java.time.Instant.now().toString();
-		String payload = "{}" + timestamp;
-
-		String signature = calculateHmacSha256(payload, secret);
-
-		java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
-		java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder()
-				.uri(java.net.URI.create(apiUrl))
-				.GET()
-				.header("X-Device-Code", deviceCode)
-				.header("X-API-Key", apiKey)
-				.header("X-Timestamp", timestamp)
-				.header("X-Signature", signature)
-				.header("X-Site-Code", siteCode)
-				.header("X-Dept-Code", structCode)
-				.build();
-
-		java.net.http.HttpResponse<String> response = client.send(request,
-				java.net.http.HttpResponse.BodyHandlers.ofString());
+		JfxposApi.init(deviceCode, apiKey, secret, siteCode, structCode);
+		java.net.http.HttpResponse<String> response = JfxposApi.get(apiUrl);
 
 		if (response.statusCode() == 200) {
 			String body = response.body();
@@ -550,21 +535,6 @@ public class ConfigController extends Controller {
 			}
 			throw new Exception("Gagal verifikasi perangkat (API Get Device): " + errorMsg);
 		}
-	}
-
-	private String calculateHmacSha256(String data, String key) throws Exception {
-		byte[] byteKey = key.getBytes(java.nio.charset.StandardCharsets.UTF_8);
-		javax.crypto.Mac sha256HMAC = javax.crypto.Mac.getInstance("HmacSHA256");
-		javax.crypto.spec.SecretKeySpec keySpec = new javax.crypto.spec.SecretKeySpec(byteKey, "HmacSHA256");
-		sha256HMAC.init(keySpec);
-
-		byte[] macData = sha256HMAC.doFinal(data.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-
-		StringBuilder result = new StringBuilder();
-		for (byte b : macData) {
-			result.append(String.format("%02x", b));
-		}
-		return result.toString();
 	}
 
 	private String extractJsonString(String json, String key) {

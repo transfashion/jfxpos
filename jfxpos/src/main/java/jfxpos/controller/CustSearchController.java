@@ -13,6 +13,7 @@ import jfxpos.config.AppConfig;
 import jfxpos.config.AppConfigStore;
 import jfxpos.models.Customer;
 import jfxpos.util.MessageBox;
+import jfxpos.util.JfxposApi;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -175,31 +176,8 @@ public class CustSearchController extends Controller {
 				apiUrl = serverUrl + "/api/customers/searchlastdigit?searchtext=" + java.net.URLEncoder.encode(keyword, java.nio.charset.StandardCharsets.UTF_8);
 			}
 
-			String deviceCode = config.deviceCode();
-			String apiKey = config.apiKey();
-			String secret = config.secret();
-			String siteCode = config.siteCode();
-			String structCode = config.structCode();
-
-			String timestamp = Instant.now().toString();
-			// Signature payload for GET request is payload + timestamp where payload is empty string: "" + timestamp or "{}" + timestamp
-			String payload = "" + timestamp;
-			String signature = calculateHmacSha256(payload, secret);
-
-			HttpClient client = HttpClient.newHttpClient();
-			HttpRequest request = HttpRequest.newBuilder()
-					.uri(URI.create(apiUrl))
-					.GET()
-					.header("X-Device-Code", deviceCode)
-					.header("X-API-Key", apiKey)
-					.header("X-Timestamp", timestamp)
-					.header("X-Signature", signature)
-					.header("X-Site-Code", siteCode)
-					.header("X-Dept-Code", structCode)
-					.build();
-
 			logger.info("Requesting Customer API: " + apiUrl);
-			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			HttpResponse<String> response = JfxposApi.get(apiUrl);
 
 			if (response.statusCode() == 200) {
 				String body = response.body();
@@ -222,7 +200,7 @@ public class CustSearchController extends Controller {
 			}
 
 		} catch (Exception e) {
-			logger.severe("Customer search failed: " + e.getMessage());
+			logger.log(java.util.logging.Level.SEVERE, "Customer search failed", e);
 			MessageBox.error(getCurrentStage(), "Failed to search customer: " + e.getMessage(), "Search Error");
 		}
 	}
@@ -253,18 +231,6 @@ public class CustSearchController extends Controller {
 		return selectedCustomer;
 	}
 
-	private String calculateHmacSha256(String data, String key) throws Exception {
-		byte[] byteKey = key.getBytes(java.nio.charset.StandardCharsets.UTF_8);
-		javax.crypto.Mac sha256HMAC = javax.crypto.Mac.getInstance("HmacSHA256");
-		javax.crypto.spec.SecretKeySpec keySpec = new javax.crypto.spec.SecretKeySpec(byteKey, "HmacSHA256");
-		sha256HMAC.init(keySpec);
-		byte[] macData = sha256HMAC.doFinal(data.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-		StringBuilder result = new StringBuilder();
-		for (byte b : macData) {
-			result.append(String.format("%02x", b));
-		}
-		return result.toString();
-	}
 
 	private List<Customer> parseCustomers(String json) {
 		List<Customer> list = new ArrayList<>();

@@ -84,6 +84,7 @@ public class ConfigController extends Controller {
 	private AppConfig initialConfig;
 
 	private Integer apiDeviceId;
+	private String apiDeviceNum;
 	private Integer apiSiteId;
 	private String apiSiteName;
 	private Integer apiStructId;
@@ -293,6 +294,7 @@ public class ConfigController extends Controller {
 					apiStructId != null ? apiStructId : initialConfig.structId(),
 					deviceCodeInput.getText(),
 					apiDeviceId != null ? apiDeviceId : initialConfig.deviceId(),
+					apiDeviceNum != null ? apiDeviceNum : initialConfig.deviceNum(),
 					apiName != null ? apiName : initialConfig.name(),
 					secretInput.getText(),
 					printerNameInput.getText(),
@@ -527,12 +529,14 @@ public class ConfigController extends Controller {
 			logger.info("Verifikasi Device Sukses: " + body);
 
 			Integer deviceId = extractJsonInt(body, "device_id");
+			String deviceNum = extractJsonString(body, "device_num");
 			String deviceName = extractJsonString(body, "name");
 			Integer siteId = extractJsonInt(body, "site_id");
 			String siteName = extractJsonString(body, "site_name");
 			Integer structId = extractJsonInt(body, "struct_id");
 
 			this.apiDeviceId = deviceId;
+			this.apiDeviceNum = deviceNum;
 			this.apiName = deviceName;
 			this.apiSiteId = siteId;
 			this.apiSiteName = siteName;

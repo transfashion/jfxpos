@@ -10,6 +10,7 @@ public record AppConfig(
 		Integer structId,
 		String deviceCode,
 		Integer deviceId,
+		String deviceNum,
 		String name,
 		String secret,
 		String ticketPrinterName,

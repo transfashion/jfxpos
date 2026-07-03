@@ -36,6 +36,9 @@ public class SaleController extends Controller {
 	};
 
 	@FXML
+	private Label deviceNumLabel;
+
+	@FXML
 	private Label siteNameLabel;
 
 	@FXML
@@ -161,6 +164,9 @@ public class SaleController extends Controller {
 		}
 		if (nameLabel != null && jfxpos.App.config != null) {
 			nameLabel.setText(jfxpos.App.config.name());
+		}
+		if (deviceNumLabel != null && jfxpos.App.config != null && jfxpos.App.config.deviceNum() != null) {
+			deviceNumLabel.setText(jfxpos.App.config.deviceNum());
 		}
 
 		// Bind components to currentTrx properties dynamically

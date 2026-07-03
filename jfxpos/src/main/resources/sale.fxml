@@ -22,7 +22,7 @@
                <children>
                   <HBox minWidth="-Infinity" prefWidth="620.0">
                      <children>
-                        <Label alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="72.0" prefWidth="65.0" styleClass="devid-info" text="01">
+                        <Label fx:id="deviceNumLabel" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="72.0" prefWidth="65.0" styleClass="devid-info" text="01">
                            <HBox.margin>
                               <Insets right="20.0" />
                            </HBox.margin>

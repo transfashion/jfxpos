@@ -10,6 +10,24 @@ import jfxpos.views.AuthorizeDialog;
 public class DashboardController extends Controller {
 
 	@FXML
+	private javafx.scene.control.Label siteNameLabel;
+
+	@FXML
+	private javafx.scene.control.Label siteCodeLabel;
+
+	@FXML
+	private javafx.scene.control.Label structCodeLabel;
+
+	@FXML
+	private javafx.scene.control.Label deviceCodeLabel;
+
+	@FXML
+	private javafx.scene.control.Label nameLabel;
+
+	@FXML
+	private javafx.scene.control.Label serverUrlLabel;
+
+	@FXML
 	private Button voidButton;
 
 	@FXML
@@ -23,6 +41,18 @@ public class DashboardController extends Controller {
 
 	public DashboardController() {
 		super(DashboardController.class);
+	}
+
+	@FXML
+	public void initialize() {
+		if (jfxpos.App.config != null) {
+			siteNameLabel.setText(jfxpos.App.config.siteName());
+			siteCodeLabel.setText(jfxpos.App.config.siteCode());
+			structCodeLabel.setText(jfxpos.App.config.structCode());
+			deviceCodeLabel.setText(jfxpos.App.config.deviceCode());
+			nameLabel.setText(jfxpos.App.config.name());
+			serverUrlLabel.setText(jfxpos.App.config.serverUrl());
+		}
 	}
 
 	@FXML

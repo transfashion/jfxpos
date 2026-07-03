@@ -2,8 +2,15 @@ package jfxpos.config;
 
 public record AppConfig(
 		String serverUrl,
-		String siteId,
-		String machineId,
+		String apiKey,
+		String siteCode,
+		Integer siteId,
+		String siteName,
+		String structCode,
+		Integer structId,
+		String deviceCode,
+		Integer deviceId,
+		String name,
 		String secret,
 		String ticketPrinterName,
 		String databaseHost,

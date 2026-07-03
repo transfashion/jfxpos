@@ -18,7 +18,7 @@
    <children>
       <HBox>
          <children>
-            <Label text="Site Name">
+            <Label fx:id="siteNameLabel" text="Site Name">
                <font>
                   <Font name="Arial Bold" size="24.0" />
                </font>
@@ -30,16 +30,16 @@
             <Insets top="3.0" />
          </VBox.margin>
          <children>
-            <Label text="POS">
+            <Label fx:id="siteCodeLabel" text="SiteCode">
             </Label>
-            <Label text="SiteID">
+            <Label fx:id="structCodeLabel" text="StructCode">
             </Label>
-            <Label text="MachineID">
+            <Label fx:id="deviceCodeLabel" text="DeviceCode">
             </Label>
-            <Label text="Name">
-            </Label>
-            <Label text="Event">
-            </Label>
+            <Label fx:id="nameLabel" text="Name">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin></Label>
             <Label text="|">
                <HBox.margin>
                   <Insets left="5.0" />
@@ -47,7 +47,7 @@
             <Hyperlink focusTraversable="false" styleClass="hyperlink" text="Show Running Parameters">
             </Hyperlink>
             <Pane prefWidth="200.0" HBox.hgrow="ALWAYS" />
-            <Label text="http://localhost">
+            <Label fx:id="serverUrlLabel" text="http://localhost">
             </Label>
          </children>
       </HBox>

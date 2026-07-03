@@ -5,8 +5,15 @@ import java.util.prefs.Preferences;
 public class AppConfigStore {
 
 	static final String SERVER_URL = "app.serverUrl";
+	static final String API_KEY = "app.apiKey";
+	static final String SITE_CODE = "app.siteCode";
+	static final String STRUCT_CODE = "app.structCode";
+	static final String DEVICE_CODE = "app.deviceCode";
 	static final String SITE_ID = "app.siteId";
-	static final String MACHINE_ID = "app.machineId";
+	static final String SITE_NAME = "app.siteName";
+	static final String STRUCT_ID = "app.structId";
+	static final String DEVICE_ID = "app.deviceId";
+	static final String NAME = "app.name";
 	static final String KEY = "app.key";
 	static final String TICKET_PRINTER_NAME = "app.ticketPrinterName";
 	static final String LAST_USERNAME = "app.lastUsername";
@@ -21,8 +28,27 @@ public class AppConfigStore {
 
 	public static void save(AppConfig config) {
 		prefs.put(SERVER_URL, config.serverUrl());
-		prefs.put(SITE_ID, config.siteId());
-		prefs.put(MACHINE_ID, config.machineId());
+		prefs.put(API_KEY, config.apiKey());
+		prefs.put(SITE_CODE, config.siteCode());
+		prefs.put(STRUCT_CODE, config.structCode());
+		prefs.put(DEVICE_CODE, config.deviceCode());
+		if (config.siteId() != null) {
+			prefs.putInt(SITE_ID, config.siteId());
+		} else {
+			prefs.remove(SITE_ID);
+		}
+		prefs.put(SITE_NAME, config.siteName() != null ? config.siteName() : "");
+		if (config.structId() != null) {
+			prefs.putInt(STRUCT_ID, config.structId());
+		} else {
+			prefs.remove(STRUCT_ID);
+		}
+		if (config.deviceId() != null) {
+			prefs.putInt(DEVICE_ID, config.deviceId());
+		} else {
+			prefs.remove(DEVICE_ID);
+		}
+		prefs.put(NAME, config.name() != null ? config.name() : "");
 		prefs.put(KEY, config.secret());
 		prefs.put(TICKET_PRINTER_NAME, config.ticketPrinterName());
 		prefs.put(DATABASE_HOST, config.databaseHost());
@@ -35,8 +61,15 @@ public class AppConfigStore {
 
 	public static AppConfig load() {
 		String serverUrl = prefs.get(SERVER_URL, "http://localhost");
-		String siteId = prefs.get(SITE_ID, "");
-		String machineId = prefs.get(MACHINE_ID, "");
+		String apiKey = prefs.get(API_KEY, "");
+		String siteCode = prefs.get(SITE_CODE, prefs.get("app.siteId", ""));
+		String structCode = prefs.get(STRUCT_CODE, "");
+		String deviceCode = prefs.get(DEVICE_CODE, prefs.get("app.machineId", ""));
+		Integer siteId = prefs.get(SITE_ID, null) != null ? prefs.getInt(SITE_ID, 0) : null;
+		String siteName = prefs.get(SITE_NAME, "");
+		Integer structId = prefs.get(STRUCT_ID, null) != null ? prefs.getInt(STRUCT_ID, 0) : null;
+		Integer deviceId = prefs.get(DEVICE_ID, null) != null ? prefs.getInt(DEVICE_ID, 0) : null;
+		String name = prefs.get(NAME, "");
 		String key = prefs.get(KEY, "");
 		String ticketPrinterName = prefs.get(TICKET_PRINTER_NAME, "");
 		String databaseHost = prefs.get(DATABASE_HOST, "localhost");
@@ -45,7 +78,7 @@ public class AppConfigStore {
 		String databasePassword = prefs.get(DATABASE_PASSWORD, "");
 		String databaseRole = prefs.get(DATABASE_ROLE, "");
 		int databasePoolSize = prefs.getInt(DATABASE_POOL_SIZE, 3);
-		return new AppConfig(serverUrl, siteId, machineId, key, ticketPrinterName,
+		return new AppConfig(serverUrl, apiKey, siteCode, siteId, siteName, structCode, structId, deviceCode, deviceId, name, key, ticketPrinterName,
 				databaseHost, databasePath, databaseUsername, databasePassword, databaseRole, databasePoolSize);
 	}
 

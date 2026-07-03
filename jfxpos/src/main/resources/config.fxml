@@ -14,9 +14,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="567.0" prefWidth="774.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TabPane prefHeight="566.0" prefWidth="737.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
           <Tab closable="false" text="Main">
                <content>
@@ -27,7 +27,7 @@
                      <children>
                         <GridPane hgap="10.0" vgap="15.0">
                           <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -42,6 +42,7 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -52,22 +53,24 @@
                               <Label text="Token" GridPane.halignment="RIGHT" />
                               <TextField fx:id="tokenInput" GridPane.columnIndex="1" GridPane.columnSpan="6" />
                               <Button fx:id="parseButton" mnemonicParsing="false" onAction="#onParseButtonClick" prefWidth="80.0" text="Parse" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <TextField fx:id="serverUrlInput" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="3" />
                               <Label text="Server URL" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-                              <Label text="Dept ID" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-                              <Label text="Secret" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-                              <TextField GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                              <TextField fx:id="machineIdInput" GridPane.columnIndex="5" GridPane.rowIndex="5" />
-                              <Label text="Device ID" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-                              <TextField fx:id="printerNameInput" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="7" />
-                              <Button fx:id="printerTestButton" mnemonicParsing="false" text="Test Print" GridPane.columnIndex="5" GridPane.rowIndex="7" />
-                              <Label text="Printer" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
-                              <Button fx:id="saveButton" maxWidth="80.0" mnemonicParsing="false" onAction="#onSaveButtonClick" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-                              <Button fx:id="cancelButton" maxWidth="80.0" mnemonicParsing="false" onAction="#onCancelButtonClick" text="Cancel" GridPane.columnIndex="2" GridPane.rowIndex="10" />
-                              <PasswordField fx:id="secretInput" GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                              <Button fx:id="testButton" mnemonicParsing="false" onAction="#onTestButtonClick" prefHeight="26.0" prefWidth="68.0" text="Test" GridPane.columnIndex="6" GridPane.halignment="RIGHT" GridPane.rowIndex="10" />
-                              <TextField fx:id="siteIdInput" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5" />
-                              <Label text="Site ID" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                              <TextField fx:id="serverUrlInput" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="3" />
+                              <Label contentDisplay="CENTER" text="API Key" GridPane.rowIndex="4" />
+                              <TextField fx:id="apiKeyInput" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="4" />
+                              <Label text="Struct Code" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                              <TextField fx:id="structCodeInput" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+                              <Label text="Secret" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                              <PasswordField fx:id="secretInput" GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+                              <Label text="Site Code" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+                              <TextField fx:id="siteCodeInput" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="6" />
+                              <Label text="Device Code" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+                              <TextField fx:id="deviceCodeInput" GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="6" />
+                              <Label text="Printer" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
+                              <TextField fx:id="printerNameInput" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="8" />
+                              <Button fx:id="printerTestButton" mnemonicParsing="false" text="Test Print" GridPane.columnIndex="5" GridPane.rowIndex="8" />
+                              <Button fx:id="saveButton" maxWidth="80.0" mnemonicParsing="false" onAction="#onSaveButtonClick" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                              <Button fx:id="cancelButton" maxWidth="80.0" mnemonicParsing="false" onAction="#onCancelButtonClick" text="Cancel" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+                              <Button fx:id="testButton" mnemonicParsing="false" onAction="#onTestButtonClick" prefHeight="26.0" prefWidth="68.0" text="Test" GridPane.columnIndex="6" GridPane.halignment="RIGHT" GridPane.rowIndex="11" />
                            </children>
                         </GridPane>
                         <AnchorPane prefHeight="50.0" />

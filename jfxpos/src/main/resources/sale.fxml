@@ -29,10 +29,10 @@
                         </Label>
                         <VBox minWidth="-Infinity" HBox.hgrow="ALWAYS">
                            <children>
-                               <Label fx:id="storeNameLabel" styleClass="store-name" text="Store Name" />
+                               <Label fx:id="siteNameLabel" styleClass="store-name" text="Store Name" />
                               <HBox styleClass="store-info-bar">
                                  <children>
-                                    <Label fx:id="storeInfoLabel" text="POS.COR.PIM.PIM" />
+                                    <Label fx:id="nameLabel" text="POS.COR.PIM.PIM" />
                                  </children>
                               </HBox>
                               <Label fx:id="channelNameLabel" text="REGULER" translateY="-1.0" />

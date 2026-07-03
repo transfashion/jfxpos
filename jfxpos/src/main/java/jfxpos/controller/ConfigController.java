@@ -31,13 +31,19 @@ public class ConfigController extends Controller {
 	TextField serverUrlInput;
 
 	@FXML
-	TextField siteIdInput;
+	TextField apiKeyInput;
+
+	@FXML
+	TextField siteCodeInput;
+
+	@FXML
+	TextField structCodeInput;
 
 	@FXML
 	TextField secretInput;
 
 	@FXML
-	TextField machineIdInput;
+	TextField deviceCodeInput;
 
 	@FXML
 	TextField printerNameInput;
@@ -77,6 +83,12 @@ public class ConfigController extends Controller {
 
 	private AppConfig initialConfig;
 
+	private Integer apiDeviceId;
+	private Integer apiSiteId;
+	private String apiSiteName;
+	private Integer apiStructId;
+	private String apiName;
+
 	public ConfigController() {
 		super(ConfigController.class);
 	}
@@ -85,9 +97,11 @@ public class ConfigController extends Controller {
 	public void initialize() {
 		initialConfig = AppConfigStore.load();
 		serverUrlInput.setText(initialConfig.serverUrl());
-		siteIdInput.setText(initialConfig.siteId());
+		apiKeyInput.setText(initialConfig.apiKey());
+		siteCodeInput.setText(initialConfig.siteCode());
+		structCodeInput.setText(initialConfig.structCode());
 		secretInput.setText(initialConfig.secret());
-		machineIdInput.setText(initialConfig.machineId());
+		deviceCodeInput.setText(initialConfig.deviceCode());
 		printerNameInput.setText(initialConfig.ticketPrinterName());
 		databaseHostInput.setText(initialConfig.databaseHost());
 		databasePathInput.setText(initialConfig.databasePath());
@@ -178,11 +192,15 @@ public class ConfigController extends Controller {
 		}
 		if (!equalsOrEmpty(serverUrlInput.getText(), initialConfig.serverUrl()))
 			return true;
-		if (!equalsOrEmpty(siteIdInput.getText(), initialConfig.siteId()))
+		if (!equalsOrEmpty(apiKeyInput.getText(), initialConfig.apiKey()))
+			return true;
+		if (!equalsOrEmpty(siteCodeInput.getText(), initialConfig.siteCode()))
+			return true;
+		if (!equalsOrEmpty(structCodeInput.getText(), initialConfig.structCode()))
 			return true;
 		if (!equalsOrEmpty(secretInput.getText(), initialConfig.secret()))
 			return true;
-		if (!equalsOrEmpty(machineIdInput.getText(), initialConfig.machineId()))
+		if (!equalsOrEmpty(deviceCodeInput.getText(), initialConfig.deviceCode()))
 			return true;
 		if (!equalsOrEmpty(printerNameInput.getText(), initialConfig.ticketPrinterName()))
 			return true;
@@ -240,6 +258,9 @@ public class ConfigController extends Controller {
 		Task<Void> testTask = new Task<>() {
 			@Override
 			protected Void call() throws Exception {
+				// 1. Verify device credentials via API
+				callGetDeviceApi();
+				// 2. Test database connection
 				testDatabaseConnection(host, path, username, password, role);
 				return null;
 			}
@@ -264,8 +285,15 @@ public class ConfigController extends Controller {
 
 			AppConfig cfg = new AppConfig(
 					serverUrlInput.getText(),
-					siteIdInput.getText(),
-					machineIdInput.getText(),
+					apiKeyInput.getText(),
+					siteCodeInput.getText(),
+					apiSiteId != null ? apiSiteId : initialConfig.siteId(),
+					apiSiteName != null ? apiSiteName : initialConfig.siteName(),
+					structCodeInput.getText(),
+					apiStructId != null ? apiStructId : initialConfig.structId(),
+					deviceCodeInput.getText(),
+					apiDeviceId != null ? apiDeviceId : initialConfig.deviceId(),
+					apiName != null ? apiName : initialConfig.name(),
 					secretInput.getText(),
 					printerNameInput.getText(),
 					host,
@@ -292,13 +320,19 @@ public class ConfigController extends Controller {
 			}
 
 			Throwable ex = testTask.getException();
-			logger.log(Level.SEVERE, "Database connection check failed during Save", ex);
+			logger.log(Level.SEVERE, "Configuration verification or connection check failed during Save", ex);
 
 			// Show connection error message to user
 			Stage stage = (Stage) saveButton.getScene().getWindow();
-			String friendlyMsg = getFriendlyDatabaseErrorMessage(ex);
+			String friendlyMsg;
+			if (ex.getMessage() != null && (ex.getMessage().contains("API") || ex.getMessage().contains("perangkat")
+					|| ex.getMessage().contains("Server URL"))) {
+				friendlyMsg = ex.getMessage();
+			} else {
+				friendlyMsg = getFriendlyDatabaseErrorMessage(ex);
+			}
 			MessageBox.error(stage,
-					"Gagal menyimpan konfigurasi: Koneksi database tidak dapat dibangun.\n\n" + friendlyMsg, ex,
+					"Gagal menyimpan konfigurasi.\n\n" + friendlyMsg, ex,
 					"Save Config Failed");
 		});
 
@@ -450,5 +484,104 @@ public class ConfigController extends Controller {
 
 		// Fallback to the original error message but cleaner
 		return "Gagal terhubung ke database.\nDetail error: " + message;
+	}
+
+	private void callGetDeviceApi() throws Exception {
+		String serverUrl = serverUrlInput.getText() != null ? serverUrlInput.getText().trim() : "";
+		if (serverUrl.isEmpty()) {
+			throw new Exception("Server URL tidak boleh kosong!");
+		}
+		if (serverUrl.endsWith("/")) {
+			serverUrl = serverUrl.substring(0, serverUrl.length() - 1);
+		}
+		String apiUrl = serverUrl + "/api/pos/getdevice";
+
+		String deviceCode = deviceCodeInput.getText() != null ? deviceCodeInput.getText().trim() : "";
+		String apiKey = apiKeyInput.getText() != null ? apiKeyInput.getText().trim() : "";
+		String secret = secretInput.getText() != null ? secretInput.getText().trim() : "";
+		String siteCode = siteCodeInput.getText() != null ? siteCodeInput.getText().trim() : "";
+		String structCode = structCodeInput.getText() != null ? structCodeInput.getText().trim() : "";
+
+		String timestamp = java.time.Instant.now().toString();
+		String payload = "{}" + timestamp;
+
+		String signature = calculateHmacSha256(payload, secret);
+
+		java.net.http.HttpClient client = java.net.http.HttpClient.newHttpClient();
+		java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder()
+				.uri(java.net.URI.create(apiUrl))
+				.GET()
+				.header("X-Device-Code", deviceCode)
+				.header("X-API-Key", apiKey)
+				.header("X-Timestamp", timestamp)
+				.header("X-Signature", signature)
+				.header("X-Site-Code", siteCode)
+				.header("X-Dept-Code", structCode)
+				.build();
+
+		java.net.http.HttpResponse<String> response = client.send(request,
+				java.net.http.HttpResponse.BodyHandlers.ofString());
+
+		if (response.statusCode() == 200) {
+			String body = response.body();
+			logger.info("Verifikasi Device Sukses: " + body);
+
+			Integer deviceId = extractJsonInt(body, "device_id");
+			String deviceName = extractJsonString(body, "name");
+			Integer siteId = extractJsonInt(body, "site_id");
+			String siteName = extractJsonString(body, "site_name");
+			Integer structId = extractJsonInt(body, "struct_id");
+
+			this.apiDeviceId = deviceId;
+			this.apiName = deviceName;
+			this.apiSiteId = siteId;
+			this.apiSiteName = siteName;
+			this.apiStructId = structId;
+		} else {
+			logger.warning(
+					"Gagal Verifikasi Device. Status: " + response.statusCode() + ", Response: " + response.body());
+			String errorMsg = extractJsonString(response.body(), "message");
+			if (errorMsg == null || errorMsg.isEmpty()) {
+				errorMsg = "HTTP Status " + response.statusCode();
+			}
+			throw new Exception("Gagal verifikasi perangkat (API Get Device): " + errorMsg);
+		}
+	}
+
+	private String calculateHmacSha256(String data, String key) throws Exception {
+		byte[] byteKey = key.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+		javax.crypto.Mac sha256HMAC = javax.crypto.Mac.getInstance("HmacSHA256");
+		javax.crypto.spec.SecretKeySpec keySpec = new javax.crypto.spec.SecretKeySpec(byteKey, "HmacSHA256");
+		sha256HMAC.init(keySpec);
+
+		byte[] macData = sha256HMAC.doFinal(data.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+
+		StringBuilder result = new StringBuilder();
+		for (byte b : macData) {
+			result.append(String.format("%02x", b));
+		}
+		return result.toString();
+	}
+
+	private String extractJsonString(String json, String key) {
+		if (json == null)
+			return null;
+		java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("\"" + key + "\"[\\s]*:[\\s]*\"([^\"]*)\"");
+		java.util.regex.Matcher matcher = pattern.matcher(json);
+		if (matcher.find()) {
+			return matcher.group(1);
+		}
+		return null;
+	}
+
+	private Integer extractJsonInt(String json, String key) {
+		if (json == null)
+			return null;
+		java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("\"" + key + "\"[\\s]*:[\\s]*([0-9]+)");
+		java.util.regex.Matcher matcher = pattern.matcher(json);
+		if (matcher.find()) {
+			return Integer.parseInt(matcher.group(1));
+		}
+		return null;
 	}
 }

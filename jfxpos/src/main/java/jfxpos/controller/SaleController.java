@@ -36,10 +36,10 @@ public class SaleController extends Controller {
 	};
 
 	@FXML
-	private Label storeNameLabel;
+	private Label siteNameLabel;
 
 	@FXML
-	private Label storeInfoLabel;
+	private Label nameLabel;
 
 	@FXML
 	private Label channelNameLabel;
@@ -156,6 +156,13 @@ public class SaleController extends Controller {
 
 	@FXML
 	public void initialize() {
+		if (siteNameLabel != null && jfxpos.App.config != null) {
+			siteNameLabel.setText(jfxpos.App.config.siteName());
+		}
+		if (nameLabel != null && jfxpos.App.config != null) {
+			nameLabel.setText(jfxpos.App.config.name());
+		}
+
 		// Bind components to currentTrx properties dynamically
 		currentTrx.addListener((obs, oldTrx, newTrx) -> {
 			if (oldTrx != null) {

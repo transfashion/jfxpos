@@ -122,3 +122,27 @@
 .fbutton-bar .descr {
 	-fx-font-size: 0.65em;
 }
+
+
+
+.promo-container .button {
+	-fx-pref-width: 70px;
+	-fx-pref-height: 56px;
+
+	-fx-min-width: -fx-pref-width;
+	-fx-min-height: -fx-pref-height;
+
+	-fx-max-width: 85px;
+	-fx-max-height: -fx-pref-height;
+
+	-fx-padding: 0 0 0 0;
+}
+
+.promo-container .descr {
+	-fx-font-size: 0.65em;
+}
+
+.promo-container .availability {
+	-fx-font-size: 1.6em;
+	-fx-font-weight: bold;
+}

@@ -87,16 +87,61 @@ public class SaleController extends Controller {
 	private Label customerDiscountLabel;
 
 	@FXML
-	private Button btnSearchCustomer;
+	private Button searchCustomerButton;
 
 	@FXML
-	private Button btnVipCustomer;
+	private Button vipCustomerButton;
 
 	@FXML
-	private Button btnRegisterCustomer;
+	private Button registerCustomerButton;
 
 	@FXML
-	private Button btnClearCustomer;
+	private Button clearCustomerButton;
+
+	@FXML
+	private Label promoItemCountLabel;
+
+	@FXML
+	private Label promoItemIdLabel;
+
+	@FXML
+	private Label promoItemNameLabel;
+
+	@FXML
+	private Label promoItemDescrLabel;
+
+	@FXML
+	private Label promoPaymCountLabel;
+
+	@FXML
+	private Label promoPaymIdLabel;
+
+	@FXML
+	private Label promoPaymNameLabel;
+
+	@FXML
+	private Label promoPaymDescrLabel;
+
+	@FXML
+	private Label promoNextTxCountLabel;
+
+	@FXML
+	private Label promoNextTxIdLabel;
+
+	@FXML
+	private Label promoNextTxNameLabel;
+
+	@FXML
+	private Label promoNextTxDescrLabel;
+
+	@FXML
+	private Button promoItemButton;
+
+	@FXML
+	private Button promoPaymentButton;
+
+	@FXML
+	private Button promoNextTxButton;
 
 	@FXML
 	private Button f1Button;
@@ -194,6 +239,42 @@ public class SaleController extends Controller {
 				if (customerDiscountLabel != null) {
 					customerDiscountLabel.textProperty().unbind();
 				}
+				if (promoItemCountLabel != null) {
+					promoItemCountLabel.textProperty().unbind();
+				}
+				if (promoItemIdLabel != null) {
+					promoItemIdLabel.textProperty().unbind();
+				}
+				if (promoItemNameLabel != null) {
+					promoItemNameLabel.textProperty().unbind();
+				}
+				if (promoItemDescrLabel != null) {
+					promoItemDescrLabel.textProperty().unbind();
+				}
+				if (promoPaymCountLabel != null) {
+					promoPaymCountLabel.textProperty().unbind();
+				}
+				if (promoPaymIdLabel != null) {
+					promoPaymIdLabel.textProperty().unbind();
+				}
+				if (promoPaymNameLabel != null) {
+					promoPaymNameLabel.textProperty().unbind();
+				}
+				if (promoPaymDescrLabel != null) {
+					promoPaymDescrLabel.textProperty().unbind();
+				}
+				if (promoNextTxCountLabel != null) {
+					promoNextTxCountLabel.textProperty().unbind();
+				}
+				if (promoNextTxIdLabel != null) {
+					promoNextTxIdLabel.textProperty().unbind();
+				}
+				if (promoNextTxNameLabel != null) {
+					promoNextTxNameLabel.textProperty().unbind();
+				}
+				if (promoNextTxDescrLabel != null) {
+					promoNextTxDescrLabel.textProperty().unbind();
+				}
 			}
 			if (newTrx != null) {
 				newTrx.grandTotalProperty().addListener(grandTotalListener);
@@ -242,6 +323,59 @@ public class SaleController extends Controller {
 					customerDiscountLabel.textProperty().bind(
 							Bindings.format("%,.0f", newTrx.customerDiscountProperty()));
 				}
+				if (promoItemCountLabel != null) {
+					promoItemCountLabel.textProperty().bind(Bindings.format("%,d", newTrx.promoItemCountProperty()));
+				}
+				if (promoItemIdLabel != null) {
+					promoItemIdLabel.textProperty().bind(Bindings.createStringBinding(
+							() -> {
+								long id = newTrx.promoItemIdProperty().get();
+								return id == 0 ? "" : String.valueOf(id);
+							},
+							newTrx.promoItemIdProperty()));
+				}
+				if (promoItemNameLabel != null) {
+					promoItemNameLabel.textProperty().bind(newTrx.promoItemNameProperty());
+				}
+				if (promoItemDescrLabel != null) {
+					promoItemDescrLabel.textProperty().bind(newTrx.promoItemDescrProperty());
+				}
+
+				if (promoPaymCountLabel != null) {
+					promoPaymCountLabel.textProperty().bind(Bindings.format("%,d", newTrx.promoPaymCountProperty()));
+				}
+				if (promoPaymIdLabel != null) {
+					promoPaymIdLabel.textProperty().bind(Bindings.createStringBinding(
+							() -> {
+								long id = newTrx.promoPaymIdProperty().get();
+								return id == 0 ? "" : String.valueOf(id);
+							},
+							newTrx.promoPaymIdProperty()));
+				}
+				if (promoPaymNameLabel != null) {
+					promoPaymNameLabel.textProperty().bind(newTrx.promoPaymNameProperty());
+				}
+				if (promoPaymDescrLabel != null) {
+					promoPaymDescrLabel.textProperty().bind(newTrx.promoPaymDescrProperty());
+				}
+
+				if (promoNextTxCountLabel != null) {
+					promoNextTxCountLabel.textProperty().bind(Bindings.format("%,d", newTrx.promoNextTxCountProperty()));
+				}
+				if (promoNextTxIdLabel != null) {
+					promoNextTxIdLabel.textProperty().bind(Bindings.createStringBinding(
+							() -> {
+								long id = newTrx.promoNextTxIdProperty().get();
+								return id == 0 ? "" : String.valueOf(id);
+							},
+							newTrx.promoNextTxIdProperty()));
+				}
+				if (promoNextTxNameLabel != null) {
+					promoNextTxNameLabel.textProperty().bind(newTrx.promoNextTxNameProperty());
+				}
+				if (promoNextTxDescrLabel != null) {
+					promoNextTxDescrLabel.textProperty().bind(newTrx.promoNextTxDescrProperty());
+				}
 			} else {
 				if (activeController == this) {
 					CustDisplayController custDisplay = getCustDisplayController();
@@ -269,6 +403,42 @@ public class SaleController extends Controller {
 				}
 				if (customerDiscountLabel != null) {
 					customerDiscountLabel.setText("0");
+				}
+				if (promoItemCountLabel != null) {
+					promoItemCountLabel.setText("0");
+				}
+				if (promoItemIdLabel != null) {
+					promoItemIdLabel.setText("");
+				}
+				if (promoItemNameLabel != null) {
+					promoItemNameLabel.setText("");
+				}
+				if (promoItemDescrLabel != null) {
+					promoItemDescrLabel.setText("");
+				}
+				if (promoPaymCountLabel != null) {
+					promoPaymCountLabel.setText("0");
+				}
+				if (promoPaymIdLabel != null) {
+					promoPaymIdLabel.setText("");
+				}
+				if (promoPaymNameLabel != null) {
+					promoPaymNameLabel.setText("");
+				}
+				if (promoPaymDescrLabel != null) {
+					promoPaymDescrLabel.setText("");
+				}
+				if (promoNextTxCountLabel != null) {
+					promoNextTxCountLabel.setText("0");
+				}
+				if (promoNextTxIdLabel != null) {
+					promoNextTxIdLabel.setText("");
+				}
+				if (promoNextTxNameLabel != null) {
+					promoNextTxNameLabel.setText("");
+				}
+				if (promoNextTxDescrLabel != null) {
+					promoNextTxDescrLabel.setText("");
 				}
 			}
 		});
@@ -299,29 +469,82 @@ public class SaleController extends Controller {
 			f2Button.setOnAction(e -> openChannelDialog());
 		}
 
+		// Edit Current Row Qty
+		if (f3Button != null) {
+			f3Button.setOnAction(e -> editCurrentRowQty());
+		}
+
+		// Select Promo for Next Transaction
+		if (f4Button != null) {
+			f4Button.setOnAction(e -> openPromoNextTxDialog());
+		}
+
+		// Select Payment Promo
+		if (f5Button != null) {
+			f5Button.setOnAction(e -> openPromoPaymentDialog());
+		}
+
+		// Select Item Promo
+		if (f6Button != null) {
+			f6Button.setOnAction(e -> openPromoItemDialog());
+		}
+
 		// Show message box on F7 button click
 		if (f7Button != null) {
 			f7Button.setOnAction(e -> createNewTransaction());
 		}
 
+		// Remove current Row
+		if (f8Button != null) {
+			f8Button.setOnAction(e -> removeCurrentRow());
+		}
+
+		// Recall
+		if (f9Button != null) {
+			f9Button.setOnAction(e -> openRecallDialog());
+		}
+
+		// Checkout
+		if (f10Button != null) {
+			f10Button.setOnAction(e -> openCheckoutDialog());
+		}
+
+		if (f11Button != null) {
+			f11Button.setOnAction(e -> openCustSearchDialog());
+		}
+
+		if (f12Button != null) {
+			f12Button.setOnAction(e -> openCustRegisterDialog());
+		}
+
 		// Register customer on button click
-		if (btnRegisterCustomer != null) {
-			btnRegisterCustomer.setOnAction(e -> openCustRegisterDialog());
+		if (registerCustomerButton != null) {
+			registerCustomerButton.setOnAction(e -> openCustRegisterDialog());
 		}
 
 		// Search customer on button click
-		if (btnSearchCustomer != null) {
-			btnSearchCustomer.setOnAction(e -> openCustSearchDialog());
+		if (searchCustomerButton != null) {
+			searchCustomerButton.setOnAction(e -> openCustSearchDialog());
 		}
 
 		// Clear customer on button click
-		if (btnClearCustomer != null) {
-			btnClearCustomer.setOnAction(e -> clearCustomerData());
+		if (clearCustomerButton != null) {
+			clearCustomerButton.setOnAction(e -> clearCustomerData());
 		}
 
-		// Update customer display total on F10 button click
-		if (f10Button != null) {
-			f10Button.setOnAction(e -> openCheckoutDialog());
+		// promo item
+		if (promoItemButton != null) {
+			promoItemButton.setOnAction(e -> openPromoItemDialog());
+		}
+
+		// promo payment
+		if (promoPaymentButton != null) {
+			promoPaymentButton.setOnAction(e -> openPromoPaymentDialog());
+		}
+
+		// promo next tx
+		if (promoNextTxButton != null) {
+			promoNextTxButton.setOnAction(e -> openPromoNextTxDialog());
 		}
 
 		// Close dialog on ESC button click
@@ -529,7 +752,7 @@ public class SaleController extends Controller {
 
 	public void createNewTransaction() {
 		if (isHasPendingTransaction()) {
-			boolean confirm = MessageBox.confirm(getCurrentWindow(), 
+			boolean confirm = MessageBox.confirm(getCurrentWindow(),
 					"Sedang ada transaksi di console saat ini, apakah yakin akan create transaksi baru?");
 			if (!confirm) {
 				return;
@@ -617,7 +840,8 @@ public class SaleController extends Controller {
 				String newName = dialog.getCustomerName();
 				String newGender = dialog.getCustomerGender();
 				java.time.LocalDate newBirth = dialog.getCustomerBirthdate();
-				logger.info("Registered Customer: ID=" + newId + ", Name=" + newName + ", Gender=" + newGender + ", Birthdate=" + newBirth);
+				logger.info("Registered Customer: ID=" + newId + ", Name=" + newName + ", Gender=" + newGender
+						+ ", Birthdate=" + newBirth);
 				if (trx != null) {
 					trx.setCustomerId(Long.parseLong(newId));
 					trx.setCustomerName(newName);
@@ -636,7 +860,8 @@ public class SaleController extends Controller {
 			dialog.openDialog();
 			jfxpos.models.Customer selected = dialog.getSelectedCustomer();
 			if (selected != null) {
-				logger.info("Selected Customer: ID=" + selected.getCustomerId() + ", Name=" + selected.getCustomerName());
+				logger.info(
+						"Selected Customer: ID=" + selected.getCustomerId() + ", Name=" + selected.getCustomerName());
 				Trx trx = currentTrx.get();
 				if (trx != null) {
 					trx.setCustomerId(selected.getCustomerId());
@@ -660,8 +885,8 @@ public class SaleController extends Controller {
 			boolean hasCustomer = (cid != null && cid != 0L) || (cname != null && !"NONE".equalsIgnoreCase(cname));
 
 			if (hasCustomer) {
-				boolean confirm = MessageBox.confirm(getCurrentWindow(), 
-						"Apakah Anda yakin ingin menghapus data customer dari transaksi ini?", 
+				boolean confirm = MessageBox.confirm(getCurrentWindow(),
+						"Apakah Anda yakin ingin menghapus data customer dari transaksi ini?",
 						"Konfirmasi Hapus Customer");
 				if (!confirm) {
 					return;
@@ -680,8 +905,9 @@ public class SaleController extends Controller {
 	}
 
 	private void openCheckoutDialog() {
-		Trx trx = currentTrx.get();
-		trx.setGrandTotal(BigDecimal.valueOf(10000));
+		// Trx trx = currentTrx.get();
+		// trx.setGrandTotal(BigDecimal.valueOf(10000));
+		logger.info("open checkout dialog");
 
 	}
 
@@ -695,6 +921,90 @@ public class SaleController extends Controller {
 				stage.close();
 			}
 		}
+	}
+
+	private void openPromoItemDialog() {
+		try {
+			jfxpos.views.PromoItemDialog dialog = new jfxpos.views.PromoItemDialog(getCurrentWindow());
+			Trx trx = currentTrx.get();
+			if (trx != null && trx.getPromoItemId() != null) {
+				dialog.selectPromoItemById(trx.getPromoItemId().intValue());
+			}
+			dialog.openDialog();
+			jfxpos.models.PromoItem selected = dialog.getSelectedPromoItem();
+			if (selected != null) {
+				logger.info("Selected Promo Item: " + selected.getNote());
+				if (trx != null) {
+					trx.setPromoItemId((long) selected.getId());
+					trx.setPromoItemName(selected.getNote());
+					trx.setPromoItemCode("PRM-ITEM-" + selected.getId());
+					trx.setPromoItemDescr("Description for promo " + selected.getId());
+					trx.setPromoItemCount(1);
+				}
+			}
+		} catch (Exception e) {
+			logger.severe("Failed to open PromoItemDialog: " + e.getMessage());
+		}
+	}
+
+	private void openPromoPaymentDialog() {
+		try {
+			jfxpos.views.PromoPaymentDialog dialog = new jfxpos.views.PromoPaymentDialog(getCurrentWindow());
+			Trx trx = currentTrx.get();
+			if (trx != null && trx.getPromoPaymId() != null) {
+				dialog.selectPromoPaymentById(trx.getPromoPaymId().intValue());
+			}
+			dialog.openDialog();
+			jfxpos.models.PromoPayment selected = dialog.getSelectedPromoPayment();
+			if (selected != null) {
+				logger.info("Selected Promo Payment: " + selected.getNote());
+				if (trx != null) {
+					trx.setPromoPaymId((long) selected.getId());
+					trx.setPromoPaymName(selected.getNote());
+					trx.setPromoPaymCode("PRM-PAYM-" + selected.getId());
+					trx.setPromoPaymDescr("Description for payment promo " + selected.getId());
+					trx.setPromoPaymCount(1);
+				}
+			}
+		} catch (Exception e) {
+			logger.severe("Failed to open PromoPaymentDialog: " + e.getMessage());
+		}
+	}
+
+	private void openPromoNextTxDialog() {
+		try {
+			jfxpos.views.PromoNextTxDialog dialog = new jfxpos.views.PromoNextTxDialog(getCurrentWindow());
+			Trx trx = currentTrx.get();
+			if (trx != null && trx.getPromoNextTxId() != null) {
+				dialog.selectPromoNextTxById(trx.getPromoNextTxId().intValue());
+			}
+			dialog.openDialog();
+			jfxpos.models.PromoNextTx selected = dialog.getSelectedPromoNextTx();
+			if (selected != null) {
+				logger.info("Selected Promo Next Tx: " + selected.getNote());
+				if (trx != null) {
+					trx.setPromoNextTxId((long) selected.getId());
+					trx.setPromoNextTxName(selected.getNote());
+					trx.setPromoNextTxCode("PRM-NEXTTX-" + selected.getId());
+					trx.setPromoNextTxDescr("Description for next purchase promo " + selected.getId());
+					trx.setPromoNextTxCount(1);
+				}
+			}
+		} catch (Exception e) {
+			logger.severe("Failed to open PromoNextTxDialog: " + e.getMessage());
+		}
+	}
+
+	private void openRecallDialog() {
+		logger.info("open recall dialog");
+	}
+
+	private void editCurrentRowQty() {
+		logger.info("edit current qty");
+	}
+
+	private void removeCurrentRow() {
+		logger.info("remove current row");
 	}
 
 	public void updateDateTime(String dateText, String timeText) {

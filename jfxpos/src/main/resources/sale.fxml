@@ -5,6 +5,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -93,7 +94,7 @@
             </VBox>
             <VBox maxWidth="-Infinity" minWidth="-Infinity" prefWidth="500.0" spacing="20.0" HBox.hgrow="ALWAYS">
                <children>
-                  <VBox>
+                  <VBox style="-fx-background-color: -fx-background;">
                      <padding>
                         <Insets bottom="10.0" left="15.0" right="15.0" />
                      </padding>
@@ -152,15 +153,15 @@
                         </HBox>
                         <HBox spacing="10.0">
                            <children>
-                              <Button fx:id="btnSearchCustomer" minWidth="-Infinity" prefWidth="100.0" text="_Search" />
-                              <Button fx:id="btnVipCustomer" minWidth="-Infinity" mnemonicParsing="false" prefWidth="100.0" text="VIP" />
-                              <Button fx:id="btnRegisterCustomer" minWidth="-Infinity" mnemonicParsing="false" prefHeight="32.0" prefWidth="100.0" text="Register" />
+                              <Button fx:id="searchCustomerButton" minWidth="-Infinity" prefWidth="100.0" text="_Search" />
+                              <Button fx:id="vipCustomerButton" minWidth="-Infinity" mnemonicParsing="false" prefWidth="100.0" text="VIP" />
+                              <Button fx:id="registerCustomerButton" minWidth="-Infinity" mnemonicParsing="false" prefHeight="32.0" prefWidth="100.0" text="Register" />
                               <Region HBox.hgrow="ALWAYS">
                                  <HBox.margin>
                                     <Insets />
                                  </HBox.margin>
                               </Region>
-                              <Button fx:id="btnClearCustomer" minWidth="-Infinity" mnemonicParsing="false" prefWidth="100.0" text="Clear" />
+                              <Button fx:id="clearCustomerButton" minWidth="-Infinity" mnemonicParsing="false" prefWidth="100.0" text="Clear" />
                            </children>
                            <VBox.margin>
                               <Insets top="10.0" />
@@ -172,25 +173,134 @@
                         <String fx:value="customer-info" />
                      </styleClass>
                      <VBox.margin>
-                        <Insets />
+                        <Insets top="10.0" />
                      </VBox.margin>
                   </VBox>
-                  <VBox layoutX="10.0" layoutY="133.0" VBox.vgrow="ALWAYS">
-                     <padding>
-                        <Insets bottom="10.0" left="15.0" right="15.0" />
-                     </padding>
-                     <children>
-                        <Label styleClass="group-title" text="Promo" translateX="-3.0" translateY="-10.0">
+                  <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                     <content>
+                        <VBox spacing="30.0">
+                           <children>
+                              <VBox VBox.vgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="10.0" left="15.0" right="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label styleClass="group-title" text="Promo" translateX="-3.0" translateY="-10.0">
+                                       <padding>
+                                          <Insets left="4.0" right="4.0" />
+                                       </padding>
+                                    </Label>
+                                    <HBox alignment="BOTTOM_LEFT">
+                                       <children>
+                                          <Button fx:id="promoItemButton" minWidth="-Infinity" mnemonicParsing="false" prefWidth="70.0">
+                                             <graphic>
+                                                <VBox alignment="CENTER" spacing="2.0">
+                                                   <children>
+                                                      <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="descr" text="Item" />
+                                                      <Label fx:id="promoItemCountLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="availability" text="0" />
+                                                   </children>
+                                                </VBox>
+                                             </graphic>
+                                          </Button>
+                                          <VBox alignment="BOTTOM_LEFT" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <Label fx:id="promoItemIdLabel" style="-fx-font-size: 1.2em;" text="promoitemCode" />
+                                                <Label fx:id="promoItemNameLabel" maxWidth="1.7976931348623157E308" style="-fx-font-size: 1.8em;" text="Select Item Promo programme" />
+                                                <Label fx:id="promoItemDescrLabel" style="-fx-font-size: 1em; -fx-font-style: italic;" text="promo description" />
+                                             </children>
+                                             <HBox.margin>
+                                                <Insets left="10.0" right="10.0" />
+                                             </HBox.margin>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="BOTTOM_LEFT">
+                                       <children>
+                                          <Button fx:id="promoPaymentButton" minWidth="-Infinity" mnemonicParsing="false" prefWidth="70.0">
+                                             <graphic>
+                                                <VBox alignment="CENTER" spacing="2.0">
+                                                   <children>
+                                                      <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="descr" text="Payment" />
+                                                      <Label fx:id="promoPaymCountLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="availability" text="0" />
+                                                   </children>
+                                                </VBox>
+                                             </graphic>
+                                          </Button>
+                                          <VBox alignment="BOTTOM_LEFT" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <Label fx:id="promoPaymIdLabel" style="-fx-font-size: 1.2em;" text="promoPaymentId" />
+                                                <Label fx:id="promoPaymNameLabel" maxWidth="1.7976931348623157E308" style="-fx-font-size: 1.8em;" text="Select Payment Promo" />
+                                                <Label fx:id="promoPaymDescrLabel" style="-fx-font-size: 1em; -fx-font-style: italic;" text="promo description" />
+                                             </children>
+                                             <HBox.margin>
+                                                <Insets left="10.0" right="10.0" />
+                                             </HBox.margin>
+                                          </VBox>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets top="20.0" />
+                                       </VBox.margin>
+                                    </HBox>
+                                    <HBox alignment="BOTTOM_LEFT">
+                                       <children>
+                                          <Button fx:id="promoNextTxButton" minWidth="-Infinity" mnemonicParsing="false" prefWidth="70.0">
+                                             <graphic>
+                                                <VBox alignment="CENTER" spacing="2.0">
+                                                   <children>
+                                                      <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="descr" text="Next Tx" />
+                                                      <Label fx:id="promoNextTxCountLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="availability" text="0" />
+                                                   </children>
+                                                </VBox>
+                                             </graphic>
+                                             <HBox.margin>
+                                                <Insets />
+                                             </HBox.margin>
+                                          </Button>
+                                          <VBox alignment="BOTTOM_LEFT" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <Label fx:id="promoNextTxIdLabel" style="-fx-font-size: 1.2em;" text="promoNextTxCode" />
+                                                <Label fx:id="promoNextTxNameLabel" maxWidth="1.7976931348623157E308" style="-fx-font-size: 1.8em;" text="Select Next Purchase Promo" />
+                                                <Label fx:id="promoNextTxDescrLabel" style="-fx-font-size: 1em; -fx-font-style: italic;" text="promo description" />
+                                             </children>
+                                             <HBox.margin>
+                                                <Insets left="10.0" right="10.0" />
+                                             </HBox.margin>
+                                          </VBox>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets top="20.0" />
+                                       </VBox.margin>
+                                    </HBox>
+                                 </children>
+                                 <styleClass>
+                                    <String fx:value="rounded-box" />
+                                    <String fx:value="subtotal-box" />
+                                    <String fx:value="promo-container" />
+                                 </styleClass>
+                              </VBox>
+                              <VBox minHeight="-Infinity" prefHeight="150.0">
+                                 <padding>
+                                    <Insets bottom="10.0" left="15.0" right="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label styleClass="group-title" text="Transaction" translateX="-3.0" translateY="-10.0">
+                                       <padding>
+                                          <Insets left="4.0" right="4.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                                 <styleClass>
+                                    <String fx:value="rounded-box" />
+                                    <String fx:value="subtotal-box" />
+                                 </styleClass>
+                              </VBox>
+                           </children>
                            <padding>
-                              <Insets left="4.0" right="4.0" />
+                              <Insets top="10.0" />
                            </padding>
-                        </Label>
-                     </children>
-                     <styleClass>
-                        <String fx:value="rounded-box" />
-                        <String fx:value="subtotal-box" />
-                     </styleClass>
-                  </VBox>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
                </children>
             </VBox>
          </children>
@@ -232,7 +342,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F4" />
-                        <Label styleClass="descr" text="..." />
+                        <Label styleClass="descr" text="Promo Next Tx" />
                      </children>
                   </VBox>
                </graphic>
@@ -242,7 +352,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F5" />
-                        <Label styleClass="descr" text="..." />
+                        <Label styleClass="descr" text="Promo Payment" />
                      </children>
                   </VBox>
                </graphic>
@@ -252,7 +362,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F6" />
-                        <Label styleClass="descr" text="..." />
+                        <Label styleClass="descr" text="Promo Item" />
                      </children>
                   </VBox>
                </graphic>
@@ -282,7 +392,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F9" />
-                        <Label styleClass="descr" text="..." />
+                        <Label styleClass="descr" text="Recall" />
                      </children>
                   </VBox>
                </graphic>
@@ -292,7 +402,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F10" />
-                        <Label styleClass="descr" text="Payment" />
+                        <Label styleClass="descr" text="Checkout" />
                      </children>
                   </VBox>
                </graphic>
@@ -302,7 +412,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F11" />
-                        <Label styleClass="descr" text="..." />
+                        <Label styleClass="descr" text="Search Cust" />
                      </children>
                   </VBox>
                </graphic>
@@ -312,7 +422,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F12" />
-                        <Label styleClass="descr" text="..." />
+                        <Label styleClass="descr" text="Reg Cust" />
                      </children>
                   </VBox>
                </graphic>

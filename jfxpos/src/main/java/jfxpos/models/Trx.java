@@ -54,6 +54,25 @@ public class Trx extends Model {
 			public static final String IS_ACTIVE = "IS_ACTIVE";
 			public static final String CREATED_AT = "CREATED_AT";
 			public static final String DATATIMESTAMP = "DATATIMESTAMP";
+
+			public static final String PROMOITEM_ID = "PROMOITEM_ID";
+			public static final String PROMOITEM_CODE = "PROMOITEM_CODE";
+			public static final String PROMOITEM_NAME = "PROMOITEM_NAME";
+			public static final String PROMOITEM_DESCR = "PROMOITEM_DESCR";
+
+			public static final String PROMOPAYM_ID = "PROMOPAYM_ID";
+			public static final String PROMOPAYM_CODE = "PROMOPAYM_CODE";
+			public static final String PROMOPAYM_NAME = "PROMOPAYM_NAME";
+			public static final String PROMOPAYM_DESCR = "PROMOPAYM_DESCR";
+
+			public static final String PROMONEXTTX_ID = "PROMONEXTTX_ID";
+			public static final String PROMONEXTTX_CODE = "PROMONEXTTX_CODE";
+			public static final String PROMONEXTTX_NAME = "PROMONEXTTX_NAME";
+			public static final String PROMONEXTTX_DESCR = "PROMONEXTTX_DESCR";
+
+			public static final String PROMOITEM_COUNT = "PROMOITEM_COUNT";
+			public static final String PROMOPAYM_COUNT = "PROMOPAYM_COUNT";
+			public static final String PROMONEXTTX_COUNT = "PROMONEXTTX_COUNT";
 		}
 	}
 
@@ -82,6 +101,25 @@ public class Trx extends Model {
 
 	private final ObjectProperty<BigDecimal> customerDiscount = new SimpleObjectProperty<>(this, "customerDiscount",
 			BigDecimal.ZERO);
+
+	private final LongProperty promoItemId = new SimpleLongProperty(this, "promoItemId");
+	private final StringProperty promoItemCode = new SimpleStringProperty(this, "promoItemCode", "");
+	private final StringProperty promoItemName = new SimpleStringProperty(this, "promoItemName", "");
+	private final StringProperty promoItemDescr = new SimpleStringProperty(this, "promoItemDescr", "");
+
+	private final LongProperty promoPaymId = new SimpleLongProperty(this, "promoPaymId");
+	private final StringProperty promoPaymCode = new SimpleStringProperty(this, "promoPaymCode", "");
+	private final StringProperty promoPaymName = new SimpleStringProperty(this, "promoPaymName", "");
+	private final StringProperty promoPaymDescr = new SimpleStringProperty(this, "promoPaymDescr", "");
+
+	private final LongProperty promoNextTxId = new SimpleLongProperty(this, "promoNextTxId");
+	private final StringProperty promoNextTxCode = new SimpleStringProperty(this, "promoNextTxCode", "");
+	private final StringProperty promoNextTxName = new SimpleStringProperty(this, "promoNextTxName", "");
+	private final StringProperty promoNextTxDescr = new SimpleStringProperty(this, "promoNextTxDescr", "");
+
+	private final IntegerProperty promoItemCount = new SimpleIntegerProperty(this, "promoItemCount", 0);
+	private final IntegerProperty promoPaymCount = new SimpleIntegerProperty(this, "promoPaymCount", 0);
+	private final IntegerProperty promoNextTxCount = new SimpleIntegerProperty(this, "promoNextTxCount", 0);
 
 	private final IntegerProperty cashierId = new SimpleIntegerProperty(this, "cashierId");
 	private final IntegerProperty siteId = new SimpleIntegerProperty(this, "siteId");
@@ -381,6 +419,186 @@ public class Trx extends Model {
 
 	public ObjectProperty<BigDecimal> customerDiscountProperty() {
 		return customerDiscount;
+	}
+
+	public Long getPromoItemId() {
+		return promoItemId.get();
+	}
+
+	public void setPromoItemId(Long promoItemId) {
+		this.promoItemId.set(promoItemId != null ? promoItemId : 0L);
+	}
+
+	public LongProperty promoItemIdProperty() {
+		return promoItemId;
+	}
+
+	public String getPromoItemCode() {
+		return promoItemCode.get();
+	}
+
+	public void setPromoItemCode(String promoItemCode) {
+		this.promoItemCode.set(promoItemCode);
+	}
+
+	public StringProperty promoItemCodeProperty() {
+		return promoItemCode;
+	}
+
+	public String getPromoItemName() {
+		return promoItemName.get();
+	}
+
+	public void setPromoItemName(String promoItemName) {
+		this.promoItemName.set(promoItemName);
+	}
+
+	public StringProperty promoItemNameProperty() {
+		return promoItemName;
+	}
+
+	public String getPromoItemDescr() {
+		return promoItemDescr.get();
+	}
+
+	public void setPromoItemDescr(String promoItemDescr) {
+		this.promoItemDescr.set(promoItemDescr);
+	}
+
+	public StringProperty promoItemDescrProperty() {
+		return promoItemDescr;
+	}
+
+	public Long getPromoPaymId() {
+		return promoPaymId.get();
+	}
+
+	public void setPromoPaymId(Long promoPaymId) {
+		this.promoPaymId.set(promoPaymId != null ? promoPaymId : 0L);
+	}
+
+	public LongProperty promoPaymIdProperty() {
+		return promoPaymId;
+	}
+
+	public String getPromoPaymCode() {
+		return promoPaymCode.get();
+	}
+
+	public void setPromoPaymCode(String promoPaymCode) {
+		this.promoPaymCode.set(promoPaymCode);
+	}
+
+	public StringProperty promoPaymCodeProperty() {
+		return promoPaymCode;
+	}
+
+	public String getPromoPaymName() {
+		return promoPaymName.get();
+	}
+
+	public void setPromoPaymName(String promoPaymName) {
+		this.promoPaymName.set(promoPaymName);
+	}
+
+	public StringProperty promoPaymNameProperty() {
+		return promoPaymName;
+	}
+
+	public String getPromoPaymDescr() {
+		return promoPaymDescr.get();
+	}
+
+	public void setPromoPaymDescr(String promoPaymDescr) {
+		this.promoPaymDescr.set(promoPaymDescr);
+	}
+
+	public StringProperty promoPaymDescrProperty() {
+		return promoPaymDescr;
+	}
+
+	public Long getPromoNextTxId() {
+		return promoNextTxId.get();
+	}
+
+	public void setPromoNextTxId(Long promoNextTxId) {
+		this.promoNextTxId.set(promoNextTxId != null ? promoNextTxId : 0L);
+	}
+
+	public LongProperty promoNextTxIdProperty() {
+		return promoNextTxId;
+	}
+
+	public String getPromoNextTxCode() {
+		return promoNextTxCode.get();
+	}
+
+	public void setPromoNextTxCode(String promoNextTxCode) {
+		this.promoNextTxCode.set(promoNextTxCode);
+	}
+
+	public StringProperty promoNextTxCodeProperty() {
+		return promoNextTxCode;
+	}
+
+	public String getPromoNextTxName() {
+		return promoNextTxName.get();
+	}
+
+	public void setPromoNextTxName(String promoNextTxName) {
+		this.promoNextTxName.set(promoNextTxName);
+	}
+
+	public StringProperty promoNextTxNameProperty() {
+		return promoNextTxName;
+	}
+
+	public String getPromoNextTxDescr() {
+		return promoNextTxDescr.get();
+	}
+
+	public void setPromoNextTxDescr(String promoNextTxDescr) {
+		this.promoNextTxDescr.set(promoNextTxDescr);
+	}
+
+	public StringProperty promoNextTxDescrProperty() {
+		return promoNextTxDescr;
+	}
+
+	public int getPromoItemCount() {
+		return promoItemCount.get();
+	}
+
+	public void setPromoItemCount(int promoItemCount) {
+		this.promoItemCount.set(promoItemCount);
+	}
+
+	public IntegerProperty promoItemCountProperty() {
+		return promoItemCount;
+	}
+
+	public int getPromoPaymCount() {
+		return promoPaymCount.get();
+	}
+
+	public void setPromoPaymCount(int promoPaymCount) {
+		this.promoPaymCount.set(promoPaymCount);
+	}
+
+	public IntegerProperty promoPaymCountProperty() {
+		return promoPaymCount;
+	}
+
+	public int getPromoNextTxCount() {
+		return promoNextTxCount.get();
+	}
+
+	public void setPromoNextTxCount(int promoNextTxCount) {
+		this.promoNextTxCount.set(promoNextTxCount);
+	}
+
+	public IntegerProperty promoNextTxCountProperty() {
+		return promoNextTxCount;
 	}
 
 	public List<TrxItem> getItems() {

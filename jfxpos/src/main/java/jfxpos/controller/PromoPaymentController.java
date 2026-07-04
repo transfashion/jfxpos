@@ -80,7 +80,7 @@ public class PromoPaymentController extends Controller {
 
 	private void loadPromos() {
 		try {
-			List<PromoPayment> list = promoPaymentRepo.findAll();
+			List<PromoPayment> list = promoPaymentRepo.findAllActive();
 			ObservableList<PromoPayment> data = FXCollections.observableArrayList(list);
 			promoPaymentTable.setItems(data);
 			if (!data.isEmpty()) {

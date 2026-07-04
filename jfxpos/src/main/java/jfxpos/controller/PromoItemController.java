@@ -75,7 +75,7 @@ public class PromoItemController extends Controller {
 
 	private void loadPromos() {
 		try {
-			List<PromoItem> list = promoItemRepo.findAll();
+			List<PromoItem> list = promoItemRepo.findAllActive();
 			ObservableList<PromoItem> data = FXCollections.observableArrayList(list);
 			promoItemTable.setItems(data);
 			if (!data.isEmpty()) {

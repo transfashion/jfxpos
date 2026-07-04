@@ -12,6 +12,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.binding.Bindings;
 import java.math.BigDecimal;
+
+import jfxpos.models.PromoItem;
 import jfxpos.models.Trx;
 import jfxpos.Controller;
 import jfxpos.util.MessageBox;
@@ -360,7 +362,8 @@ public class SaleController extends Controller {
 				}
 
 				if (promoNextTxCountLabel != null) {
-					promoNextTxCountLabel.textProperty().bind(Bindings.format("%,d", newTrx.promoNextTxCountProperty()));
+					promoNextTxCountLabel.textProperty()
+							.bind(Bindings.format("%,d", newTrx.promoNextTxCountProperty()));
 				}
 				if (promoNextTxIdLabel != null) {
 					promoNextTxIdLabel.textProperty().bind(Bindings.createStringBinding(
@@ -783,9 +786,34 @@ public class SaleController extends Controller {
 			jfxpos.repository.PromoPaymentRepository promoPaymentRepo = new jfxpos.repository.PromoPaymentRepository();
 			jfxpos.repository.PromoNextTxRepository promoNextTxRepo = new jfxpos.repository.PromoNextTxRepository();
 
-			newTrx.setPromoItemCount(promoItemRepo.getActivePromoCount());
-			newTrx.setPromoPaymCount(promoPaymentRepo.getActivePromoCount());
-			newTrx.setPromoNextTxCount(promoNextTxRepo.getActivePromoCount());
+			int activePromoItemCount = promoItemRepo.getActivePromoCount();
+			int activePromoPaymCount = promoPaymentRepo.getActivePromoCount();
+			int activePromoNextTxCount = promoNextTxRepo.getActivePromoCount();
+
+			newTrx.setPromoItemCount(activePromoItemCount);
+			newTrx.setPromoPaymCount(activePromoPaymCount);
+			newTrx.setPromoNextTxCount(activePromoNextTxCount);
+
+			if (activePromoItemCount > 0) {
+				// ambil baris pertama promo item aktif
+				PromoItem defaultPromoItem = promoItemRepo.getDefaultPromo();
+				newTrx.setPromoItemName(defaultPromoItem.getName());
+			} else {
+
+			}
+
+			if (activePromoPaymCount > 0) {
+				// ambil baris pertama promo paym aktif
+			} else {
+
+			}
+
+			if (activePromoNextTxCount > 0) {
+				// ambil baris pertama promo next tx aktif
+			} else {
+
+			}
+
 		} catch (Exception e) {
 			logger.severe("Failed to load active promo counts for new transaction: " + e.getMessage());
 		}
@@ -945,10 +973,10 @@ public class SaleController extends Controller {
 			dialog.openDialog();
 			jfxpos.models.PromoItem selected = dialog.getSelectedPromoItem();
 			if (selected != null) {
-				logger.info("Selected Promo Item: " + selected.getNote());
+				logger.info("Selected Promo Item: " + selected.getName());
 				if (trx != null) {
 					trx.setPromoItemId((long) selected.getId());
-					trx.setPromoItemName(selected.getNote());
+					trx.setPromoItemName(selected.getName());
 					trx.setPromoItemCode("PRM-ITEM-" + selected.getId());
 					trx.setPromoItemDescr("Description for promo " + selected.getId());
 					trx.setPromoItemCount(1);

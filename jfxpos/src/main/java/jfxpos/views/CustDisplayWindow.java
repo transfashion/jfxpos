@@ -82,7 +82,21 @@ public class CustDisplayWindow extends View {
 	public void open() {
 		if (App.isProd) {
 			stage.setMaximized(true);
+		} else {
+			if (Double.isNaN(stage.getX())) {
+				javafx.geometry.Rectangle2D primaryBounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+				double width = stage.getScene().getRoot().prefWidth(-1);
+				double height = stage.getScene().getRoot().prefHeight(-1);
+				stage.setX(primaryBounds.getMaxX() - width);
+				stage.setY(primaryBounds.getMaxY() - height);
+			}
 		}
 		stage.show();
+	}
+
+	public void updateDateTime(String dateText, String timeText) {
+		if (controller != null) {
+			controller.updateDateTime(dateText, timeText);
+		}
 	}
 }

@@ -33,6 +33,35 @@ public class DashboardWindow extends View {
 				custdisplayWindow.getStage().close();
 			}
 		});
+
+		clockTick(1);
+	}
+
+	private void clockTick(int minute) {
+		java.time.format.DateTimeFormatter dateFormatter = java.time.format.DateTimeFormatter
+				.ofPattern("EEEE, d MMMM yyyy", java.util.Locale.of("id", "ID"));
+		java.time.format.DateTimeFormatter timeFormatter = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
+
+		javafx.animation.Timeline clock = new javafx.animation.Timeline(
+				new javafx.animation.KeyFrame(javafx.util.Duration.ZERO, e -> {
+					java.time.LocalDateTime now = java.time.LocalDateTime.now();
+					String dateStr = now.format(dateFormatter);
+					String timeStr = now.format(timeFormatter);
+
+					// Update active SaleController if any
+					jfxpos.controller.SaleController activeController = jfxpos.controller.SaleController.getActiveController();
+					if (activeController != null) {
+						activeController.updateDateTime(dateStr, timeStr);
+					}
+
+					// Update CustDisplayWindow
+					if (custdisplayWindow != null) {
+						custdisplayWindow.updateDateTime(dateStr, timeStr);
+					}
+				}),
+				new javafx.animation.KeyFrame(javafx.util.Duration.minutes(minute)));
+		clock.setCycleCount(javafx.animation.Animation.INDEFINITE);
+		clock.play();
 	}
 
 	public void setLoginView() throws Exception {
@@ -51,8 +80,10 @@ public class DashboardWindow extends View {
 		Platform.runLater(() -> {
 			if (App.isProd) {
 				stage.setMaximized(true);
+			} else if (App.isDev) {
+				stage.setX(0);
+				stage.setY(0);
 			}
-			stage.centerOnScreen();
 
 			try {
 				showCustomerDisplay();
@@ -83,6 +114,13 @@ public class DashboardWindow extends View {
 				custdisplayWindow.open();
 			}
 		}
+
+		// Push initial date/time to the newly opened customer display
+		java.time.format.DateTimeFormatter dateFormatter = java.time.format.DateTimeFormatter
+				.ofPattern("EEEE, d MMMM yyyy", java.util.Locale.of("id", "ID"));
+		java.time.format.DateTimeFormatter timeFormatter = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
+		java.time.LocalDateTime now = java.time.LocalDateTime.now();
+		custdisplayWindow.updateDateTime(now.format(dateFormatter), now.format(timeFormatter));
 	}
 
 }

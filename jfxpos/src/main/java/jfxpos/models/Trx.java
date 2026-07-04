@@ -658,4 +658,22 @@ public class Trx extends Model {
 			setPromoNextTxDescr("tidak ada promo yang aktif saat ini");
 		}
 	}
+
+	public void setCustomer(jfxpos.models.Customer customer) {
+		if (customer != null) {
+			setCustomerId(customer.getCustomerId());
+			setCustomerName(customer.getCustomerName());
+			setCustomerTypeId(customer.getCustomerTypeId());
+			setCustomerTypeName(customer.getCustomerTypeName());
+			setCustomerGender(customer.getCustomerGender());
+			setCustomerBirthdate(customer.getCustomerBirthdate());
+		} else {
+			setCustomerId(0L);
+			setCustomerName("NONE");
+			setCustomerTypeId(0);
+			setCustomerTypeName("");
+			setCustomerGender(0);
+			setCustomerBirthdate(null);
+		}
+	}
 }

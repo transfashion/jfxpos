@@ -10,7 +10,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.binding.Bindings;
 import java.math.BigDecimal;
 
 import jfxpos.models.Trx;
@@ -22,9 +21,13 @@ public class SaleController extends Controller {
 
 	private static SaleController activeController;
 
+	public static SaleController getActiveController() {
+		return activeController;
+	}
+
 	private Stage currentWindow;
 	private final ObjectProperty<Trx> currentTrx = new SimpleObjectProperty<>();
-	private final jfxpos.repository.ChannelRepository channelRepo = new jfxpos.repository.ChannelRepository();
+	private final SaleService saleService = new SaleService();
 
 	private final javafx.beans.value.ChangeListener<BigDecimal> grandTotalListener = (obs, oldVal, newVal) -> {
 		if (activeController == this) {
@@ -36,152 +39,162 @@ public class SaleController extends Controller {
 		}
 	};
 
-	@FXML
-	private Label deviceNumLabel;
+	private final javafx.beans.value.ChangeListener<String> customerNameListener = (obs, oldVal, newVal) -> {
+		if (activeController == this) {
+			CustDisplayController custDisplay = getCustDisplayController();
+			if (custDisplay != null) {
+				String displayName = (newVal == null || "NONE".equalsIgnoreCase(newVal.trim())) ? "" : newVal;
+				custDisplay.setCustomerName(displayName);
+			}
+		}
+	};
 
 	@FXML
-	private Label siteNameLabel;
+	Label deviceNumLabel;
 
 	@FXML
-	private Label nameLabel;
+	Label siteNameLabel;
 
 	@FXML
-	private Label channelNameLabel;
+	Label nameLabel;
 
 	@FXML
-	private Label dateLabel;
+	Label channelNameLabel;
 
 	@FXML
-	private Label timeLabel;
+	Label dateLabel;
 
 	@FXML
-	private ImageView searchModeImage;
+	Label timeLabel;
 
 	@FXML
-	private TextField lineInput;
+	ImageView searchModeImage;
 
 	@FXML
-	private Label itemDescriptionLabel;
+	TextField lineInput;
 
 	@FXML
-	private Label itemPriceLabel;
+	Label itemDescriptionLabel;
 
 	@FXML
-	private TableView<?> itemTable;
+	Label itemPriceLabel;
 
 	@FXML
-	private Label grandTotalValueLabel;
+	TableView<?> itemTable;
 
 	@FXML
-	private Label grandTotalQtyLabel;
+	Label grandTotalValueLabel;
 
 	@FXML
-	private Label customerIdLabel;
+	Label grandTotalQtyLabel;
 
 	@FXML
-	private Label customerTypeLabel;
+	Label customerIdLabel;
 
 	@FXML
-	private Label customerNameLabel;
+	Label customerTypeLabel;
 
 	@FXML
-	private Label customerDiscountLabel;
+	Label customerNameLabel;
 
 	@FXML
-	private Button searchCustomerButton;
+	Label customerDiscountLabel;
 
 	@FXML
-	private Button vipCustomerButton;
+	Button searchCustomerButton;
 
 	@FXML
-	private Button registerCustomerButton;
+	Button vipCustomerButton;
 
 	@FXML
-	private Button clearCustomerButton;
+	Button registerCustomerButton;
 
 	@FXML
-	private Label promoItemCountLabel;
+	Button clearCustomerButton;
 
 	@FXML
-	private Label promoItemIdLabel;
+	Label promoItemCountLabel;
 
 	@FXML
-	private Label promoItemNameLabel;
+	Label promoItemIdLabel;
 
 	@FXML
-	private Label promoItemDescrLabel;
+	Label promoItemNameLabel;
 
 	@FXML
-	private Label promoPaymCountLabel;
+	Label promoItemDescrLabel;
 
 	@FXML
-	private Label promoPaymIdLabel;
+	Label promoPaymCountLabel;
 
 	@FXML
-	private Label promoPaymNameLabel;
+	Label promoPaymIdLabel;
 
 	@FXML
-	private Label promoPaymDescrLabel;
+	Label promoPaymNameLabel;
 
 	@FXML
-	private Label promoNextTxCountLabel;
+	Label promoPaymDescrLabel;
 
 	@FXML
-	private Label promoNextTxIdLabel;
+	Label promoNextTxCountLabel;
 
 	@FXML
-	private Label promoNextTxNameLabel;
+	Label promoNextTxIdLabel;
 
 	@FXML
-	private Label promoNextTxDescrLabel;
+	Label promoNextTxNameLabel;
 
 	@FXML
-	private Button promoItemButton;
+	Label promoNextTxDescrLabel;
 
 	@FXML
-	private Button promoPaymentButton;
+	Button promoItemButton;
 
 	@FXML
-	private Button promoNextTxButton;
+	Button promoPaymentButton;
 
 	@FXML
-	private Button f1Button;
+	Button promoNextTxButton;
 
 	@FXML
-	private Button f2Button;
+	Button f1Button;
 
 	@FXML
-	private Button f3Button;
+	Button f2Button;
 
 	@FXML
-	private Button f4Button;
+	Button f3Button;
 
 	@FXML
-	private Button f5Button;
+	Button f4Button;
 
 	@FXML
-	private Button f6Button;
+	Button f5Button;
 
 	@FXML
-	private Button f7Button;
+	Button f6Button;
 
 	@FXML
-	private Button f8Button;
+	Button f7Button;
 
 	@FXML
-	private Button f9Button;
+	Button f8Button;
 
 	@FXML
-	private Button f10Button;
+	Button f9Button;
 
 	@FXML
-	private Button f11Button;
+	Button f10Button;
 
 	@FXML
-	private Button f12Button;
+	Button f11Button;
 
 	@FXML
-	private Button escButton;
+	Button f12Button;
+
+	@FXML
+	Button escButton;
 
 	private int consoleNumber;
 	private jfxpos.models.InputSearchMode currentSearchMode = jfxpos.models.InputSearchMode.BARCODE;
@@ -215,233 +228,28 @@ public class SaleController extends Controller {
 			deviceNumLabel.setText(jfxpos.App.config.deviceNum());
 		}
 
-		// Bind components to currentTrx properties dynamically
+		// Bind components to currentTrx properties dynamically using SaleViewBinder
 		currentTrx.addListener((obs, oldTrx, newTrx) -> {
 			if (oldTrx != null) {
-				oldTrx.grandTotalProperty().removeListener(grandTotalListener);
-				if (grandTotalValueLabel != null) {
-					grandTotalValueLabel.textProperty().unbind();
-				}
-				if (grandTotalQtyLabel != null) {
-					grandTotalQtyLabel.textProperty().unbind();
-				}
-				if (channelNameLabel != null) {
-					channelNameLabel.textProperty().unbind();
-				}
-				if (customerIdLabel != null) {
-					customerIdLabel.textProperty().unbind();
-				}
-				if (customerTypeLabel != null) {
-					customerTypeLabel.textProperty().unbind();
-				}
-				if (customerNameLabel != null) {
-					customerNameLabel.textProperty().unbind();
-				}
-				if (customerDiscountLabel != null) {
-					customerDiscountLabel.textProperty().unbind();
-				}
-				if (promoItemCountLabel != null) {
-					promoItemCountLabel.textProperty().unbind();
-				}
-				if (promoItemIdLabel != null) {
-					promoItemIdLabel.textProperty().unbind();
-				}
-				if (promoItemNameLabel != null) {
-					promoItemNameLabel.textProperty().unbind();
-				}
-				if (promoItemDescrLabel != null) {
-					promoItemDescrLabel.textProperty().unbind();
-				}
-				if (promoPaymCountLabel != null) {
-					promoPaymCountLabel.textProperty().unbind();
-				}
-				if (promoPaymIdLabel != null) {
-					promoPaymIdLabel.textProperty().unbind();
-				}
-				if (promoPaymNameLabel != null) {
-					promoPaymNameLabel.textProperty().unbind();
-				}
-				if (promoPaymDescrLabel != null) {
-					promoPaymDescrLabel.textProperty().unbind();
-				}
-				if (promoNextTxCountLabel != null) {
-					promoNextTxCountLabel.textProperty().unbind();
-				}
-				if (promoNextTxIdLabel != null) {
-					promoNextTxIdLabel.textProperty().unbind();
-				}
-				if (promoNextTxNameLabel != null) {
-					promoNextTxNameLabel.textProperty().unbind();
-				}
-				if (promoNextTxDescrLabel != null) {
-					promoNextTxDescrLabel.textProperty().unbind();
-				}
+				SaleViewBinder.unbind(this, oldTrx, grandTotalListener);
+				oldTrx.customerNameProperty().removeListener(customerNameListener);
 			}
 			if (newTrx != null) {
-				newTrx.grandTotalProperty().addListener(grandTotalListener);
+				SaleViewBinder.bind(this, newTrx, grandTotalListener);
+				newTrx.customerNameProperty().addListener(customerNameListener);
 				if (activeController == this) {
 					grandTotalListener.changed(newTrx.grandTotalProperty(), null, newTrx.getGrandTotal());
-				}
-				if (grandTotalValueLabel != null) {
-					grandTotalValueLabel.textProperty().bind(
-							Bindings.format("%,.0f", newTrx.grandTotalProperty()));
-				}
-				if (grandTotalQtyLabel != null) {
-					grandTotalQtyLabel.textProperty().bind(
-							Bindings.format("%,d", newTrx.qtyProperty()));
-				}
-				if (channelNameLabel != null) {
-					channelNameLabel.textProperty().bind(newTrx.channelNameProperty());
-				}
-				if (customerIdLabel != null) {
-					customerIdLabel.textProperty().bind(
-							Bindings.createStringBinding(
-									() -> {
-										long cid = newTrx.customerIdProperty().get();
-										return cid == 0 ? "" : String.valueOf(cid);
-									},
-									newTrx.customerIdProperty()));
-				}
-				if (customerTypeLabel != null) {
-					customerTypeLabel.textProperty().bind(
-							Bindings.createStringBinding(
-									() -> {
-										int ctid = newTrx.customerTypeIdProperty().get();
-										return ctid == 0 ? "" : String.valueOf(ctid);
-									},
-									newTrx.customerTypeIdProperty()));
-				}
-				if (customerNameLabel != null) {
-					customerNameLabel.textProperty().bind(
-							Bindings.createStringBinding(
-									() -> {
-										String cname = newTrx.customerNameProperty().get();
-										return cname == null ? "" : cname;
-									},
-									newTrx.customerNameProperty()));
-				}
-				if (customerDiscountLabel != null) {
-					customerDiscountLabel.textProperty().bind(
-							Bindings.format("%,.0f", newTrx.customerDiscountProperty()));
-				}
-				if (promoItemCountLabel != null) {
-					promoItemCountLabel.textProperty().bind(Bindings.format("%,d", newTrx.promoItemCountProperty()));
-				}
-				if (promoItemIdLabel != null) {
-					promoItemIdLabel.textProperty().bind(Bindings.createStringBinding(
-							() -> {
-								long id = newTrx.promoItemIdProperty().get();
-								return id == 0 ? "" : String.valueOf(id);
-							},
-							newTrx.promoItemIdProperty()));
-				}
-				if (promoItemNameLabel != null) {
-					promoItemNameLabel.textProperty().bind(newTrx.promoItemNameProperty());
-				}
-				if (promoItemDescrLabel != null) {
-					promoItemDescrLabel.textProperty().bind(newTrx.promoItemDescrProperty());
-				}
-
-				if (promoPaymCountLabel != null) {
-					promoPaymCountLabel.textProperty().bind(Bindings.format("%,d", newTrx.promoPaymCountProperty()));
-				}
-				if (promoPaymIdLabel != null) {
-					promoPaymIdLabel.textProperty().bind(Bindings.createStringBinding(
-							() -> {
-								long id = newTrx.promoPaymIdProperty().get();
-								return id == 0 ? "" : String.valueOf(id);
-							},
-							newTrx.promoPaymIdProperty()));
-				}
-				if (promoPaymNameLabel != null) {
-					promoPaymNameLabel.textProperty().bind(newTrx.promoPaymNameProperty());
-				}
-				if (promoPaymDescrLabel != null) {
-					promoPaymDescrLabel.textProperty().bind(newTrx.promoPaymDescrProperty());
-				}
-
-				if (promoNextTxCountLabel != null) {
-					promoNextTxCountLabel.textProperty()
-							.bind(Bindings.format("%,d", newTrx.promoNextTxCountProperty()));
-				}
-				if (promoNextTxIdLabel != null) {
-					promoNextTxIdLabel.textProperty().bind(Bindings.createStringBinding(
-							() -> {
-								long id = newTrx.promoNextTxIdProperty().get();
-								return id == 0 ? "" : String.valueOf(id);
-							},
-							newTrx.promoNextTxIdProperty()));
-				}
-				if (promoNextTxNameLabel != null) {
-					promoNextTxNameLabel.textProperty().bind(newTrx.promoNextTxNameProperty());
-				}
-				if (promoNextTxDescrLabel != null) {
-					promoNextTxDescrLabel.textProperty().bind(newTrx.promoNextTxDescrProperty());
+					customerNameListener.changed(newTrx.customerNameProperty(), null, newTrx.getCustomerName());
 				}
 			} else {
 				if (activeController == this) {
 					CustDisplayController custDisplay = getCustDisplayController();
 					if (custDisplay != null) {
 						custDisplay.setGrandTotal("0");
+						custDisplay.setCustomerName("");
 					}
 				}
-				if (grandTotalValueLabel != null) {
-					grandTotalValueLabel.setText("0");
-				}
-				if (grandTotalQtyLabel != null) {
-					grandTotalQtyLabel.setText("0");
-				}
-				if (channelNameLabel != null) {
-					channelNameLabel.setText("");
-				}
-				if (customerIdLabel != null) {
-					customerIdLabel.setText("");
-				}
-				if (customerTypeLabel != null) {
-					customerTypeLabel.setText("");
-				}
-				if (customerNameLabel != null) {
-					customerNameLabel.setText("");
-				}
-				if (customerDiscountLabel != null) {
-					customerDiscountLabel.setText("0");
-				}
-				if (promoItemCountLabel != null) {
-					promoItemCountLabel.setText("0");
-				}
-				if (promoItemIdLabel != null) {
-					promoItemIdLabel.setText("");
-				}
-				if (promoItemNameLabel != null) {
-					promoItemNameLabel.setText("");
-				}
-				if (promoItemDescrLabel != null) {
-					promoItemDescrLabel.setText("");
-				}
-				if (promoPaymCountLabel != null) {
-					promoPaymCountLabel.setText("0");
-				}
-				if (promoPaymIdLabel != null) {
-					promoPaymIdLabel.setText("");
-				}
-				if (promoPaymNameLabel != null) {
-					promoPaymNameLabel.setText("");
-				}
-				if (promoPaymDescrLabel != null) {
-					promoPaymDescrLabel.setText("");
-				}
-				if (promoNextTxCountLabel != null) {
-					promoNextTxCountLabel.setText("0");
-				}
-				if (promoNextTxIdLabel != null) {
-					promoNextTxIdLabel.setText("");
-				}
-				if (promoNextTxNameLabel != null) {
-					promoNextTxNameLabel.setText("");
-				}
-				if (promoNextTxDescrLabel != null) {
-					promoNextTxDescrLabel.setText("");
-				}
+				SaleViewBinder.clear(this);
 			}
 		});
 
@@ -592,70 +400,35 @@ public class SaleController extends Controller {
 	}
 
 	public void requestFocus() {
-		if (lineInput != null) {
-			javafx.application.Platform.runLater(() -> lineInput.requestFocus());
-		}
+		SaleInputHandler.requestFocus(lineInput);
 	}
 
 	public boolean isLineInputFocused() {
-		return lineInput != null && lineInput.isFocused();
+		return SaleInputHandler.isLineInputFocused(lineInput);
 	}
 
 	public boolean isItemTableFocused() {
-		return itemTable != null && itemTable.isFocused();
+		return SaleInputHandler.isItemTableFocused(itemTable);
 	}
 
 	public void focusItemTable() {
-		if (itemTable != null) {
-			itemTable.requestFocus();
-			if (itemTable.getSelectionModel().getSelectedIndex() < 0 && !itemTable.getItems().isEmpty()) {
-				itemTable.getSelectionModel().select(0);
-			}
-		}
+		SaleInputHandler.focusItemTable(itemTable);
 	}
 
 	public void appendLineInput(String text) {
-		if (lineInput != null) {
-			lineInput.appendText(text);
-			lineInput.positionCaret(lineInput.getText().length());
-		}
+		SaleInputHandler.appendLineInput(lineInput, text);
 	}
 
 	public void handleLeftArrow() {
-		if (lineInput != null) {
-			lineInput.requestFocus();
-			javafx.application.Platform.runLater(() -> {
-				int pos = lineInput.getCaretPosition();
-				if (pos > 0) {
-					lineInput.positionCaret(pos - 1);
-				}
-			});
-		}
+		SaleInputHandler.handleLeftArrow(lineInput);
 	}
 
 	public void handleRightArrow() {
-		if (lineInput != null) {
-			lineInput.requestFocus();
-			javafx.application.Platform.runLater(() -> {
-				int pos = lineInput.getCaretPosition();
-				if (pos < lineInput.getText().length()) {
-					lineInput.positionCaret(pos + 1);
-				}
-			});
-		}
+		SaleInputHandler.handleRightArrow(lineInput);
 	}
 
 	public void handleBackspace() {
-		if (lineInput != null) {
-			lineInput.requestFocus();
-			javafx.application.Platform.runLater(() -> {
-				int pos = lineInput.getCaretPosition();
-				String text = lineInput.getText();
-				if (pos > 0 && text != null && !text.isEmpty()) {
-					lineInput.deleteText(pos - 1, pos);
-				}
-			});
-		}
+		SaleInputHandler.handleBackspace(lineInput);
 	}
 
 	public void fireF1Button() {
@@ -761,62 +534,7 @@ public class SaleController extends Controller {
 			}
 		}
 
-		Trx newTrx = new Trx();
-		newTrx.setSubtotal(BigDecimal.ZERO);
-		newTrx.setQty(0);
-
-		try {
-			java.util.List<jfxpos.models.Channel> channels = channelRepo.findAll();
-			if (channels != null && !channels.isEmpty()) {
-				jfxpos.models.Channel smallestIdChannel = channels.stream()
-						.min(java.util.Comparator.comparingInt(c -> c.getId()))
-						.orElse(null);
-				if (smallestIdChannel != null) {
-					newTrx.setChannelId(smallestIdChannel.getId());
-					newTrx.setChannelName(smallestIdChannel.getChannelName());
-				}
-			}
-		} catch (Exception e) {
-			logger.severe("Failed to load default channel for new transaction: " + e.getMessage());
-		}
-
-		try {
-			jfxpos.repository.PromoItemRepository promoItemRepo = new jfxpos.repository.PromoItemRepository();
-			jfxpos.repository.PromoPaymentRepository promoPaymentRepo = new jfxpos.repository.PromoPaymentRepository();
-			jfxpos.repository.PromoNextTxRepository promoNextTxRepo = new jfxpos.repository.PromoNextTxRepository();
-
-			int activePromoItemCount = promoItemRepo.getActivePromoCount();
-			int activePromoPaymCount = promoPaymentRepo.getActivePromoCount();
-			int activePromoNextTxCount = promoNextTxRepo.getActivePromoCount();
-
-			newTrx.setPromoItemCount(activePromoItemCount);
-			newTrx.setPromoPaymCount(activePromoPaymCount);
-			newTrx.setPromoNextTxCount(activePromoNextTxCount);
-
-			if (activePromoItemCount > 0) {
-				// ambil baris pertama promo item aktif
-				newTrx.setPromoItem(promoItemRepo.getDefaultPromo());
-			} else {
-				newTrx.setPromoItem(null);
-			}
-
-			if (activePromoPaymCount > 0) {
-				// ambil baris pertama promo paym aktif
-				newTrx.setPromoPaym(promoPaymentRepo.getDefaultPromo());
-			} else {
-				newTrx.setPromoPaym(null);
-			}
-
-			if (activePromoNextTxCount > 0) {
-				// ambil baris pertama promo next tx aktif
-				newTrx.setPromoNextTx(promoNextTxRepo.getDefaultPromo());
-			} else {
-				newTrx.setPromoNextTx(null);
-			}
-
-		} catch (Exception e) {
-			logger.severe("Failed to load active promo counts for new transaction: " + e.getMessage());
-		}
+		Trx newTrx = saleService.startNewTransaction();
 
 		currentTrx.set(newTrx);
 		if (lineInput != null) {
@@ -832,89 +550,15 @@ public class SaleController extends Controller {
 	}
 
 	private void openChannelDialog() {
-		try {
-			jfxpos.views.ChannelDialog dialog = new jfxpos.views.ChannelDialog(getCurrentWindow());
-			Trx trx = currentTrx.get();
-			if (trx != null && trx.getChannelId() != null) {
-				dialog.selectChannelById(trx.getChannelId());
-			}
-			dialog.openDialog();
-			jfxpos.models.Channel selected = dialog.getSelectedChannel();
-			if (selected != null) {
-				logger.info("Selected Channel: " + selected.getChannelName());
-				if (trx != null) {
-					trx.setChannelId(selected.getId());
-					trx.setChannelName(selected.getChannelName());
-				}
-			}
-		} catch (Exception e) {
-			logger.severe("Failed to open ChannelDialog: " + e.getMessage());
-		}
+		SaleDialogManager.openChannelDialog(getCurrentWindow(), currentTrx.get());
 	}
 
 	private void openCustRegisterDialog() {
-		try {
-			jfxpos.views.CustRegisterDialog dialog = new jfxpos.views.CustRegisterDialog(getCurrentWindow());
-			Trx trx = currentTrx.get();
-			if (trx != null) {
-				Long cid = trx.getCustomerId();
-				if (cid != null && cid != 0) {
-					dialog.setCustomerId(String.valueOf(cid));
-				}
-				String cname = trx.getCustomerName();
-				if (cname != null && !"NONE".equals(cname)) {
-					dialog.setCustomerName(cname);
-				}
-				Integer cgender = trx.getCustomerGender();
-				if (cgender != null && cgender != 0) {
-					dialog.setCustomerGender(String.valueOf(cgender));
-				}
-				java.time.LocalDate cbirth = trx.getCustomerBirthdate();
-				if (cbirth != null) {
-					dialog.setCustomerBirthdate(cbirth);
-				}
-			}
-			dialog.openDialog();
-			if (dialog.isSaved()) {
-				String newId = dialog.getCustomerId();
-				String newName = dialog.getCustomerName();
-				String newGender = dialog.getCustomerGender();
-				java.time.LocalDate newBirth = dialog.getCustomerBirthdate();
-				logger.info("Registered Customer: ID=" + newId + ", Name=" + newName + ", Gender=" + newGender
-						+ ", Birthdate=" + newBirth);
-				if (trx != null) {
-					trx.setCustomerId(Long.parseLong(newId));
-					trx.setCustomerName(newName);
-					trx.setCustomerGender(newGender != null && !newGender.isEmpty() ? Integer.parseInt(newGender) : 0);
-					trx.setCustomerBirthdate(newBirth);
-				}
-			}
-		} catch (Exception e) {
-			logger.severe("Failed to open CustRegisterDialog: " + e.getMessage());
-		}
+		SaleDialogManager.openCustRegisterDialog(getCurrentWindow(), currentTrx.get());
 	}
 
 	private void openCustSearchDialog() {
-		try {
-			jfxpos.views.CustSearchDialog dialog = new jfxpos.views.CustSearchDialog(getCurrentWindow());
-			dialog.openDialog();
-			jfxpos.models.Customer selected = dialog.getSelectedCustomer();
-			if (selected != null) {
-				logger.info(
-						"Selected Customer: ID=" + selected.getCustomerId() + ", Name=" + selected.getCustomerName());
-				Trx trx = currentTrx.get();
-				if (trx != null) {
-					trx.setCustomerId(selected.getCustomerId());
-					trx.setCustomerName(selected.getCustomerName());
-					trx.setCustomerTypeId(selected.getCustomerTypeId());
-					trx.setCustomerTypeName(selected.getCustomerTypeName());
-					trx.setCustomerGender(selected.getCustomerGender());
-					trx.setCustomerBirthdate(selected.getCustomerBirthdate());
-				}
-			}
-		} catch (Exception e) {
-			logger.severe("Failed to open CustSearchDialog: " + e.getMessage());
-		}
+		SaleDialogManager.openCustSearchDialog(getCurrentWindow(), currentTrx.get());
 	}
 
 	private void clearCustomerData() {
@@ -945,10 +589,7 @@ public class SaleController extends Controller {
 	}
 
 	private void openCheckoutDialog() {
-		// Trx trx = currentTrx.get();
-		// trx.setGrandTotal(BigDecimal.valueOf(10000));
 		logger.info("open checkout dialog");
-
 	}
 
 	private void closeSaleDialog() {
@@ -964,66 +605,15 @@ public class SaleController extends Controller {
 	}
 
 	private void openPromoItemDialog() {
-		try {
-			jfxpos.views.PromoItemDialog dialog = new jfxpos.views.PromoItemDialog(getCurrentWindow());
-			Trx trx = currentTrx.get();
-			if (trx != null && trx.getPromoItemId() != null) {
-				dialog.selectPromoItemById(trx.getPromoItemId().intValue());
-			}
-			dialog.openDialog();
-			jfxpos.models.PromoItem selected = dialog.getSelectedPromoItem();
-			if (selected != null) {
-				logger.info("Selected Promo Item: " + selected.getName());
-				if (trx != null) {
-					trx.setPromoItem(selected);
-					trx.setPromoItemCount(1);
-				}
-			}
-		} catch (Exception e) {
-			logger.severe("Failed to open PromoItemDialog: " + e.getMessage());
-		}
+		SaleDialogManager.openPromoItemDialog(getCurrentWindow(), currentTrx.get());
 	}
 
 	private void openPromoPaymentDialog() {
-		try {
-			jfxpos.views.PromoPaymentDialog dialog = new jfxpos.views.PromoPaymentDialog(getCurrentWindow());
-			Trx trx = currentTrx.get();
-			if (trx != null && trx.getPromoPaymId() != null) {
-				dialog.selectPromoPaymentById(trx.getPromoPaymId().intValue());
-			}
-			dialog.openDialog();
-			jfxpos.models.PromoPayment selected = dialog.getSelectedPromoPayment();
-			if (selected != null) {
-				logger.info("Selected Promo Payment: " + selected.getNote());
-				if (trx != null) {
-					trx.setPromoPaym(selected);
-					trx.setPromoPaymCount(1);
-				}
-			}
-		} catch (Exception e) {
-			logger.severe("Failed to open PromoPaymentDialog: " + e.getMessage());
-		}
+		SaleDialogManager.openPromoPaymentDialog(getCurrentWindow(), currentTrx.get());
 	}
 
 	private void openPromoNextTxDialog() {
-		try {
-			jfxpos.views.PromoNextTxDialog dialog = new jfxpos.views.PromoNextTxDialog(getCurrentWindow());
-			Trx trx = currentTrx.get();
-			if (trx != null && trx.getPromoNextTxId() != null) {
-				dialog.selectPromoNextTxById(trx.getPromoNextTxId().intValue());
-			}
-			dialog.openDialog();
-			jfxpos.models.PromoNextTx selected = dialog.getSelectedPromoNextTx();
-			if (selected != null) {
-				logger.info("Selected Promo Next Tx: " + selected.getNote());
-				if (trx != null) {
-					trx.setPromoNextTx(selected);
-					trx.setPromoNextTxCount(1);
-				}
-			}
-		} catch (Exception e) {
-			logger.severe("Failed to open PromoNextTxDialog: " + e.getMessage());
-		}
+		SaleDialogManager.openPromoNextTxDialog(getCurrentWindow(), currentTrx.get());
 	}
 
 	private void openRecallDialog() {
@@ -1059,6 +649,10 @@ public class SaleController extends Controller {
 			BigDecimal grandTotal = (trx != null) ? trx.getGrandTotal() : BigDecimal.ZERO;
 			String formatted = grandTotal == null ? "0" : String.format("%,.0f", grandTotal);
 			custDisplay.setGrandTotal(formatted);
+			
+			String customerName = (trx != null) ? trx.getCustomerName() : "";
+			String displayName = (customerName == null || "NONE".equalsIgnoreCase(customerName.trim())) ? "" : customerName;
+			custDisplay.setCustomerName(displayName);
 		}
 	}
 

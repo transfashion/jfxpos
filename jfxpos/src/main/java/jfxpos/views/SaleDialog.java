@@ -2,6 +2,7 @@ package jfxpos.views;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import jfxpos.App;
 import jfxpos.View;
 import jfxpos.controller.SaleController;
 
@@ -29,6 +30,19 @@ public class SaleDialog extends View {
 		stage = createDialogStage(Title + " - Console #" + consoleNumber, scene, owner);
 		stage.setResizable(true);
 
+		if (App.isDev) {
+			stage.setX(0);
+			stage.setY(0);
+		}
+
+		// Push initial date/time to controller
+		java.time.format.DateTimeFormatter dateFormatter = java.time.format.DateTimeFormatter
+				.ofPattern("EEEE, d MMMM yyyy", java.util.Locale.of("id", "ID"));
+		java.time.format.DateTimeFormatter timeFormatter = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
+		java.time.LocalDateTime now = java.time.LocalDateTime.now();
+		controller.updateDateTime(now.format(dateFormatter), now.format(timeFormatter));
+
+
 		// Request focus on lineInput and notify controller when shown
 		stage.setOnShown(e -> {
 			controller.requestFocus();
@@ -42,7 +56,8 @@ public class SaleDialog extends View {
 			}
 		});
 
-		// Redirect key typed to lineInput if LINE_INPUT_MODE is active and focus is elsewhere
+		// Redirect key typed to lineInput if LINE_INPUT_MODE is active and focus is
+		// elsewhere
 		scene.addEventFilter(javafx.scene.input.KeyEvent.KEY_TYPED, event -> {
 			if (LINE_INPUT_MODE && !controller.isLineInputFocused()) {
 				String character = event.getCharacter();
@@ -99,7 +114,8 @@ public class SaleDialog extends View {
 			} else if (event.getCode() == javafx.scene.input.KeyCode.F12) {
 				controller.fireF12Button();
 				event.consume();
-			} else if (event.getCode() == javafx.scene.input.KeyCode.UP || event.getCode() == javafx.scene.input.KeyCode.DOWN) {
+			} else if (event.getCode() == javafx.scene.input.KeyCode.UP
+					|| event.getCode() == javafx.scene.input.KeyCode.DOWN) {
 				if (!controller.isItemTableFocused()) {
 					controller.focusItemTable();
 					event.consume();
@@ -122,29 +138,13 @@ public class SaleDialog extends View {
 			}
 		});
 
-		// Intercept stage close request (e.g. clicking 'X' close button) to ask for confirmation
+		// Intercept stage close request (e.g. clicking 'X' close button) to ask for
+		// confirmation
 		stage.setOnCloseRequest(event -> {
 			if (!controller.confirmClose()) {
 				event.consume();
 			}
 		});
-
-		// Timeline to update date and time every 1 minute
-		java.time.format.DateTimeFormatter dateFormatter = java.time.format.DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy", java.util.Locale.of("id", "ID"));
-		java.time.format.DateTimeFormatter timeFormatter = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
-
-		javafx.animation.Timeline clock = new javafx.animation.Timeline(
-			new javafx.animation.KeyFrame(javafx.util.Duration.ZERO, e -> {
-				java.time.LocalDateTime now = java.time.LocalDateTime.now();
-				controller.updateDateTime(now.format(dateFormatter), now.format(timeFormatter));
-			}),
-			new javafx.animation.KeyFrame(javafx.util.Duration.minutes(1))
-		);
-		clock.setCycleCount(javafx.animation.Animation.INDEFINITE);
-		clock.play();
-
-		// Stop timeline when stage is hidden to avoid memory/resource leaks
-		stage.setOnHidden(event -> clock.stop());
 	}
 
 	@Override

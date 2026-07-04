@@ -21,9 +21,9 @@ public class PromoItemRepository {
 		promos.add(new PromoItem(0, "NONE"));
 		String sql = String.format("SELECT * FROM %s WHERE %s = ? " +
 				"AND (%s IS NULL OR %s <= CURRENT_DATE) AND (%s IS NULL OR %s >= CURRENT_DATE) " +
-				"AND (%s IS NULL OR %s <= CURRENT_TIME) AND (%s IS NULL OR %s >= CURRENT_TIME) " +
+				"AND (%s IS NULL OR %s <= LOCALTIME) AND (%s IS NULL OR %s >= LOCALTIME) " +
 				"ORDER BY %s ASC, %s ASC, %s ASC, %s ASC",
-				PromoItem.Contract.TABLE_NAME, 
+				PromoItem.Contract.TABLE_NAME,
 				PromoItem.Contract.Columns.ISACTIVE,
 				PromoItem.Contract.Columns.DATESTART, PromoItem.Contract.Columns.DATESTART,
 				PromoItem.Contract.Columns.DATEEND, PromoItem.Contract.Columns.DATEEND,
@@ -69,8 +69,8 @@ public class PromoItemRepository {
 	public int getActivePromoCount() {
 		String sql = String.format("SELECT COUNT(*) FROM %s WHERE %s = ? " +
 				"AND (%s IS NULL OR %s <= CURRENT_DATE) AND (%s IS NULL OR %s >= CURRENT_DATE) " +
-				"AND (%s IS NULL OR %s <= CURRENT_TIME) AND (%s IS NULL OR %s >= CURRENT_TIME)",
-				PromoItem.Contract.TABLE_NAME, 
+				"AND (%s IS NULL OR %s <= LOCALTIME) AND (%s IS NULL OR %s >= LOCALTIME)",
+				PromoItem.Contract.TABLE_NAME,
 				PromoItem.Contract.Columns.ISACTIVE,
 				PromoItem.Contract.Columns.DATESTART, PromoItem.Contract.Columns.DATESTART,
 				PromoItem.Contract.Columns.DATEEND, PromoItem.Contract.Columns.DATEEND,

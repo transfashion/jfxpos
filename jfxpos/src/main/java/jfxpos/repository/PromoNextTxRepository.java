@@ -15,7 +15,6 @@ public class PromoNextTxRepository {
 		// Mock data for Next Transaction promos
 		promos.add(new PromoNextTx(1, "Voucher Belanja 50k untuk Transaksi Berikutnya"));
 		promos.add(new PromoNextTx(2, "Diskon 15% untuk Transaksi Berikutnya (Min Belanja 200k)"));
-		promos.add(new PromoNextTx(3, "Gratis Parkir & Gift Voucher untuk Transaksi Berikutnya"));
 		return promos;
 	}
 
@@ -24,5 +23,9 @@ public class PromoNextTxRepository {
 				.filter(p -> p.getId() == id)
 				.findFirst()
 				.orElse(null);
+	}
+
+	public int getActivePromoCount() {
+		return findAll().size();
 	}
 }

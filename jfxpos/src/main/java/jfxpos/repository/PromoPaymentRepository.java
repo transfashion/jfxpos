@@ -26,4 +26,8 @@ public class PromoPaymentRepository {
 				.findFirst()
 				.orElse(null);
 	}
+
+	public int getActivePromoCount() {
+		return findAll().size();
+	}
 }

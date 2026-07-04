@@ -778,6 +778,18 @@ public class SaleController extends Controller {
 			logger.severe("Failed to load default channel for new transaction: " + e.getMessage());
 		}
 
+		try {
+			jfxpos.repository.PromoItemRepository promoItemRepo = new jfxpos.repository.PromoItemRepository();
+			jfxpos.repository.PromoPaymentRepository promoPaymentRepo = new jfxpos.repository.PromoPaymentRepository();
+			jfxpos.repository.PromoNextTxRepository promoNextTxRepo = new jfxpos.repository.PromoNextTxRepository();
+
+			newTrx.setPromoItemCount(promoItemRepo.getActivePromoCount());
+			newTrx.setPromoPaymCount(promoPaymentRepo.getActivePromoCount());
+			newTrx.setPromoNextTxCount(promoNextTxRepo.getActivePromoCount());
+		} catch (Exception e) {
+			logger.severe("Failed to load active promo counts for new transaction: " + e.getMessage());
+		}
+
 		currentTrx.set(newTrx);
 		if (lineInput != null) {
 			lineInput.clear();

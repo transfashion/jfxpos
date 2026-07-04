@@ -616,4 +616,46 @@ public class Trx extends Model {
 	public void setPayments(List<TrxPaym> payments) {
 		this.payments = payments;
 	}
+
+	public void setPromoItem(jfxpos.models.PromoItem promo) {
+		if (promo != null) {
+			setPromoItemId((long) promo.getId());
+			setPromoItemCode(promo.getCode());
+			setPromoItemName(promo.getName());
+			setPromoItemDescr(promo.getDescr());
+		} else {
+			setPromoItemId(0L);
+			setPromoItemCode("");
+			setPromoItemName("NONE");
+			setPromoItemDescr("tidak ada promo yang aktif saat ini");
+		}
+	}
+
+	public void setPromoPaym(jfxpos.models.PromoPayment promo) {
+		if (promo != null) {
+			setPromoPaymId((long) promo.getId());
+			setPromoPaymCode(promo.getCode());
+			setPromoPaymName(promo.getName());
+			setPromoPaymDescr(promo.getDescr());
+		} else {
+			setPromoPaymId(0L);
+			setPromoPaymCode("");
+			setPromoPaymName("NONE");
+			setPromoPaymDescr("tidak ada promo yang aktif saat ini");
+		}
+	}
+
+	public void setPromoNextTx(jfxpos.models.PromoNextTx promo) {
+		if (promo != null) {
+			setPromoNextTxId((long) promo.getId());
+			setPromoNextTxCode(promo.getCode());
+			setPromoNextTxName(promo.getName());
+			setPromoNextTxDescr(promo.getDescr());
+		} else {
+			setPromoNextTxId(0L);
+			setPromoNextTxCode("");
+			setPromoNextTxName("NONE");
+			setPromoNextTxDescr("tidak ada promo yang aktif saat ini");
+		}
+	}
 }

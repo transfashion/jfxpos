@@ -13,7 +13,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.binding.Bindings;
 import java.math.BigDecimal;
 
-import jfxpos.models.PromoItem;
 import jfxpos.models.Trx;
 import jfxpos.Controller;
 import jfxpos.util.MessageBox;
@@ -796,22 +795,23 @@ public class SaleController extends Controller {
 
 			if (activePromoItemCount > 0) {
 				// ambil baris pertama promo item aktif
-				PromoItem defaultPromoItem = promoItemRepo.getDefaultPromo();
-				newTrx.setPromoItemName(defaultPromoItem.getName());
+				newTrx.setPromoItem(promoItemRepo.getDefaultPromo());
 			} else {
-
+				newTrx.setPromoItem(null);
 			}
 
 			if (activePromoPaymCount > 0) {
 				// ambil baris pertama promo paym aktif
+				newTrx.setPromoPaym(promoPaymentRepo.getDefaultPromo());
 			} else {
-
+				newTrx.setPromoPaym(null);
 			}
 
 			if (activePromoNextTxCount > 0) {
 				// ambil baris pertama promo next tx aktif
+				newTrx.setPromoNextTx(promoNextTxRepo.getDefaultPromo());
 			} else {
-
+				newTrx.setPromoNextTx(null);
 			}
 
 		} catch (Exception e) {
@@ -975,10 +975,7 @@ public class SaleController extends Controller {
 			if (selected != null) {
 				logger.info("Selected Promo Item: " + selected.getName());
 				if (trx != null) {
-					trx.setPromoItemId((long) selected.getId());
-					trx.setPromoItemName(selected.getName());
-					trx.setPromoItemCode("PRM-ITEM-" + selected.getId());
-					trx.setPromoItemDescr("Description for promo " + selected.getId());
+					trx.setPromoItem(selected);
 					trx.setPromoItemCount(1);
 				}
 			}
@@ -999,10 +996,7 @@ public class SaleController extends Controller {
 			if (selected != null) {
 				logger.info("Selected Promo Payment: " + selected.getNote());
 				if (trx != null) {
-					trx.setPromoPaymId((long) selected.getId());
-					trx.setPromoPaymName(selected.getNote());
-					trx.setPromoPaymCode("PRM-PAYM-" + selected.getId());
-					trx.setPromoPaymDescr("Description for payment promo " + selected.getId());
+					trx.setPromoPaym(selected);
 					trx.setPromoPaymCount(1);
 				}
 			}
@@ -1023,10 +1017,7 @@ public class SaleController extends Controller {
 			if (selected != null) {
 				logger.info("Selected Promo Next Tx: " + selected.getNote());
 				if (trx != null) {
-					trx.setPromoNextTxId((long) selected.getId());
-					trx.setPromoNextTxName(selected.getNote());
-					trx.setPromoNextTxCode("PRM-NEXTTX-" + selected.getId());
-					trx.setPromoNextTxDescr("Description for next purchase promo " + selected.getId());
+					trx.setPromoNextTx(selected);
 					trx.setPromoNextTxCount(1);
 				}
 			}

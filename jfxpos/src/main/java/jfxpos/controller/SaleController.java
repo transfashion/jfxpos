@@ -639,7 +639,7 @@ public class SaleController extends Controller {
 				logger.info("Selected Customer: ID=" + selected.getCustomerId() + ", Name=" + selected.getCustomerName());
 				Trx trx = currentTrx.get();
 				if (trx != null) {
-					trx.setCustomerId((long) selected.getCustomerId());
+					trx.setCustomerId(selected.getCustomerId());
 					trx.setCustomerName(selected.getCustomerName());
 					trx.setCustomerTypeId(selected.getCustomerTypeId());
 					trx.setCustomerTypeName(selected.getCustomerTypeName());

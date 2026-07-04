@@ -17,7 +17,7 @@ public class Customer extends Model {
 		}
 	}
 
-	private int customerId;
+	private long customerId;
 	private String customerName;
 	private int customerTypeId;
 	private String customerTypeName;
@@ -27,7 +27,7 @@ public class Customer extends Model {
 	public Customer() {
 	}
 
-	public Customer(int customerId, String customerName, int customerTypeId, String customerTypeName, int customerGender, LocalDate customerBirthdate) {
+	public Customer(long customerId, String customerName, int customerTypeId, String customerTypeName, int customerGender, LocalDate customerBirthdate) {
 		this.customerId = customerId;
 		this.customerName = customerName;
 		this.customerTypeId = customerTypeId;
@@ -36,11 +36,11 @@ public class Customer extends Model {
 		this.customerBirthdate = customerBirthdate;
 	}
 
-	public int getCustomerId() {
+	public long getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(int customerId) {
+	public void setCustomerId(long customerId) {
 		this.customerId = customerId;
 	}
 

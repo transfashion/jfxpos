@@ -11,8 +11,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-
-<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="601.0" prefWidth="746.0" stylesheets="@.root.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="601.0" prefWidth="900.0" stylesheets="@.root.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="customerTitleLabel" style="-fx-font-weight: bold; -fx-font-size: 2.4em;" text="Customers" />
       <HBox alignment="CENTER_LEFT" spacing="10.0">
@@ -32,29 +31,38 @@
       <HBox spacing="10.0">
          <children>
             <Region prefWidth="100.0" />
-            <RadioButton fx:id="radioById" mnemonicParsing="false" selected="true" text="ID" />
+            <Label style="-fx-font-size: 1.1em;" text="tekan F1 untuk penggantian mode pencarian (Nomor HP, Nama, 4 digit terakhir nomor HP) " />
+         </children>
+         <VBox.margin>
+            <Insets top="3.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox spacing="10.0">
+         <children>
+            <Region prefWidth="100.0" />
+            <RadioButton fx:id="radioById" mnemonicParsing="false" selected="true" text="Nomor HP" />
             <RadioButton fx:id="radioByName" mnemonicParsing="false" text="Name">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
             </RadioButton>
-            <RadioButton fx:id="radioBy4LastDigit" mnemonicParsing="false" text="Last 4 digits">
+            <RadioButton fx:id="radioBy4LastDigit" mnemonicParsing="false" text="4 digit terakhir no HP">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
             </RadioButton>
          </children>
          <VBox.margin>
-            <Insets bottom="20.0" top="10.0" />
+            <Insets bottom="20.0" top="15.0" />
          </VBox.margin>
       </HBox>
       <TableView fx:id="tableViewResult" VBox.vgrow="ALWAYS">
         <columns>
-          <TableColumn fx:id="colId" prefWidth="100.0" text="ID" />
-          <TableColumn fx:id="colName" prefWidth="200.0" text="Name" />
-          <TableColumn fx:id="colType" prefWidth="120.0" text="Type" />
-          <TableColumn fx:id="colGender" prefWidth="80.0" text="Gender" />
-          <TableColumn fx:id="colBirthdate" prefWidth="120.0" text="Birthdate" />
+          <TableColumn fx:id="colId" prefWidth="201.0" text="ID" />
+          <TableColumn fx:id="colName" prefWidth="400.0" text="Name" />
+          <TableColumn fx:id="colBirthdate" prefWidth="62.0" text="Birthdate" visible="false" />
+          <TableColumn fx:id="colGender" prefWidth="100.0" text="Gender" />
+          <TableColumn fx:id="colType" minWidth="0.0" prefWidth="100.0" text="Type" />
         </columns>
       </TableView>
       <HBox prefWidth="200.0" spacing="10.0">

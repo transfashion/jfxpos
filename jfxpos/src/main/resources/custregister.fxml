@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -28,27 +27,24 @@
           <RowConstraints minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Customer ID:" />
-            <Label text="Customer Name:" GridPane.rowIndex="1" />
-            <Label text="Gender:" GridPane.rowIndex="2" />
-            <Label text="Birthdate:" GridPane.rowIndex="3" />
+            <Label text="Nomor HP" />
+            <Label text="Nama" GridPane.rowIndex="1" />
+            <Label text="Gender" GridPane.rowIndex="2" />
+            <Label text="Tgl Lahir" GridPane.rowIndex="3" />
             
-            <TextField fx:id="txtCustomerId" promptText="Enter Customer ID" GridPane.columnIndex="1" />
-            <TextField fx:id="txtCustomerName" promptText="Enter Customer Name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="txtCustomerId" promptText="masukkan nomor HP" GridPane.columnIndex="1" />
+            <TextField fx:id="txtCustomerName" promptText="Nama" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             
-            <HBox spacing="20.0" alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <fx:define>
-                  <ToggleGroup fx:id="genderGroup" />
-               </fx:define>
+            <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
-                  <RadioButton fx:id="rbPria" mnemonicParsing="false" text="Pria" toggleGroup="$genderGroup" style="-fx-font-size: 1.6em;" />
-                  <RadioButton fx:id="rbWanita" mnemonicParsing="false" text="Wanita" toggleGroup="$genderGroup" style="-fx-font-size: 1.6em;" />
+                  <RadioButton fx:id="rbPria" mnemonicParsing="false" style="-fx-font-size: 1.6em;" text="Pria" />
+                  <RadioButton fx:id="rbWanita" mnemonicParsing="false" style="-fx-font-size: 1.6em;" text="Wanita" />
                </children>
             </HBox>
             
-            <DatePicker fx:id="dpBirthdate" promptText="Select Birthdate (Optional)" prefWidth="270.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <DatePicker fx:id="dpBirthdate" prefWidth="270.0" promptText="Tanggal Lahir (Optional)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             
-            <HBox spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="4" alignment="CENTER_LEFT">
+            <HBox alignment="CENTER_LEFT" spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
                   <Button fx:id="btnSave" mnemonicParsing="false" prefWidth="110.0" text="Save" />
                   <Button fx:id="btnCancel" mnemonicParsing="false" prefWidth="110.0" text="Cancel" />

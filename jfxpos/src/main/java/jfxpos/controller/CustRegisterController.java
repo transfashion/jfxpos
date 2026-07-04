@@ -28,7 +28,6 @@ public class CustRegisterController extends Controller {
 	@FXML
 	private RadioButton rbWanita;
 
-	@FXML
 	private ToggleGroup genderGroup;
 
 	@FXML
@@ -52,6 +51,11 @@ public class CustRegisterController extends Controller {
 
 	@FXML
 	public void initialize() {
+		// Initialize ToggleGroup programmatically to avoid SceneBuilder FXML loading errors
+		genderGroup = new ToggleGroup();
+		rbPria.setToggleGroup(genderGroup);
+		rbWanita.setToggleGroup(genderGroup);
+
 		// Event handler for Save button
 		btnSave.setOnAction(e -> handleSave());
 
@@ -71,18 +75,10 @@ public class CustRegisterController extends Controller {
 		txtCustomerId.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ENTER) {
 				String id = txtCustomerId.getText() != null ? txtCustomerId.getText().trim() : "";
+				id = cleanCustomerId(id);
 				Stage currentStage = (btnSave.getScene() != null) ? (Stage) btnSave.getScene().getWindow() : null;
 
-				if (id.isEmpty()) {
-					MessageBox.error(currentStage, "Customer ID cannot be empty!", "Validation Error");
-					txtCustomerId.requestFocus();
-					return;
-				}
-				try {
-					Long.parseLong(id);
-				} catch (NumberFormatException e) {
-					MessageBox.error(currentStage, "Customer ID must be a valid number!", "Validation Error");
-					txtCustomerId.requestFocus();
+				if (!validateCustomerId(id, currentStage)) {
 					return;
 				}
 
@@ -203,8 +199,9 @@ public class CustRegisterController extends Controller {
 
 	private void handleSave() {
 		String id = txtCustomerId.getText() != null ? txtCustomerId.getText().trim() : "";
+		id = cleanCustomerId(id);
 		String name = txtCustomerName.getText() != null ? txtCustomerName.getText().trim() : "";
-		
+
 		String gender = "";
 		if (rbPria.isSelected()) {
 			gender = "1";
@@ -219,17 +216,7 @@ public class CustRegisterController extends Controller {
 			currentStage = s;
 		}
 
-		if (id.isEmpty()) {
-			MessageBox.error(currentStage, "Customer ID cannot be empty!", "Validation Error");
-			txtCustomerId.requestFocus();
-			return;
-		}
-
-		try {
-			Long.parseLong(id);
-		} catch (NumberFormatException e) {
-			MessageBox.error(currentStage, "Customer ID must be a valid number!", "Validation Error");
-			txtCustomerId.requestFocus();
+		if (!validateCustomerId(id, currentStage)) {
 			return;
 		}
 
@@ -257,6 +244,29 @@ public class CustRegisterController extends Controller {
 	private void handleCancel() {
 		this.saved = false;
 		closeDialog();
+	}
+
+	private String cleanCustomerId(String id) {
+		if (id != null && id.startsWith("0")) {
+			String cleaned = id.replaceFirst("^0+", "");
+			txtCustomerId.setText(cleaned);
+			return cleaned;
+		}
+		return id;
+	}
+
+	private boolean validateCustomerId(String id, Stage currentStage) {
+		if (id.isEmpty()) {
+			MessageBox.error(currentStage, "Nomor HP tidak boleh kosong!", "Validation Error");
+			txtCustomerId.requestFocus();
+			return false;
+		}
+		if (!id.matches("^8[1-9]\\d{7,10}$")) {
+			MessageBox.error(currentStage, "Nomor HP customer tidak valid", "Validation Error");
+			txtCustomerId.requestFocus();
+			return false;
+		}
+		return true;
 	}
 
 	private void closeDialog() {
@@ -305,9 +315,11 @@ public class CustRegisterController extends Controller {
 		this.customerGender = gender;
 		if (gender != null) {
 			if (gender.equalsIgnoreCase("Pria") || gender.equals("1")) {
-				if (rbPria != null) rbPria.setSelected(true);
+				if (rbPria != null)
+					rbPria.setSelected(true);
 			} else if (gender.equalsIgnoreCase("Wanita") || gender.equals("2")) {
-				if (rbWanita != null) rbWanita.setSelected(true);
+				if (rbWanita != null)
+					rbWanita.setSelected(true);
 			}
 		}
 	}

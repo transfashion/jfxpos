@@ -14,6 +14,7 @@ build/
 out/
 
 jfxpos/bin
+jfxpossyn/bin
 launcher/bin
 
 # Gradle

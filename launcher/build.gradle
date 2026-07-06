@@ -12,6 +12,8 @@ plugins {
 dependencies {
     implementation project(':jfxpos')
     implementation project(':jfxpossyn')
+    implementation 'org.firebirdsql.jdbc:jaybird:6.0.5'
+    implementation 'com.zaxxer:HikariCP:5.1.0'
 }
 
 javafx {
@@ -76,6 +78,7 @@ jlink {
 }
 
 def jfxposJarTask = project(':jfxpos').tasks.named('jar')
+def jfxpossynJarTask = project(':jfxpossyn').tasks.named('jar')
 
 tasks.named('jpackageImage') {
     dependsOn(':clean')
@@ -90,9 +93,10 @@ tasks.named('jpackageImage') {
         def imageAppDir = layout.buildDirectory.dir("jpackage/jfxpos/${appSubDir}").get().asFile
         copy {
             from jfxposJarTask.get().archiveFile
+            from jfxpossynJarTask.get().archiveFile
             into imageAppDir
         }
-        println "jfxpos.jar copied to: ${imageAppDir}"
+        println "jfxpos.jar and jfxpossyn.jar copied to: ${imageAppDir}"
 
         // Copy seluruh folder jpackageImage ke [project_root]/build/jfxpos
         def targetDir = file("${rootProject.projectDir}/build/jfxpos")

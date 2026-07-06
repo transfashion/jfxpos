@@ -19,3 +19,8 @@ launcher/bin
 
 # Gradle
 .gradle/
+
+# Eclipse
+.classpath
+.project
+.settings/

@@ -33,6 +33,9 @@ public class DashboardController extends Controller {
 	private javafx.scene.layout.VBox progresInfoVBox;
 
 	@FXML
+	private javafx.scene.layout.VBox alertInfoVBox;
+
+	@FXML
 	private javafx.scene.control.ProgressBar progressBar;
 
 	@FXML
@@ -82,9 +85,17 @@ public class DashboardController extends Controller {
 
 	@FXML
 	public void initialize() {
+
+		// sembunyikan progress sebelum ada proses yang berjalan
 		if (progresInfoVBox != null) {
 			progresInfoVBox.setVisible(false);
 			progresInfoVBox.setManaged(false);
+		}
+
+		// sembuyikan alert info
+		if (alertInfoVBox != null) {
+			alertInfoVBox.setVisible(false);
+			alertInfoVBox.setManaged(false);
 		}
 
 		if (jfxpos.App.config != null) {

@@ -91,12 +91,16 @@ public class DashboardWindow extends View {
 		}
 	}
 
-	public void updateProgress(double progress, String message) {
+	public void updateProgress(double progress, String title, String message) {
 		Platform.runLater(() -> {
 			if (dashboardController != null) {
-				dashboardController.updateProgress(progress, message);
+				dashboardController.updateProgress(progress, title, message);
 			}
 		});
+	}
+
+	public void updateProgress(double progress, String message) {
+		updateProgress(progress, "Progress", message);
 	}
 
 	@Override

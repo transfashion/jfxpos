@@ -28,14 +28,14 @@ public class ItemSyncer {
 		if (config == null) {
 			logger.warning("Synchronization aborted: AppConfig is null.");
 			if (listener != null) {
-				listener.onProgress(0.0, "Synchronization aborted: AppConfig is null.");
+				listener.onProgress(0.0, "Update Data", "Synchronization aborted: AppConfig is null.");
 			}
 			return;
 		}
 
 		logger.info("Starting item synchronization...");
 		if (listener != null) {
-			listener.onProgress(0.0, "Starting item synchronization...");
+			listener.onProgress(0.0, "Update Data", "Starting item synchronization...");
 		}
 
 		int totalSteps = 10;
@@ -46,7 +46,7 @@ public class ItemSyncer {
 				Thread.currentThread().interrupt();
 				logger.warning("Synchronization interrupted.");
 				if (listener != null) {
-					listener.onProgress((double) i / totalSteps, "Synchronization interrupted.");
+					listener.onProgress((double) i / totalSteps, "Update Data", "Synchronization interrupted.");
 				}
 				return;
 			}
@@ -55,13 +55,13 @@ public class ItemSyncer {
 			String message = "Syncing items dari: step " + i + " of " + totalSteps + "...";
 			logger.info(message);
 			if (listener != null) {
-				listener.onProgress(progress, message);
+				listener.onProgress(progress, "Update Data", message);
 			}
 		}
 
 		logger.info("Item synchronization skeleton executed successfully.");
 		if (listener != null) {
-			listener.onProgress(1.0, "Item synchronization completed successfully.");
+			listener.onProgress(1.0, "Update Data", "Item synchronization completed successfully.");
 		}
 	}
 }

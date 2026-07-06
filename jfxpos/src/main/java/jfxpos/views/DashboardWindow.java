@@ -24,8 +24,8 @@ public class DashboardWindow extends View {
 
 		setStage(stage);
 		stage.setTitle(Title);
-		stage.setMinWidth(800);
-		stage.setMinHeight(600);
+		stage.setMinWidth(1024);
+		stage.setMinHeight(700);
 
 		this.stage = stage;
 
@@ -50,7 +50,8 @@ public class DashboardWindow extends View {
 					String timeStr = now.format(timeFormatter);
 
 					// Update active SaleController if any
-					jfxpos.controller.SaleController activeController = jfxpos.controller.SaleController.getActiveController();
+					jfxpos.controller.SaleController activeController = jfxpos.controller.SaleController
+							.getActiveController();
 					if (activeController != null) {
 						activeController.updateDateTime(dateStr, timeStr);
 					}
@@ -68,12 +69,26 @@ public class DashboardWindow extends View {
 	public void setLoginView() throws Exception {
 		Scene scene = loadFxml(FXML_LOGIN, new LoginController(this));
 		stage.setScene(scene);
+
+		if (App.isProd) {
+			Platform.runLater(() -> {
+				stage.setMaximized(false);
+				stage.setMaximized(true);
+			});
+		}
 	}
 
 	public void setDashboardView() throws Exception {
 		this.dashboardController = new DashboardController(this);
 		Scene scene = loadFxml(FXML_DASHBOARD, this.dashboardController);
 		stage.setScene(scene);
+
+		if (App.isProd) {
+			Platform.runLater(() -> {
+				stage.setMaximized(false);
+				stage.setMaximized(true);
+			});
+		}
 	}
 
 	public void updateProgress(double progress, String message) {
@@ -93,6 +108,8 @@ public class DashboardWindow extends View {
 			} else if (App.isDev) {
 				stage.setX(0);
 				stage.setY(0);
+				stage.setMinWidth(stage.getWidth());
+				stage.setMinHeight(stage.getHeight());
 			}
 
 			try {

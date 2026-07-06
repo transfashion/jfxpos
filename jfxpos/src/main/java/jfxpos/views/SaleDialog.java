@@ -30,7 +30,9 @@ public class SaleDialog extends View {
 		stage = createDialogStage(Title + " - Console #" + consoleNumber, scene, owner);
 		stage.setResizable(true);
 
-		if (App.isDev) {
+		if (App.isProd) {
+			stage.setMaximized(true);
+		} else if (App.isDev) {
 			stage.setX(0);
 			stage.setY(0);
 		}
@@ -41,7 +43,6 @@ public class SaleDialog extends View {
 		java.time.format.DateTimeFormatter timeFormatter = java.time.format.DateTimeFormatter.ofPattern("HH:mm");
 		java.time.LocalDateTime now = java.time.LocalDateTime.now();
 		controller.updateDateTime(now.format(dateFormatter), now.format(timeFormatter));
-
 
 		// Request focus on lineInput and notify controller when shown
 		stage.setOnShown(e -> {

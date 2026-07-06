@@ -17,6 +17,7 @@ public class DashboardWindow extends View {
 
 	final Stage stage;
 	private CustDisplayWindow custdisplayWindow;
+	private DashboardController dashboardController;
 
 	public DashboardWindow(Stage stage) {
 		super(DashboardWindow.class);
@@ -70,8 +71,17 @@ public class DashboardWindow extends View {
 	}
 
 	public void setDashboardView() throws Exception {
-		Scene scene = loadFxml(FXML_DASHBOARD, new DashboardController());
+		this.dashboardController = new DashboardController(this);
+		Scene scene = loadFxml(FXML_DASHBOARD, this.dashboardController);
 		stage.setScene(scene);
+	}
+
+	public void updateProgress(double progress, String message) {
+		Platform.runLater(() -> {
+			if (dashboardController != null) {
+				dashboardController.updateProgress(progress, message);
+			}
+		});
 	}
 
 	@Override

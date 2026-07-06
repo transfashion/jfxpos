@@ -11,6 +11,7 @@ plugins {
 // taabahkan dependency
 dependencies {
     implementation project(':jfxpos')
+    implementation project(':jfxpossyn')
 }
 
 javafx {

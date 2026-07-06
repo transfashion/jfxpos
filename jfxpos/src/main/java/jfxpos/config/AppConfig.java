@@ -19,5 +19,5 @@ public record AppConfig(
 		String databaseUsername,
 		String databasePassword,
 		String databaseRole,
-		int databasePoolSize) {
+		int databasePoolSize) implements jfxpossyn.config.AppConfig {
 }

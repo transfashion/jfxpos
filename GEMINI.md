@@ -11,6 +11,8 @@ Dokumen ini berisi pedoman, struktur, dan aturan arsitektur untuk pengembangan a
 *   **Struktur Modul**:
     1.  `launcher`: Titik awal (*start point*) aplikasi. Modul ini bertanggung jawab untuk proses pemeriksaan dan pembaruan otomatis (*autoupdate*), khususnya mengunduh/mengganti file `jfxpos.jar` utama sebelum menjalankan aplikasi POS.
     2.  `jfxpos`: Modul aplikasi utama berisi UI POS, kontroler, logika bisnis, dan integrasi database.
+    3.  `jfxpossyn`: Modul sinkronisasi data yang tidak bergantung pada JavaFX / UI library, sehingga murni berjalan untuk keperluan data dan dapat digunakan kembali oleh modul lain.
+
 
 ---
 
@@ -63,6 +65,9 @@ Untuk menjaga kualitas dan pemeliharaan kode (*maintainability*), ikuti aturan k
 ## 4. Panduan Implementasi Tambahan untuk AI
 
 Saat menambahkan fitur baru atau melakukan perubahan:
-1.  **Konfigurasi**: Jika memerlukan parameter koneksi database baru atau modifikasi pooling, perbarui record `AppConfig` di `jfxpos.config`, form FXML, serta `ConfigController` secara sinkron.
-2.  **Modularitas**: Pastikan kelas penanganan *autoupdater* tetap berada di modul `launcher` dan tidak bergantung pada komponen UI atau pustaka internal dari `jfxpos`.
+1.  **Konfigurasi**: Jika memerlukan parameter koneksi database baru atau modifikasi pooling, perbarui interface `AppConfig` di `jfxpossyn.config` serta record `AppConfig` di `jfxpos.config`, form FXML, dan `ConfigController` secara sinkron.
+2.  **Modularitas**:
+    *   Pastikan kelas penanganan *autoupdater* tetap berada di modul `launcher` dan tidak bergantung pada komponen UI atau pustaka internal dari `jfxpos`.
+    *   Modul `jfxpossyn` harus tetap **independen dari JavaFX / UI library** agar dapat digunakan sebagai utility / pustaka data di modul lain.
+    *   Mekanisme konfigurasi untuk data modul disatukan menggunakan interface `jfxpossyn.config.AppConfig`, yang kemudian diimplementasikan oleh record `jfxpos.config.AppConfig` di modul utama.
 3.  **Kepatuhan Kode**: Selalu gunakan standard Java modern (Java 25), seperti records, pattern matching, dan penanganan resource otomatis (*try-with-resources*) untuk menutup koneksi database yang diperoleh dari pool.

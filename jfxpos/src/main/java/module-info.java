@@ -9,6 +9,7 @@ module jfxpos {
 	requires java.net.http;
 	requires org.firebirdsql.jaybird;
 	requires com.zaxxer.hikari;
+	requires transitive jfxpossyn;
 
 	exports jfxpos;
 	exports jfxpos.config;

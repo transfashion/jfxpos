@@ -71,3 +71,12 @@ Saat menambahkan fitur baru atau melakukan perubahan:
     *   Modul `jfxpossyn` harus tetap **independen dari JavaFX / UI library** agar dapat digunakan sebagai utility / pustaka data di modul lain.
     *   Mekanisme konfigurasi untuk data modul disatukan menggunakan interface `jfxpossyn.config.AppConfig`, yang kemudian diimplementasikan oleh record `jfxpos.config.AppConfig` di modul utama.
 3.  **Kepatuhan Kode**: Selalu gunakan standard Java modern (Java 25), seperti records, pattern matching, dan penanganan resource otomatis (*try-with-resources*) untuk menutup koneksi database yang diperoleh dari pool.
+4.  **Asinkron & Pemrosesan Thread**:
+    *   Setiap operasi I/O berat atau sinkronisasi data harus dijalankan di thread latar belakang (background thread) agar UI JavaFX tidak membeku (freeze).
+    *   **Wajib**: Modifikasi atau pembaruan elemen UI JavaFX dari thread latar belakang harus dibungkus menggunakan `javafx.application.Platform.runLater()`.
+5.  **Desain Sinkronisasi (jfxpossyn)**:
+    *   Logika sinkronisasi data di modul `jfxpossyn` harus menggunakan callback interface (seperti `SyncProgressListener`) untuk melaporkan kemajuan (progress).
+    *   Modul `jfxpossyn` tidak boleh melakukan manipulasi UI secara langsung ataupun mengimpor library JavaFX.
+6.  **Konfigurasi Modul (JPMS)**:
+    *   Pastikan file `module-info.java` pada setiap modul disesuaikan dengan benar jika ada penambahan paket atau pustaka eksternal. Gunakan `requires transitive` jika pustaka/paket tersebut perlu diekspos ke modul dependen lainnya.
+

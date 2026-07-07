@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.control.ButtonType;
@@ -14,6 +15,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import java.math.BigDecimal;
 
 import jfxpos.models.Trx;
+import jfxpos.models.TrxItem;
+import jfxpossyn.model.Item;
+import jfxpos.views.SelectColDialog;
+import jfxpos.views.SelectSizeDialog;
 import jfxpos.Controller;
 import jfxpos.util.MessageBox;
 import jfxpos.views.CustDisplayWindow;
@@ -81,7 +86,34 @@ public class SaleController extends Controller {
 	Label itemPriceLabel;
 
 	@FXML
-	TableView<?> itemTable;
+	TableView<TrxItem> itemTable;
+
+	@FXML
+	TableColumn<TrxItem, String> colBarcode;
+
+	@FXML
+	TableColumn<TrxItem, String> colArticle;
+
+	@FXML
+	TableColumn<TrxItem, String> colColor;
+
+	@FXML
+	TableColumn<TrxItem, String> colSize;
+
+	@FXML
+	TableColumn<TrxItem, String> colDescr;
+
+	@FXML
+	TableColumn<TrxItem, Integer> colQty;
+
+	@FXML
+	TableColumn<TrxItem, BigDecimal> colPrice;
+
+	@FXML
+	TableColumn<TrxItem, BigDecimal> colDisc;
+
+	@FXML
+	TableColumn<TrxItem, BigDecimal> colTotal;
 
 	@FXML
 	Label grandTotalValueLabel;
@@ -219,6 +251,25 @@ public class SaleController extends Controller {
 
 	@FXML
 	public void initialize() {
+		if (colBarcode != null)
+			colBarcode.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("barcode"));
+		if (colArticle != null)
+			colArticle.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemArt"));
+		if (colColor != null)
+			colColor.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemCol"));
+		if (colSize != null)
+			colSize.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemSize"));
+		if (colDescr != null)
+			colDescr.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemDescr"));
+		if (colQty != null)
+			colQty.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("qty"));
+		if (colPrice != null)
+			colPrice.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemPrice"));
+		if (colDisc != null)
+			colDisc.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("discValue"));
+		if (colTotal != null)
+			colTotal.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("total"));
+
 		if (siteNameLabel != null && jfxpos.App.config != null) {
 			siteNameLabel.setText(jfxpos.App.config.siteName());
 		}
@@ -408,6 +459,16 @@ public class SaleController extends Controller {
 		return SaleInputHandler.isLineInputFocused(lineInput);
 	}
 
+	public String getLineInputText() {
+		return lineInput != null ? lineInput.getText() : "";
+	}
+
+	public void clearLineInput() {
+		if (lineInput != null) {
+			lineInput.clear();
+		}
+	}
+
 	public boolean isItemTableFocused() {
 		return SaleInputHandler.isItemTableFocused(itemTable);
 	}
@@ -547,7 +608,143 @@ public class SaleController extends Controller {
 		if (itemPriceLabel != null) {
 			itemPriceLabel.setText("");
 		}
+		if (itemTable != null) {
+			itemTable.getItems().clear();
+		}
+		updateCustDisplay();
 		logger.info("New transaction started");
+	}
+
+	public void handleItemSearch(jfxpos.models.InputSearchMode searchMode, String searchText) {
+		try {
+			Item chosenItem = null;
+
+			if (searchMode == jfxpos.models.InputSearchMode.BARCODE) {
+				chosenItem = saleService.findItemByBarcode(searchText);
+			} else if (searchMode == jfxpos.models.InputSearchMode.ART) {
+				java.util.List<Item> candidates = saleService.findItemsByArticle(searchText);
+				if (candidates == null || candidates.isEmpty()) {
+					jfxpos.util.SoundUtil.playAlert();
+					if (itemDescriptionLabel != null) {
+						itemDescriptionLabel.setText("ITEM NOT FOUND");
+					}
+					if (itemPriceLabel != null) {
+						itemPriceLabel.setText("");
+					}
+					clearLineInput();
+					return;
+				}
+
+				if (candidates.size() == 1) {
+					chosenItem = candidates.get(0);
+				} else {
+					// Extract unique colors
+					java.util.List<Item> uniqueColorItems = new java.util.ArrayList<>();
+					java.util.Set<String> colorsSeen = new java.util.HashSet<>();
+					for (Item candidate : candidates) {
+						String col = candidate.getItemCol();
+						if (col == null)
+							col = "";
+						if (colorsSeen.add(col.trim().toUpperCase())) {
+							uniqueColorItems.add(candidate);
+						}
+					}
+
+					java.util.List<Item> filteredByColor = candidates;
+					if (uniqueColorItems.size() > 1) {
+						SelectColDialog colDialog = new SelectColDialog(getCurrentWindow(), uniqueColorItems);
+						colDialog.openDialog();
+						Item selectedColorItem = colDialog.getSelectedItem();
+						if (selectedColorItem == null) {
+							logger.info("Search item cancelled during color selection");
+							return; // User cancelled
+						}
+
+						String selectedColor = selectedColorItem.getItemCol();
+						filteredByColor = new java.util.ArrayList<>();
+						for (Item candidate : candidates) {
+							if (selectedColor == null && candidate.getItemCol() == null) {
+								filteredByColor.add(candidate);
+							} else if (selectedColor != null
+									&& selectedColor.equalsIgnoreCase(candidate.getItemCol())) {
+								filteredByColor.add(candidate);
+							}
+						}
+					}
+
+					// Extract unique sizes from filteredByColor
+					java.util.List<Item> uniqueSizeItems = new java.util.ArrayList<>();
+					java.util.Set<String> sizesSeen = new java.util.HashSet<>();
+					for (Item candidate : filteredByColor) {
+						String sz = candidate.getItemSize();
+						if (sz == null)
+							sz = "";
+						if (sizesSeen.add(sz.trim().toUpperCase())) {
+							uniqueSizeItems.add(candidate);
+						}
+					}
+
+					if (uniqueSizeItems.size() > 1) {
+						SelectSizeDialog sizeDialog = new SelectSizeDialog(getCurrentWindow(), filteredByColor);
+						sizeDialog.openDialog();
+						chosenItem = sizeDialog.getSelectedItem();
+						if (chosenItem == null) {
+							logger.info("Search item cancelled during size selection");
+							return; // User cancelled
+						}
+					} else if (!filteredByColor.isEmpty()) {
+						chosenItem = filteredByColor.get(0);
+					}
+				}
+			}
+
+			if (chosenItem != null) {
+				TrxItem lineItem = saleService.createTrxItemFromItem(chosenItem);
+				if (lineItem != null) {
+					Trx activeTrx = currentTrx.get();
+					if (activeTrx != null) {
+						activeTrx.getItems().add(lineItem);
+
+						// Update TableView
+						if (itemTable != null) {
+							itemTable.getItems().setAll(activeTrx.getItems());
+						}
+
+						// Recalculate transaction totals
+						int newQty = activeTrx.getQty() + lineItem.getQty();
+						activeTrx.setQty(newQty);
+
+						BigDecimal newGrandTotal = activeTrx.getGrandTotal().add(lineItem.getGrandTotal());
+						activeTrx.setGrandTotal(newGrandTotal);
+
+						// Update description and price labels
+						if (itemDescriptionLabel != null) {
+							itemDescriptionLabel.setText(lineItem.getItemDescr());
+						}
+						if (itemPriceLabel != null) {
+							itemPriceLabel.setText(String.format("%,.0f", lineItem.getItemPrice()));
+						}
+
+						// Update customer display
+						updateCustDisplay();
+					}
+					clearLineInput();
+					logger.info("Item added to transaction: " + lineItem.getItemDescr());
+				}
+			} else {
+				jfxpos.util.SoundUtil.playAlert();
+				if (itemDescriptionLabel != null) {
+					itemDescriptionLabel.setText("ITEM NOT FOUND");
+				}
+				if (itemPriceLabel != null) {
+					itemPriceLabel.setText("");
+				}
+				clearLineInput();
+			}
+		} catch (Exception e) {
+			logger.severe("Error searching item: " + e.getMessage());
+			MessageBox.error(getCurrentWindow(), "Error: " + e.getMessage());
+		}
 	}
 
 	private void openChannelDialog() {
@@ -651,10 +848,17 @@ public class SaleController extends Controller {
 			BigDecimal grandTotal = (trx != null) ? trx.getGrandTotal() : BigDecimal.ZERO;
 			String formatted = grandTotal == null ? "0" : String.format("%,.0f", grandTotal);
 			custDisplay.setGrandTotal(formatted);
-			
+
 			String customerName = (trx != null) ? trx.getCustomerName() : "";
-			String displayName = (customerName == null || "NONE".equalsIgnoreCase(customerName.trim())) ? "" : customerName;
+			String displayName = (customerName == null || "NONE".equalsIgnoreCase(customerName.trim())) ? ""
+					: customerName;
 			custDisplay.setCustomerName(displayName);
+
+			if (trx != null && trx.getItems() != null) {
+				custDisplay.setItems(trx.getItems());
+			} else {
+				custDisplay.setItems(new java.util.ArrayList<>());
+			}
 		}
 	}
 

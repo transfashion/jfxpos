@@ -11,6 +11,7 @@ module jfxpos {
 	requires org.firebirdsql.jaybird;
 	requires com.zaxxer.hikari;
 	requires transitive jfxpossyn;
+	requires java.desktop;
 
 	exports jfxpos;
 	exports jfxpos.config;

@@ -83,8 +83,15 @@
                   </HBox>
                   <TableView fx:id="itemTable" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" styleClass="item-datagrid" VBox.vgrow="ALWAYS">
                     <columns>
-                      <TableColumn prefWidth="75.0" text="C1" />
-                      <TableColumn prefWidth="75.0" text="C2" />
+                      <TableColumn fx:id="colBarcode" prefWidth="120.0" text="Barcode" />
+                      <TableColumn fx:id="colArticle" prefWidth="120.0" text="Article" />
+                      <TableColumn fx:id="colColor" prefWidth="80.0" text="Color" />
+                      <TableColumn fx:id="colSize" prefWidth="60.0" text="Size" />
+                      <TableColumn fx:id="colDescr" prefWidth="220.0" text="Description" />
+                      <TableColumn fx:id="colQty" prefWidth="50.0" text="Qty" />
+                      <TableColumn fx:id="colPrice" prefWidth="100.0" text="Price" />
+                      <TableColumn fx:id="colDisc" prefWidth="80.0" text="Disc" />
+                      <TableColumn fx:id="colTotal" prefWidth="120.0" text="Total" />
                     </columns>
                      <VBox.margin>
                         <Insets top="20.0" />

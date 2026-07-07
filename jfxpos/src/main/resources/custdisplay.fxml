@@ -48,8 +48,10 @@
             </HBox>
             <TableView fx:id="itemTableView" maxHeight="300.0" VBox.vgrow="ALWAYS">
               <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                <TableColumn fx:id="colDescr" prefWidth="120.0" text="Description" />
+                <TableColumn fx:id="colQty" prefWidth="50.0" text="Qty" />
+                <TableColumn fx:id="colPrice" prefWidth="100.0" text="Price" />
+                <TableColumn fx:id="colTotal" prefWidth="100.0" text="Total" />
               </columns>
                <VBox.margin>
                   <Insets bottom="20.0" right="20.0" top="30.0" />

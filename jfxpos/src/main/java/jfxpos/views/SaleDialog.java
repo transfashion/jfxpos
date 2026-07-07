@@ -136,6 +136,12 @@ public class SaleDialog extends View {
 					controller.handleBackspace();
 					event.consume();
 				}
+			} else if (event.getCode() == javafx.scene.input.KeyCode.ENTER) {
+				String text = controller.getLineInputText();
+				if (text != null && !text.isEmpty()) {
+					searchItem(controller.getCurrentSearchMode(), text);
+					event.consume();
+				}
 			}
 		});
 
@@ -146,6 +152,11 @@ public class SaleDialog extends View {
 				event.consume();
 			}
 		});
+	}
+
+	private void searchItem(jfxpos.models.InputSearchMode searchMode, String searchtext) {
+		logger.info("Executing searchItem with mode: " + searchMode + ", text: " + searchtext);
+		controller.handleItemSearch(searchMode, searchtext);
 	}
 
 	@Override

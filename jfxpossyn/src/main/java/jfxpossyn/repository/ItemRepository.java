@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -194,5 +195,116 @@ public class ItemRepository {
 				throw e;
 			}
 		}
+	}
+
+	public Item findByBarcode(String barcode) throws SQLException {
+		String sql = String.format(
+				"SELECT i.* FROM %s i " +
+				"JOIN %s ib ON i.%s = ib.%s " +
+				"WHERE ib.%s = ? AND i.%s = FALSE",
+				Item.Contract.TABLE_NAME,
+				ItemBarcode.Contract.TABLE_NAME,
+				Item.Contract.Columns.ITEM_ID,
+				ItemBarcode.Contract.Columns.ITEM_ID,
+				ItemBarcode.Contract.Columns.BARCODE,
+				Item.Contract.Columns.ITEM_ISDISABLED
+		);
+
+		try (Connection conn = DbPool.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setString(1, barcode);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					return mapResultSetToItem(rs);
+				}
+			}
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, "Error searching item by barcode: " + barcode, e);
+			throw e;
+		}
+		return null;
+	}
+
+	public Item findByArticle(String article) throws SQLException {
+		String sql = String.format(
+				"SELECT * FROM %s WHERE %s = ? AND %s = FALSE",
+				Item.Contract.TABLE_NAME,
+				Item.Contract.Columns.ITEM_ART,
+				Item.Contract.Columns.ITEM_ISDISABLED
+		);
+
+		try (Connection conn = DbPool.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setString(1, article);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					return mapResultSetToItem(rs);
+				}
+			}
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, "Error searching item by article: " + article, e);
+			throw e;
+		}
+		return null;
+	}
+
+	public List<Item> findAllByArticle(String article) throws SQLException {
+		String sql = String.format(
+				"SELECT * FROM %s WHERE %s = ? AND %s = FALSE",
+				Item.Contract.TABLE_NAME,
+				Item.Contract.Columns.ITEM_ART,
+				Item.Contract.Columns.ITEM_ISDISABLED
+		);
+
+		List<Item> items = new ArrayList<>();
+		try (Connection conn = DbPool.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setString(1, article);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					items.add(mapResultSetToItem(rs));
+				}
+			}
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, "Error searching items by article: " + article, e);
+			throw e;
+		}
+		return items;
+	}
+
+	private Item mapResultSetToItem(ResultSet rs) throws SQLException {
+		Item item = new Item();
+		item.setItemId(rs.getLong(Item.Contract.Columns.ITEM_ID));
+		item.setItemArt(rs.getString(Item.Contract.Columns.ITEM_ART));
+		item.setItemCol(rs.getString(Item.Contract.Columns.ITEM_COL));
+		item.setItemSize(rs.getString(Item.Contract.Columns.ITEM_SIZE));
+		item.setItemDescr(rs.getString(Item.Contract.Columns.ITEM_DESCR));
+		item.setItemPriceGross(rs.getBigDecimal(Item.Contract.Columns.ITEM_PRICEGROSS));
+		item.setItemPrice(rs.getBigDecimal(Item.Contract.Columns.ITEM_PRICE));
+		item.setItemDisc(rs.getBigDecimal(Item.Contract.Columns.ITEM_DISC));
+		item.setItemIsSpecialPrice(rs.getBoolean(Item.Contract.Columns.ITEM_ISSPECIALPRICE));
+		item.setItemIsDisabled(rs.getBoolean(Item.Contract.Columns.ITEM_ISDISABLED));
+		
+		int ctg = rs.getInt(Item.Contract.Columns.CTG_ID);
+		if (!rs.wasNull()) item.setCtgId(ctg);
+		item.setCtgName(rs.getString(Item.Contract.Columns.CTG_NAME));
+		
+		int unit = rs.getInt(Item.Contract.Columns.UNIT_ID);
+		if (!rs.wasNull()) item.setUnitId(unit);
+		item.setUnitName(rs.getString(Item.Contract.Columns.UNIT_NAME));
+		
+		int struct = rs.getInt(Item.Contract.Columns.STRUCT_ID);
+		if (!rs.wasNull()) item.setStructId(struct);
+		item.setStructName(rs.getString(Item.Contract.Columns.STRUCT_NAME));
+		
+		int brand = rs.getInt(Item.Contract.Columns.BRAND_ID);
+		if (!rs.wasNull()) item.setBrandId(brand);
+		item.setBrandName(rs.getString(Item.Contract.Columns.BRAND_NAME));
+		
+		Timestamp ts = rs.getTimestamp(Item.Contract.Columns.DATATIMESTAMP);
+		if (ts != null) item.setDataTimestamp(ts.toLocalDateTime());
+		
+		item.setMd5Hash(rs.getString(Item.Contract.Columns.MD5HASH));
+		return item;
 	}
 }

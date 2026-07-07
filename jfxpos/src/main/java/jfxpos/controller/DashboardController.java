@@ -106,6 +106,32 @@ public class DashboardController extends Controller {
 			alertInfoVBox.setManaged(false);
 		}
 
+		// Test load table-table yang diperlukan disini, jika error munculkan di
+		// alertInfoVBox
+		try {
+			new jfxpos.repository.PromoItemRepository().getActivePromoCount();
+			new jfxpos.repository.PromoPaymentRepository().getActivePromoCount();
+			new jfxpos.repository.PromoNextTxRepository().getActivePromoCount();
+		} catch (Exception e) {
+			logger.log(java.util.logging.Level.SEVERE, "Failed to initialize and count active promos", e);
+			if (alertInfoVBox != null) {
+				alertTitleLabel.setText("Error");
+				alertMessageLabel.setText(e.getMessage());
+				alertInfoVBox.setVisible(true);
+				alertInfoVBox.setManaged(true);
+			}
+			setButtonsDisable(true);
+			if (voidButton != null) {
+				voidButton.setDisable(true);
+			}
+			if (posConsole1Button != null) {
+				posConsole1Button.setDisable(true);
+			}
+			if (posConsole2Button != null) {
+				posConsole2Button.setDisable(true);
+			}
+		}
+
 		if (jfxpos.App.config != null) {
 			siteNameLabel.setText(jfxpos.App.config.siteName());
 			siteCodeLabel.setText(jfxpos.App.config.siteCode());
@@ -129,9 +155,9 @@ public class DashboardController extends Controller {
 		}
 		if (posVersionLabel != null) {
 			if (version == null) {
-				posVersionLabel.setText("Versi POS: DEV");
+				posVersionLabel.setText("Development Version");
 			} else {
-				posVersionLabel.setText("Versi POS: v" + version);
+				posVersionLabel.setText("v" + version);
 			}
 		}
 	}

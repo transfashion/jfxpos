@@ -66,7 +66,7 @@ public class PromoNextTxRepository {
 		return null;
 	}
 
-	public int getActivePromoCount() {
+	public int getActivePromoCount() throws SQLException {
 		String sql = String.format("SELECT COUNT(*) FROM %s WHERE %s = ? " +
 				"AND (%s IS NULL OR %s <= CURRENT_DATE) AND (%s IS NULL OR %s >= CURRENT_DATE) " +
 				"AND (%s IS NULL OR %s <= CURRENT_TIME) AND (%s IS NULL OR %s >= CURRENT_TIME)",
@@ -86,8 +86,6 @@ public class PromoNextTxRepository {
 					return rs.getInt(1);
 				}
 			}
-		} catch (SQLException e) {
-			logger.log(Level.SEVERE, "Error getting active promo next transactions count", e);
 		}
 		return 0;
 	}

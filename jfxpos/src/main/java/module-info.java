@@ -1,6 +1,7 @@
 module jfxpos {
 	requires transitive javafx.controls;
 	requires transitive javafx.fxml;
+	requires transitive javafx.graphics;
 
 	requires transitive java.logging;
 

@@ -56,7 +56,7 @@ public class InventorySyncer {
 
 			double progress = (double) i / totalSteps;
 			String message = "Syncing inventory dari: step " + i + " of " + totalSteps + "...";
-			logger.info(message);
+			// logger.info(message);
 			if (listener != null) {
 				listener.onProgress(progress, TITLE, message);
 			}

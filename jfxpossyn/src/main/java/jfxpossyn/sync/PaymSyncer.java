@@ -56,7 +56,7 @@ public class PaymSyncer {
 
 			double progress = (double) i / totalSteps;
 			String message = "Syncing payment methods dari: step " + i + " of " + totalSteps + "...";
-			logger.info(message);
+			// logger.info(message);
 			if (listener != null) {
 				listener.onProgress(progress, TITLE, message);
 			}

@@ -1,6 +1,7 @@
 package jfxpossyn.repository;
 
 import jfxpossyn.model.Item;
+import jfxpossyn.model.ItemBarcode;
 import jfxpossyn.util.DbPool;
 
 import java.sql.Connection;
@@ -47,7 +48,7 @@ public class ItemRepository {
 
 	/**
 	 * Batch upserts (inserts or updates) items into the ITEM table using connection pools
-	 * and commits them in a single transaction.
+	 * and commits them in a single transaction along with their barcodes.
 	 *
 	 * @param items List of Item models to upsert.
 	 * @throws SQLException If database access fails.
@@ -84,9 +85,24 @@ public class ItemRepository {
 				Item.Contract.Columns.ITEM_ID
 		);
 
+		String barcodeSql = String.format(
+				"UPDATE OR INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) " +
+						"VALUES (?, ?, ?, ?, ?, ?, ?) MATCHING (%s)",
+				ItemBarcode.Contract.TABLE_NAME,
+				ItemBarcode.Contract.Columns.ITEMBARCODE_ID,
+				ItemBarcode.Contract.Columns.ITEM_ID,
+				ItemBarcode.Contract.Columns.BARCODE,
+				ItemBarcode.Contract.Columns.BRAND_ID,
+				ItemBarcode.Contract.Columns.IS_ACTIVE,
+				ItemBarcode.Contract.Columns.CREATED_AT,
+				ItemBarcode.Contract.Columns.DATATIMESTAMP,
+				ItemBarcode.Contract.Columns.ITEMBARCODE_ID
+		);
+
 		try (Connection conn = DbPool.getConnection()) {
 			conn.setAutoCommit(false);
-			try (PreparedStatement ps = conn.prepareStatement(sql)) {
+			try (PreparedStatement ps = conn.prepareStatement(sql);
+					PreparedStatement psBarcode = conn.prepareStatement(barcodeSql)) {
 				for (Item item : items) {
 					ps.setLong(1, item.getItemId());
 					ps.setString(2, item.getItemArt());
@@ -137,10 +153,44 @@ public class ItemRepository {
 					ps.addBatch();
 				}
 				ps.executeBatch();
+
+				boolean hasBarcodes = false;
+				for (Item item : items) {
+					if (item.getBarcodes() != null) {
+						for (ItemBarcode bc : item.getBarcodes()) {
+							psBarcode.setLong(1, bc.getItemBarcodeId());
+							psBarcode.setLong(2, bc.getItemId());
+							psBarcode.setString(3, bc.getBarcode());
+							if (bc.getBrandId() != null) {
+								psBarcode.setInt(4, bc.getBrandId());
+							} else {
+								psBarcode.setNull(4, java.sql.Types.INTEGER);
+							}
+							psBarcode.setBoolean(5, bc.isActive());
+							if (bc.getCreatedAt() != null) {
+								psBarcode.setTimestamp(6, Timestamp.valueOf(bc.getCreatedAt()));
+							} else {
+								psBarcode.setNull(6, java.sql.Types.TIMESTAMP);
+							}
+							if (bc.getDataTimestamp() != null) {
+								psBarcode.setTimestamp(7, Timestamp.valueOf(bc.getDataTimestamp()));
+							} else {
+								psBarcode.setNull(7, java.sql.Types.TIMESTAMP);
+							}
+							psBarcode.addBatch();
+							hasBarcodes = true;
+						}
+					}
+				}
+
+				if (hasBarcodes) {
+					psBarcode.executeBatch();
+				}
+
 				conn.commit();
 			} catch (SQLException e) {
 				conn.rollback();
-				logger.log(Level.SEVERE, "Failed batch insert/update of items", e);
+				logger.log(Level.SEVERE, "Failed batch insert/update of items and barcodes", e);
 				throw e;
 			}
 		}

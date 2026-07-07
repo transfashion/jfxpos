@@ -2,6 +2,7 @@ package jfxpossyn.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Item extends Model {
 	public static final class Contract {
@@ -57,6 +58,15 @@ public class Item extends Model {
 	private LocalDateTime createdAt;
 	private LocalDateTime dataTimestamp;
 	private String md5Hash;
+	private List<ItemBarcode> barcodes;
+
+	public List<ItemBarcode> getBarcodes() {
+		return barcodes;
+	}
+
+	public void setBarcodes(List<ItemBarcode> barcodes) {
+		this.barcodes = barcodes;
+	}
 
 	public long getItemId() {
 		return itemId;

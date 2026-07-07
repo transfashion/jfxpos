@@ -54,7 +54,7 @@ public class PromoSyncer {
 
 			double progress = (double) i / totalSteps;
 			String message = "Syncing promos dari: step " + i + " of " + totalSteps + "...";
-			logger.info(message);
+			// logger.info(message);
 			if (listener != null) {
 				listener.onProgress(progress, TITLE, message);
 			}

@@ -261,9 +261,17 @@ public class ConfigController extends Controller {
 			@Override
 			protected Void call() throws Exception {
 				// 1. Verify device credentials via API
-				callGetDeviceApi();
+				try {
+					callGetDeviceApi();
+				} catch (Exception ex) {
+					throw new Exception("API_ERROR: " + ex.getMessage(), ex);
+				}
 				// 2. Test database connection
-				testDatabaseConnection(host, path, username, password, role);
+				try {
+					testDatabaseConnection(host, path, username, password, role);
+				} catch (Exception ex) {
+					throw new Exception("DB_ERROR: " + ex.getMessage(), ex);
+				}
 				return null;
 			}
 		};
@@ -329,12 +337,34 @@ public class ConfigController extends Controller {
 			// Show connection error message to user
 			Stage stage = (Stage) saveButton.getScene().getWindow();
 			String friendlyMsg;
-			if (ex.getMessage() != null && (ex.getMessage().contains("API") || ex.getMessage().contains("perangkat")
-					|| ex.getMessage().contains("Server URL"))) {
-				friendlyMsg = ex.getMessage();
+			String message = ex.getMessage() != null ? ex.getMessage() : "";
+
+			if (message.startsWith("API_ERROR: ")) {
+				String actualError = message.substring("API_ERROR: ".length());
+				Throwable cause = ex.getCause();
+				if (cause != null && (actualError.equals("null") || actualError.trim().isEmpty())) {
+					actualError = cause.getMessage() != null ? cause.getMessage() : cause.toString();
+				}
+				String lowerActual = actualError.toLowerCase();
+				if (lowerActual.contains("connection refused")
+						|| lowerActual.contains("host")
+						|| lowerActual.contains("unknownhost")
+						|| lowerActual.contains("connect")
+						|| lowerActual.contains("timeout")
+						|| lowerActual.contains("socket")) {
+					friendlyMsg = "Gagal terhubung ke API Server: Hubungan ditolak atau server tidak aktif.\n"
+							+ "Silakan periksa Server URL dan pastikan jaringan internet terhubung.\n\nDetail: "
+							+ actualError;
+				} else {
+					friendlyMsg = "Gagal verifikasi data via API:\n" + actualError;
+				}
+			} else if (message.startsWith("DB_ERROR: ")) {
+				Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
+				friendlyMsg = getFriendlyDatabaseErrorMessage(cause);
 			} else {
-				friendlyMsg = getFriendlyDatabaseErrorMessage(ex);
+				friendlyMsg = ex.getMessage() != null ? ex.getMessage() : ex.toString();
 			}
+
 			MessageBox.error(stage,
 					"Gagal menyimpan konfigurasi.\n\n" + friendlyMsg, ex,
 					"Save Config Failed");
@@ -513,8 +543,8 @@ public class ConfigController extends Controller {
 			String body = response.body();
 			logger.info("Verifikasi Device Sukses: " + body);
 
-			Integer deviceId = extractJsonInt(body, "device_id");
-			String deviceNum = extractJsonString(body, "device_num");
+			Integer deviceId = extractJsonInt(body, "posdevice_id");
+			String deviceNum = extractJsonString(body, "posdevice_num");
 			String deviceName = extractJsonString(body, "name");
 			Integer siteId = extractJsonInt(body, "site_id");
 			String siteName = extractJsonString(body, "site_name");

@@ -9,7 +9,6 @@ import jfxpos.views.AuthorizeDialog;
 
 import javafx.concurrent.Task;
 import jfxpos.util.MessageBox;
-import jfxpossyn.sync.ItemSyncer;
 import jfxpos.views.DashboardWindow;
 
 public class DashboardController extends Controller {
@@ -34,6 +33,12 @@ public class DashboardController extends Controller {
 
 	@FXML
 	private javafx.scene.layout.VBox alertInfoVBox;
+
+	@FXML
+	private javafx.scene.control.Label alertTitleLabel;
+
+	@FXML
+	private javafx.scene.control.Label alertMessageLabel;
 
 	@FXML
 	private javafx.scene.control.ProgressBar progressBar;
@@ -61,6 +66,9 @@ public class DashboardController extends Controller {
 
 	@FXML
 	private javafx.scene.control.Label serverUrlLabel;
+
+	@FXML
+	private javafx.scene.control.Label posVersionLabel;
 
 	@FXML
 	private Button voidButton;
@@ -105,6 +113,26 @@ public class DashboardController extends Controller {
 			deviceCodeLabel.setText(jfxpos.App.config.deviceCode());
 			nameLabel.setText(jfxpos.App.config.name());
 			serverUrlLabel.setText(jfxpos.App.config.serverUrl());
+		}
+
+		java.util.Properties p = new java.util.Properties();
+		try (java.io.InputStream is = getClass().getResourceAsStream("/app.properties")) {
+			if (is != null) {
+				p.load(is);
+			}
+		} catch (java.io.IOException e) {
+			logger.log(java.util.logging.Level.WARNING, "Failed to load app.properties", e);
+		}
+		String version = p.getProperty("app.version");
+		if (version == null) {
+			version = getClass().getPackage().getImplementationVersion();
+		}
+		if (posVersionLabel != null) {
+			if (version == null) {
+				posVersionLabel.setText("Versi POS: DEV");
+			} else {
+				posVersionLabel.setText("Versi POS: v" + version);
+			}
 		}
 	}
 
@@ -158,6 +186,10 @@ public class DashboardController extends Controller {
 		if (hideDelay != null) {
 			hideDelay.stop();
 			hideDelay = null;
+		}
+		if (alertInfoVBox != null) {
+			alertInfoVBox.setVisible(false);
+			alertInfoVBox.setManaged(false);
 		}
 		setButtonsDisable(true);
 		if (progresInfoVBox != null) {
@@ -213,14 +245,13 @@ public class DashboardController extends Controller {
 
 		startProgress("Update Data", "Memulai update data...");
 
-		Task<Void> syncTask = new Task<>() {
+		Task<Boolean> syncTask = new Task<>() {
 			@Override
-			protected Void call() throws Exception {
-				ItemSyncer syncer = new ItemSyncer();
-				syncer.syncItem(jfxpos.App.config, (progress, title, message) -> {
+			protected Boolean call() throws Exception {
+				jfxpossyn.UpdateData updateData = new jfxpossyn.UpdateData();
+				return updateData.start(jfxpos.App.config, (progress, title, message) -> {
 					window.updateProgress(progress, title, message);
 				});
-				return null;
 			}
 		};
 
@@ -228,9 +259,16 @@ public class DashboardController extends Controller {
 			if (updateDataButton.getScene() != null) {
 				updateDataButton.getScene().setCursor(javafx.scene.Cursor.DEFAULT);
 			}
-			endProgress("Update Data", "Update data berhasil!", true);
-			Stage stage = (Stage) updateDataButton.getScene().getWindow();
-			MessageBox.info(stage, "Update data berhasil!", "Update Data");
+			Boolean executed = syncTask.getValue();
+			if (Boolean.TRUE.equals(executed)) {
+				endProgress("Update Data", "Update data berhasil!", true);
+				Stage stage = (Stage) updateDataButton.getScene().getWindow();
+				MessageBox.info(stage, "Update data berhasil!", "Update Data");
+			} else {
+				endProgress("Update Data", "Data Up to date", true);
+				Stage stage = (Stage) updateDataButton.getScene().getWindow();
+				MessageBox.info(stage, "Data Up to date", "Update Data");
+			}
 		});
 
 		syncTask.setOnFailed(e -> {
@@ -238,9 +276,22 @@ public class DashboardController extends Controller {
 				updateDataButton.getScene().setCursor(javafx.scene.Cursor.DEFAULT);
 			}
 			Throwable ex = syncTask.getException();
-			endProgress("Update Data", "Gagal update data: " + (ex != null ? ex.getMessage() : "Unknown error"));
+			String errorMsg = (ex != null ? ex.getMessage() : "Unknown error");
+			endProgress("Update Data", "Gagal update data: " + errorMsg);
+
+			if (alertInfoVBox != null) {
+				if (alertTitleLabel != null) {
+					alertTitleLabel.setText("Gagal Update Data");
+				}
+				if (alertMessageLabel != null) {
+					alertMessageLabel.setText(errorMsg);
+				}
+				alertInfoVBox.setVisible(true);
+				alertInfoVBox.setManaged(true);
+			}
+
 			Stage stage = (Stage) updateDataButton.getScene().getWindow();
-			MessageBox.error(stage, "Gagal update data. Detail: " + (ex != null ? ex.getMessage() : "Unknown error"),
+			MessageBox.error(stage, "Gagal update data. Detail: " + errorMsg,
 					ex, "Update Data");
 		});
 

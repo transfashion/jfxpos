@@ -1,4 +1,6 @@
 dependencies {
+    implementation 'org.firebirdsql.jdbc:jaybird:6.0.5'
+    implementation 'com.zaxxer:HikariCP:5.1.0'
 }
 
 jar {

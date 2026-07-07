@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.beans.property.ObjectProperty;
@@ -571,7 +572,8 @@ public class SaleController extends Controller {
 			if (hasCustomer) {
 				boolean confirm = MessageBox.confirm(getCurrentWindow(),
 						"Apakah Anda yakin ingin menghapus data customer dari transaksi ini?",
-						"Konfirmasi Hapus Customer");
+						"Konfirmasi Hapus Customer",
+						ButtonType.CANCEL);
 				if (!confirm) {
 					return;
 				}

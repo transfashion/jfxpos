@@ -3,29 +3,29 @@ package jfxpossyn.sync;
 import jfxpossyn.config.AppConfig;
 import java.util.logging.Logger;
 
-public class ItemSyncer {
-	public static final String TITLE = "Synchronize Item";
-	private static final Logger logger = Logger.getLogger(ItemSyncer.class.getName());
+public class PromoSyncer {
+	public static final String TITLE = "Synchronize Promo";
+	private static final Logger logger = Logger.getLogger(PromoSyncer.class.getName());
 
 	/**
-	 * Performs item synchronization using the provided application configuration.
+	 * Performs promo synchronization using the provided application configuration.
 	 *
 	 * @param config The application configuration containing server URL, API key,
 	 *               etc.
 	 */
-	public void syncItem(AppConfig config) {
-		syncItem(config, null);
+	public void syncPromo(AppConfig config) {
+		syncPromo(config, null);
 	}
 
 	/**
-	 * Performs item synchronization using the provided application configuration
+	 * Performs promo synchronization using the provided application configuration
 	 * and reports progress.
 	 *
 	 * @param config   The application configuration containing server URL, API key,
 	 *                 etc.
 	 * @param listener The progress listener to notify.
 	 */
-	public void syncItem(AppConfig config, SyncProgressListener listener) {
+	public void syncPromo(AppConfig config, SyncProgressListener listener) {
 		if (config == null) {
 			logger.warning("Synchronization aborted: AppConfig is null.");
 			if (listener != null) {
@@ -34,9 +34,9 @@ public class ItemSyncer {
 			return;
 		}
 
-		logger.info("Starting item synchronization...");
+		logger.info("Starting promo synchronization...");
 		if (listener != null) {
-			listener.onProgress(0.0, TITLE, "Starting item synchronization...");
+			listener.onProgress(0.0, TITLE, "Starting promo synchronization...");
 		}
 
 		int totalSteps = 10;
@@ -53,16 +53,16 @@ public class ItemSyncer {
 			}
 
 			double progress = (double) i / totalSteps;
-			String message = "Syncing items dari: step " + i + " of " + totalSteps + "...";
+			String message = "Syncing promos dari: step " + i + " of " + totalSteps + "...";
 			logger.info(message);
 			if (listener != null) {
 				listener.onProgress(progress, TITLE, message);
 			}
 		}
 
-		logger.info("Item synchronization skeleton executed successfully.");
+		logger.info("Promo synchronization skeleton executed successfully.");
 		if (listener != null) {
-			listener.onProgress(1.0, TITLE, "Item synchronization completed successfully.");
+			listener.onProgress(1.0, TITLE, "Promo synchronization completed successfully.");
 		}
 	}
 }

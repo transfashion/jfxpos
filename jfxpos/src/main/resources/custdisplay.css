@@ -1,0 +1,26 @@
+.item-datagrid .column-header.description .label {
+	-fx-alignment: CENTER_LEFT;
+	-fx-padding: 0 0 0 10px;
+
+}
+
+
+.item-datagrid .column-header.total .label {
+	-fx-alignment: CENTER_RIGHT;
+	-fx-padding: 0 10px 0 0;
+}
+
+
+.item-datagrid .table-cell.description {
+	-fx-alignment: TOP_LEFT;
+	-fx-padding: 0 0 0 10px;
+}
+
+.item-datagrid .table-cell.qty {
+	-fx-alignment: TOP_CENTER;
+}
+
+.item-datagrid .table-cell.total {
+	-fx-alignment: TOP_RIGHT;
+	-fx-padding: 0 10px 0 0;
+}

@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import jfxpos.Controller;
@@ -12,6 +13,9 @@ public class CustDisplayController extends Controller {
 
 	@FXML
 	private Label grandTotalValueLabel;
+
+	@FXML
+	private Label grandTotalQtyLabel;
 
 	@FXML
 	private VBox imageContainer;
@@ -23,13 +27,10 @@ public class CustDisplayController extends Controller {
 	private TableView<jfxpos.models.TrxItem> itemTableView;
 
 	@FXML
-	private TableColumn<jfxpos.models.TrxItem, String> colDescr;
+	private TableColumn<jfxpos.models.TrxItem, jfxpos.models.TrxItem> colItemDescr;
 
 	@FXML
 	private TableColumn<jfxpos.models.TrxItem, Integer> colQty;
-
-	@FXML
-	private TableColumn<jfxpos.models.TrxItem, java.math.BigDecimal> colPrice;
 
 	@FXML
 	private TableColumn<jfxpos.models.TrxItem, java.math.BigDecimal> colTotal;
@@ -59,18 +60,37 @@ public class CustDisplayController extends Controller {
 		if (grandTotalValueLabel != null) {
 			grandTotalValueLabel.setText("0");
 		}
+		if (grandTotalQtyLabel != null) {
+			grandTotalQtyLabel.setText("0");
+		}
 
-		if (colDescr != null) {
-			colDescr.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemDescr"));
+		if (colItemDescr != null) {
+			colItemDescr.setCellValueFactory(cellData -> new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue()));
+			colItemDescr.setCellFactory(column -> new ItemDescrCell());
+			colItemDescr.prefWidthProperty().bind(
+				itemTableView.widthProperty()
+				.subtract(colQty.widthProperty())
+				.subtract(colTotal.widthProperty())
+				.subtract(15)
+			);
 		}
 		if (colQty != null) {
 			colQty.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("qty"));
 		}
-		if (colPrice != null) {
-			colPrice.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemPrice"));
-		}
 		if (colTotal != null) {
 			colTotal.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("total"));
+			colTotal.setCellFactory(column -> new TableCell<jfxpos.models.TrxItem, java.math.BigDecimal>() {
+				@Override
+				protected void updateItem(java.math.BigDecimal item, boolean empty) {
+					super.updateItem(item, empty);
+					if (empty || item == null) {
+						setText(null);
+					} else {
+						setText(String.format("%,.0f", item));
+						setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
+					}
+				}
+			});
 		}
 	}
 
@@ -90,6 +110,12 @@ public class CustDisplayController extends Controller {
 	public void setGrandTotal(String grandTotal) {
 		if (grandTotalValueLabel != null) {
 			javafx.application.Platform.runLater(() -> grandTotalValueLabel.setText(grandTotal));
+		}
+	}
+
+	public void setGrandTotalQty(String qty) {
+		if (grandTotalQtyLabel != null) {
+			javafx.application.Platform.runLater(() -> grandTotalQtyLabel.setText(qty));
 		}
 	}
 

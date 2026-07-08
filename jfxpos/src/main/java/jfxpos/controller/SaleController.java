@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.control.ButtonType;
@@ -42,6 +43,10 @@ public class SaleController extends Controller {
 			if (custDisplay != null) {
 				String formatted = newVal == null ? "0" : String.format("%,.0f", newVal);
 				custDisplay.setGrandTotal(formatted);
+
+				Trx trx = currentTrx.get();
+				int totalQty = (trx != null) ? trx.getQty() : 0;
+				custDisplay.setGrandTotalQty(String.valueOf(totalQty));
 			}
 		}
 	};
@@ -90,31 +95,10 @@ public class SaleController extends Controller {
 	TableView<TrxItem> itemTable;
 
 	@FXML
-	TableColumn<TrxItem, String> colBarcode;
-
-	@FXML
-	TableColumn<TrxItem, Long> colItemId;
-
-	@FXML
-	TableColumn<TrxItem, String> colArticle;
-
-	@FXML
-	TableColumn<TrxItem, String> colColor;
-
-	@FXML
-	TableColumn<TrxItem, String> colSize;
-
-	@FXML
-	TableColumn<TrxItem, String> colDescr;
+	TableColumn<TrxItem, TrxItem> colItemDescr;
 
 	@FXML
 	TableColumn<TrxItem, Integer> colQty;
-
-	@FXML
-	TableColumn<TrxItem, BigDecimal> colPrice;
-
-	@FXML
-	TableColumn<TrxItem, BigDecimal> colDisc;
 
 	@FXML
 	TableColumn<TrxItem, BigDecimal> colTotal;
@@ -255,26 +239,44 @@ public class SaleController extends Controller {
 
 	@FXML
 	public void initialize() {
-		if (colBarcode != null)
-			colBarcode.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("barcode"));
-		if (colItemId != null)
-			colItemId.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemId"));
-		if (colArticle != null)
-			colArticle.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemArt"));
-		if (colColor != null)
-			colColor.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemCol"));
-		if (colSize != null)
-			colSize.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemSize"));
-		if (colDescr != null)
-			colDescr.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemDescr"));
-		if (colQty != null)
+		if (colItemDescr != null) {
+			colItemDescr.setCellValueFactory(
+					cellData -> new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue()));
+			colItemDescr.setCellFactory(column -> new ItemDescrCell());
+			colItemDescr.prefWidthProperty().bind(
+					itemTable.widthProperty()
+							.subtract(colQty.widthProperty())
+							.subtract(colTotal.widthProperty())
+							.subtract(15));
+		}
+		if (colQty != null) {
 			colQty.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("qty"));
-		if (colPrice != null)
-			colPrice.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemPrice"));
-		if (colDisc != null)
-			colDisc.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("discValue"));
-		if (colTotal != null)
+			colQty.setCellFactory(column -> new TableCell<TrxItem, Integer>() {
+				@Override
+				protected void updateItem(Integer item, boolean empty) {
+					super.updateItem(item, empty);
+					if (empty || item == null) {
+						setText(null);
+					} else {
+						setText(String.valueOf(item));
+					}
+				}
+			});
+		}
+		if (colTotal != null) {
 			colTotal.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("total"));
+			colTotal.setCellFactory(column -> new TableCell<TrxItem, BigDecimal>() {
+				@Override
+				protected void updateItem(BigDecimal item, boolean empty) {
+					super.updateItem(item, empty);
+					if (empty || item == null) {
+						setText(null);
+					} else {
+						setText(String.format("%,.0f", item));
+					}
+				}
+			});
+		}
 
 		if (siteNameLabel != null && jfxpos.App.config != null) {
 			siteNameLabel.setText(jfxpos.App.config.siteName());
@@ -731,8 +733,10 @@ public class SaleController extends Controller {
 								int newQty = lastItem.getQty() + lineItem.getQty();
 								lastItem.setQty(newQty);
 								BigDecimal priceNett = lastItem.getItemPrice().subtract(lastItem.getDiscValue());
-								lastItem.setSubtotalGross(lastItem.getPriceGross().multiply(BigDecimal.valueOf(newQty)));
-								lastItem.setSubtotalDiscount(lastItem.getDiscValue().multiply(BigDecimal.valueOf(newQty)));
+								lastItem.setSubtotalGross(
+										lastItem.getPriceGross().multiply(BigDecimal.valueOf(newQty)));
+								lastItem.setSubtotalDiscount(
+										lastItem.getDiscValue().multiply(BigDecimal.valueOf(newQty)));
 								lastItem.setSubtotalNett(priceNett.multiply(BigDecimal.valueOf(newQty)));
 								lastItem.setTotal(lastItem.getSubtotalNett());
 								lastItem.setGrandTotal(lastItem.getTotal());
@@ -899,7 +903,8 @@ public class SaleController extends Controller {
 
 		int selectedIndex = itemTable.getSelectionModel().getSelectedIndex();
 
-		boolean confirm = MessageBox.confirm(getCurrentWindow(), "Apakah Anda yakin ingin menghapus item " + selectedItem.getItemDescr() + "?");
+		boolean confirm = MessageBox.confirm(getCurrentWindow(),
+				"Apakah Anda yakin ingin menghapus item " + selectedItem.getItemDescr() + "?");
 		if (!confirm) {
 			return;
 		}
@@ -985,6 +990,9 @@ public class SaleController extends Controller {
 			BigDecimal grandTotal = (trx != null) ? trx.getGrandTotal() : BigDecimal.ZERO;
 			String formatted = grandTotal == null ? "0" : String.format("%,.0f", grandTotal);
 			custDisplay.setGrandTotal(formatted);
+
+			int totalQty = (trx != null) ? trx.getQty() : 0;
+			custDisplay.setGrandTotalQty(String.valueOf(totalQty));
 
 			String customerName = (trx != null) ? trx.getCustomerName() : "";
 			String displayName = (customerName == null || "NONE".equalsIgnoreCase(customerName.trim())) ? ""

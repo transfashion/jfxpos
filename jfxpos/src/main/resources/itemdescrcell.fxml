@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox spacing="10.0">
+         <children>
+            <Label fx:id="itemArtLabel" text="ART" />
+            <Label fx:id="itemColLabel" text="COL" />
+            <Label fx:id="itemSizeLabel" text="SIZE" />
+            <Label fx:id="itemIdLabel" text="ID">
+               <HBox.margin>
+                  <Insets left="40.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
+      <Label fx:id="itemDescrLabel" maxWidth="1.7976931348623157E308" text="DESCR" />
+      <HBox spacing="10.0">
+         <children>
+            <Label fx:id="itemPriceLabel" text="PRICE" />
+            <Label fx:id="itemDiscLabel" text="DISC" />
+            <Label fx:id="itemPromoLabel" text="PROMO" />
+            <Label fx:id="itemPriceNettLabel" text="NETPRICE" />
+         </children>
+         <padding>
+            <Insets left="30.0" />
+         </padding>
+      </HBox>
+   </children>
+</VBox>

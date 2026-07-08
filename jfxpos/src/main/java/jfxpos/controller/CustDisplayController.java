@@ -78,6 +78,11 @@ public class CustDisplayController extends Controller {
 		if (itemTableView != null) {
 			javafx.application.Platform.runLater(() -> {
 				itemTableView.getItems().setAll(items);
+				int lastIndex = itemTableView.getItems().size() - 1;
+				if (lastIndex >= 0) {
+					itemTableView.getSelectionModel().select(lastIndex);
+					itemTableView.scrollTo(lastIndex);
+				}
 			});
 		}
 	}
@@ -103,5 +108,18 @@ public class CustDisplayController extends Controller {
 				timeLabel.setText(timeText);
 			}
 		});
+	}
+
+	public void selectRow(int index) {
+		if (itemTableView != null) {
+			javafx.application.Platform.runLater(() -> {
+				if (index >= 0 && index < itemTableView.getItems().size()) {
+					itemTableView.getSelectionModel().select(index);
+					itemTableView.scrollTo(index);
+				} else {
+					itemTableView.getSelectionModel().clearSelection();
+				}
+			});
+		}
 	}
 }

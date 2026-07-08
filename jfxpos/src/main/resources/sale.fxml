@@ -84,6 +84,7 @@
                   <TableView fx:id="itemTable" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" styleClass="item-datagrid" VBox.vgrow="ALWAYS">
                     <columns>
                       <TableColumn fx:id="colBarcode" prefWidth="120.0" text="Barcode" />
+                      <TableColumn fx:id="colItemId" prefWidth="80.0" text="Item ID" />
                       <TableColumn fx:id="colArticle" prefWidth="120.0" text="Article" />
                       <TableColumn fx:id="colColor" prefWidth="80.0" text="Color" />
                       <TableColumn fx:id="colSize" prefWidth="60.0" text="Size" />

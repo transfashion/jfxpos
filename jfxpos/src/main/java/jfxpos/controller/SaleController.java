@@ -19,6 +19,7 @@ import jfxpos.models.TrxItem;
 import jfxpossyn.model.Item;
 import jfxpos.views.SelectColDialog;
 import jfxpos.views.SelectSizeDialog;
+import jfxpos.views.EditQtyDialog;
 import jfxpos.Controller;
 import jfxpos.util.MessageBox;
 import jfxpos.views.CustDisplayWindow;
@@ -90,6 +91,9 @@ public class SaleController extends Controller {
 
 	@FXML
 	TableColumn<TrxItem, String> colBarcode;
+
+	@FXML
+	TableColumn<TrxItem, Long> colItemId;
 
 	@FXML
 	TableColumn<TrxItem, String> colArticle;
@@ -253,6 +257,8 @@ public class SaleController extends Controller {
 	public void initialize() {
 		if (colBarcode != null)
 			colBarcode.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("barcode"));
+		if (colItemId != null)
+			colItemId.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemId"));
 		if (colArticle != null)
 			colArticle.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("itemArt"));
 		if (colColor != null)
@@ -314,6 +320,15 @@ public class SaleController extends Controller {
 						lineInput.deselect();
 						lineInput.end();
 					});
+				}
+			});
+		}
+
+		if (itemTable != null) {
+			itemTable.getSelectionModel().selectedIndexProperty().addListener((obs, oldIndex, newIndex) -> {
+				CustDisplayController custDisplay = getCustDisplayController();
+				if (custDisplay != null && newIndex != null) {
+					custDisplay.selectRow(newIndex.intValue());
 				}
 			});
 		}
@@ -703,19 +718,43 @@ public class SaleController extends Controller {
 				if (lineItem != null) {
 					Trx activeTrx = currentTrx.get();
 					if (activeTrx != null) {
-						activeTrx.getItems().add(lineItem);
+						java.util.List<TrxItem> items = activeTrx.getItems();
+						TrxItem lastItem = items.isEmpty() ? null : items.get(items.size() - 1);
+						boolean merged = false;
+						if (lastItem != null) {
+							boolean sameId = lastItem.getItemId() == lineItem.getItemId();
+							boolean samePrice = lastItem.getItemPrice() != null && lineItem.getItemPrice() != null
+									&& lastItem.getItemPrice().compareTo(lineItem.getItemPrice()) == 0;
+							boolean sameDisc = lastItem.getItemDisc() != null && lineItem.getItemDisc() != null
+									&& lastItem.getItemDisc().compareTo(lineItem.getItemDisc()) == 0;
+							if (sameId && samePrice && sameDisc) {
+								int newQty = lastItem.getQty() + lineItem.getQty();
+								lastItem.setQty(newQty);
+								BigDecimal priceNett = lastItem.getItemPrice().subtract(lastItem.getDiscValue());
+								lastItem.setSubtotalGross(lastItem.getPriceGross().multiply(BigDecimal.valueOf(newQty)));
+								lastItem.setSubtotalDiscount(lastItem.getDiscValue().multiply(BigDecimal.valueOf(newQty)));
+								lastItem.setSubtotalNett(priceNett.multiply(BigDecimal.valueOf(newQty)));
+								lastItem.setTotal(lastItem.getSubtotalNett());
+								lastItem.setGrandTotal(lastItem.getTotal());
+								merged = true;
+							}
+						}
+						if (!merged) {
+							activeTrx.getItems().add(lineItem);
+						}
 
 						// Update TableView
 						if (itemTable != null) {
 							itemTable.getItems().setAll(activeTrx.getItems());
+							int lastIndex = itemTable.getItems().size() - 1;
+							if (lastIndex >= 0) {
+								itemTable.getSelectionModel().select(lastIndex);
+								itemTable.scrollTo(lastIndex);
+							}
 						}
 
 						// Recalculate transaction totals
-						int newQty = activeTrx.getQty() + lineItem.getQty();
-						activeTrx.setQty(newQty);
-
-						BigDecimal newGrandTotal = activeTrx.getGrandTotal().add(lineItem.getGrandTotal());
-						activeTrx.setGrandTotal(newGrandTotal);
+						recalculateTotals();
 
 						// Update description and price labels
 						if (itemDescriptionLabel != null) {
@@ -724,9 +763,6 @@ public class SaleController extends Controller {
 						if (itemPriceLabel != null) {
 							itemPriceLabel.setText(String.format("%,.0f", lineItem.getItemPrice()));
 						}
-
-						// Update customer display
-						updateCustDisplay();
 					}
 					clearLineInput();
 					logger.info("Item added to transaction: " + lineItem.getItemDescr());
@@ -820,11 +856,86 @@ public class SaleController extends Controller {
 	}
 
 	private void editCurrentRowQty() {
-		logger.info("edit current qty");
+		TrxItem selectedItem = itemTable.getSelectionModel().getSelectedItem();
+		if (selectedItem == null) {
+			return;
+		}
+
+		try {
+			EditQtyDialog dialog = new EditQtyDialog(
+					getCurrentWindow(),
+					selectedItem.getItemId(),
+					selectedItem.getItemDescr(),
+					selectedItem.getQty());
+			dialog.openDialog();
+
+			if (dialog.isConfirmed()) {
+				int newQty = dialog.getNewQty();
+				selectedItem.setQty(newQty);
+
+				BigDecimal priceNett = selectedItem.getItemPrice().subtract(selectedItem.getDiscValue());
+				selectedItem.setSubtotalGross(selectedItem.getPriceGross().multiply(BigDecimal.valueOf(newQty)));
+				selectedItem.setSubtotalDiscount(selectedItem.getDiscValue().multiply(BigDecimal.valueOf(newQty)));
+				selectedItem.setSubtotalNett(priceNett.multiply(BigDecimal.valueOf(newQty)));
+				selectedItem.setTotal(selectedItem.getSubtotalNett());
+				selectedItem.setGrandTotal(selectedItem.getTotal());
+
+				itemTable.refresh();
+				recalculateTotals();
+
+				logger.info("Updated quantity of item ID " + selectedItem.getItemId() + " to " + newQty);
+			}
+		} catch (Exception e) {
+			logger.severe("Failed to open EditQtyDialog: " + e.getMessage());
+			MessageBox.error(getCurrentWindow(), e);
+		}
 	}
 
 	private void removeCurrentRow() {
-		logger.info("remove current row");
+		TrxItem selectedItem = itemTable.getSelectionModel().getSelectedItem();
+		if (selectedItem == null) {
+			return;
+		}
+
+		int selectedIndex = itemTable.getSelectionModel().getSelectedIndex();
+
+		boolean confirm = MessageBox.confirm(getCurrentWindow(), "Apakah Anda yakin ingin menghapus item " + selectedItem.getItemDescr() + "?");
+		if (!confirm) {
+			return;
+		}
+
+		Trx activeTrx = currentTrx.get();
+		if (activeTrx != null) {
+			activeTrx.getItems().remove(selectedItem);
+			itemTable.getItems().setAll(activeTrx.getItems());
+
+			recalculateTotals();
+
+			// Select the row above or below if possible
+			if (!activeTrx.getItems().isEmpty()) {
+				int newIndex = Math.min(selectedIndex, activeTrx.getItems().size() - 1);
+				itemTable.getSelectionModel().select(newIndex);
+			}
+
+			TrxItem newSelection = itemTable.getSelectionModel().getSelectedItem();
+			if (newSelection != null) {
+				if (itemDescriptionLabel != null) {
+					itemDescriptionLabel.setText(newSelection.getItemDescr());
+				}
+				if (itemPriceLabel != null) {
+					itemPriceLabel.setText(String.format("%,.0f", newSelection.getItemPrice()));
+				}
+			} else {
+				if (itemDescriptionLabel != null) {
+					itemDescriptionLabel.setText("");
+				}
+				if (itemPriceLabel != null) {
+					itemPriceLabel.setText("");
+				}
+			}
+
+			logger.info("Item removed: " + selectedItem.getItemDescr());
+		}
 	}
 
 	public void updateDateTime(String dateText, String timeText) {
@@ -838,6 +949,32 @@ public class SaleController extends Controller {
 
 	public void onFocused() {
 		activeController = this;
+		updateCustDisplay();
+	}
+
+	private void recalculatePromos() {
+		Trx activeTrx = currentTrx.get();
+		if (activeTrx != null) {
+			// TODO: Implement promo/discount calculations based on business rules.
+			// This method will modify activeTrx or its TrxItems before totals are summed.
+			logger.info("Recalculating promotions for transaction");
+		}
+	}
+
+	public void recalculateTotals() {
+		Trx activeTrx = currentTrx.get();
+		if (activeTrx != null) {
+			recalculatePromos();
+
+			int totalQty = 0;
+			BigDecimal totalGrandTotal = BigDecimal.ZERO;
+			for (TrxItem item : activeTrx.getItems()) {
+				totalQty += item.getQty();
+				totalGrandTotal = totalGrandTotal.add(item.getGrandTotal());
+			}
+			activeTrx.setQty(totalQty);
+			activeTrx.setGrandTotal(totalGrandTotal);
+		}
 		updateCustDisplay();
 	}
 

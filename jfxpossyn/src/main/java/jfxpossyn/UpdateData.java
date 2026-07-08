@@ -57,54 +57,68 @@ public class UpdateData {
 		int syncItemId = syncItemRepository.insertSyncItem(currentSync);
 		long startTime = System.currentTimeMillis();
 
-		// 1. ItemSyncer (0.0 to 0.25)
-		ItemSyncer itemSyncer = new ItemSyncer();
-		itemSyncer.syncItem(config, (progress, title, message) -> {
-			if (listener != null) {
-				double overallProgress = 0.0 + (progress * 0.25);
-				listener.onProgress(overallProgress, title, message);
+		try {
+			// 1. ItemSyncer (0.0 to 0.25)
+			ItemSyncer itemSyncer = new ItemSyncer();
+			itemSyncer.syncItem(config, (progress, title, message) -> {
+				if (listener != null) {
+					double overallProgress = 0.0 + (progress * 0.25);
+					listener.onProgress(overallProgress, title, message);
+				}
+			});
+
+			// 2. InventorySyncer (0.25 to 0.50)
+			InventorySyncer inventorySyncer = new InventorySyncer();
+			inventorySyncer.syncInventory(config, (progress, title, message) -> {
+				if (listener != null) {
+					double overallProgress = 0.25 + (progress * 0.25);
+					listener.onProgress(overallProgress, title, message);
+				}
+			});
+
+			// 3. PromoSyncer (0.50 to 0.75)
+			PromoSyncer promoSyncer = new PromoSyncer();
+			promoSyncer.syncPromo(config, (progress, title, message) -> {
+				if (listener != null) {
+					double overallProgress = 0.50 + (progress * 0.25);
+					listener.onProgress(overallProgress, title, message);
+				}
+			});
+
+			// 4. PaymSyncer (0.75 to 1.00)
+			PaymSyncer paymSyncer = new PaymSyncer();
+			paymSyncer.syncPaym(config, (progress, title, message) -> {
+				if (listener != null) {
+					double overallProgress = 0.75 + (progress * 0.25);
+					listener.onProgress(overallProgress, title, message);
+				}
+			});
+
+			// Jika seluruh proses berhasil, tandai sebagai komplit dan catat durasi
+			if (syncItemId != -1) {
+				long endTime = System.currentTimeMillis();
+				long durationMillis = endTime - startTime;
+				// Pembulatan ke atas untuk durasi menit
+				int durationMinutes = (int) Math.ceil(durationMillis / 60000.0);
+
+				currentSync.setId(syncItemId);
+				currentSync.setCompleted(true);
+				currentSync.setCompletedDate(LocalDateTime.now());
+				currentSync.setDuration(durationMinutes);
+				syncItemRepository.updateSyncItem(currentSync);
 			}
-		});
-
-		// 2. InventorySyncer (0.25 to 0.50)
-		InventorySyncer inventorySyncer = new InventorySyncer();
-		inventorySyncer.syncInventory(config, (progress, title, message) -> {
-			if (listener != null) {
-				double overallProgress = 0.25 + (progress * 0.25);
-				listener.onProgress(overallProgress, title, message);
+		} catch (Exception e) {
+			if (syncItemId != -1) {
+				currentSync.setId(syncItemId);
+				currentSync.setError(true);
+				currentSync.setErrorMessage(e.getMessage());
+				try {
+					syncItemRepository.updateSyncItem(currentSync);
+				} catch (Exception ex) {
+					// Ignore database update exception to allow the original sync exception to propagate
+				}
 			}
-		});
-
-		// 3. PromoSyncer (0.50 to 0.75)
-		PromoSyncer promoSyncer = new PromoSyncer();
-		promoSyncer.syncPromo(config, (progress, title, message) -> {
-			if (listener != null) {
-				double overallProgress = 0.50 + (progress * 0.25);
-				listener.onProgress(overallProgress, title, message);
-			}
-		});
-
-		// 4. PaymSyncer (0.75 to 1.00)
-		PaymSyncer paymSyncer = new PaymSyncer();
-		paymSyncer.syncPaym(config, (progress, title, message) -> {
-			if (listener != null) {
-				double overallProgress = 0.75 + (progress * 0.25);
-				listener.onProgress(overallProgress, title, message);
-			}
-		});
-
-		// Jika seluruh proses berhasil, tandai sebagai komplit dan catat durasi
-		if (syncItemId != -1) {
-			long endTime = System.currentTimeMillis();
-			long durationMillis = endTime - startTime;
-			// Pembulatan ke atas untuk durasi menit
-			int durationMinutes = (int) Math.ceil(durationMillis / 60000.0);
-
-			currentSync.setId(syncItemId);
-			currentSync.setCompleted(true);
-			currentSync.setCompletedDate(LocalDateTime.now());
-			currentSync.setDuration(durationMinutes);
-			syncItemRepository.updateSyncItem(currentSync);
+			throw e;
 		}
 
 		return true;

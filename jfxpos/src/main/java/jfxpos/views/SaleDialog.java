@@ -28,15 +28,19 @@ public class SaleDialog extends View {
 		Scene scene = loadFxml(FXML, controller);
 		controller.setConsoleNumber(consoleNumber);
 
-		// Right-click on row shows ContextMenu from itemcontextmenu.fxml, double-click edits qty
+		// Right-click on row shows ContextMenu from itemcontextmenu.fxml, double-click
+		// edits qty
 		javafx.scene.control.ContextMenu contextMenu = null;
 		try {
 			javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(View.class.getResource("/itemcontextmenu.fxml"));
 			contextMenu = loader.load();
 
-			javafx.scene.control.MenuItem removeMenuItem = (javafx.scene.control.MenuItem) loader.getNamespace().get("removeMenuItem");
-			javafx.scene.control.MenuItem editQtyMenuItem = (javafx.scene.control.MenuItem) loader.getNamespace().get("editQtyMenuItem");
-			javafx.scene.control.MenuItem infoMenuItem = (javafx.scene.control.MenuItem) loader.getNamespace().get("infoMenuItem");
+			javafx.scene.control.MenuItem removeMenuItem = (javafx.scene.control.MenuItem) loader.getNamespace()
+					.get("removeMenuItem");
+			javafx.scene.control.MenuItem editQtyMenuItem = (javafx.scene.control.MenuItem) loader.getNamespace()
+					.get("editQtyMenuItem");
+			javafx.scene.control.MenuItem infoMenuItem = (javafx.scene.control.MenuItem) loader.getNamespace()
+					.get("infoMenuItem");
 
 			if (removeMenuItem != null) {
 				removeMenuItem.setOnAction(event -> controller.fireF8Button());
@@ -48,7 +52,10 @@ public class SaleDialog extends View {
 				infoMenuItem.setOnAction(event -> {
 					var selected = controller.getItemTable().getSelectionModel().getSelectedItem();
 					if (selected != null) {
-						logger.info("Selected item details: ID=" + selected.getItemId() + ", Descr=" + selected.getItemDescr() + ", Art=" + selected.getItemArt() + ", Col=" + selected.getItemCol() + ", Size=" + selected.getItemSize() + ", Price=" + selected.getItemPrice() + ", Qty=" + selected.getQty());
+						logger.info("Selected item details: ID=" + selected.getItemId() + ", Descr="
+								+ selected.getItemDescr() + ", Art=" + selected.getItemArt() + ", Col="
+								+ selected.getItemCol() + ", Size=" + selected.getItemSize() + ", Price="
+								+ selected.getItemPrice() + ", Qty=" + selected.getQty());
 					} else {
 						logger.info("No item selected for Item Information.");
 					}
@@ -65,10 +72,9 @@ public class SaleDialog extends View {
 
 				// Bind context menu to row
 				row.contextMenuProperty().bind(
-					javafx.beans.binding.Bindings.when(row.emptyProperty())
-						.then((javafx.scene.control.ContextMenu) null)
-						.otherwise(finalContextMenu)
-				);
+						javafx.beans.binding.Bindings.when(row.emptyProperty())
+								.then((javafx.scene.control.ContextMenu) null)
+								.otherwise(finalContextMenu));
 
 				// Double-click handler
 				row.setOnMouseClicked(event -> {
@@ -203,8 +209,10 @@ public class SaleDialog extends View {
 		// Intercept stage close request (e.g. clicking 'X' close button) to ask for
 		// confirmation
 		stage.setOnCloseRequest(event -> {
-			if (!controller.confirmClose()) {
-				event.consume();
+			if (controller.isHasPendingTransaction()) {
+				if (!controller.confirmClose()) {
+					event.consume();
+				}
 			}
 		});
 	}

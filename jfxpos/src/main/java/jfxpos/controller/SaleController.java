@@ -465,7 +465,7 @@ public class SaleController extends Controller {
 		if (escButton != null && escButton.getScene() != null) {
 			stage = (Stage) escButton.getScene().getWindow();
 		}
-		return MessageBox.confirm(stage, "Apakah akan menutup console ini?");
+		return MessageBox.confirm(stage, "Apakah akan menutup console ini?", "Sales Console", ButtonType.CANCEL);
 	}
 
 	public void requestFocus() {
@@ -916,7 +916,8 @@ public class SaleController extends Controller {
 		int selectedIndex = itemTable.getSelectionModel().getSelectedIndex();
 
 		boolean confirm = MessageBox.confirm(getCurrentWindow(),
-				"Apakah Anda yakin ingin menghapus item " + selectedItem.getItemDescr() + "?");
+				"Apakah Anda yakin ingin menghapus item " + selectedItem.getItemDescr() + "?", "Remove Item",
+				ButtonType.CANCEL);
 		if (!confirm) {
 			return;
 		}

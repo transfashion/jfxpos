@@ -14,6 +14,8 @@ public class SyncItem extends Model {
 			public static final String ISCOMPLETED = "SYNCITEM_ISCOMPLETED";
 			public static final String COMPLETEDDATE = "SYNCITEM_COMPLETEDDATE";
 			public static final String DURATION = "SYNCITEM_DURATION";
+			public static final String ISERROR = "SYNCITEM_ISERROR";
+			public static final String ERRORMESSAGE = "SYNCITEM_ERRORMESSAGE";
 		}
 	}
 
@@ -23,17 +25,25 @@ public class SyncItem extends Model {
 	private boolean isCompleted;
 	private LocalDateTime completedDate;
 	private Integer duration;
+	private boolean isError;
+	private String errorMessage;
 
 	public SyncItem() {
 	}
 
 	public SyncItem(int id, LocalDateTime datetime, LocalDate clearon, boolean isCompleted, LocalDateTime completedDate, Integer duration) {
+		this(id, datetime, clearon, isCompleted, completedDate, duration, false, null);
+	}
+
+	public SyncItem(int id, LocalDateTime datetime, LocalDate clearon, boolean isCompleted, LocalDateTime completedDate, Integer duration, boolean isError, String errorMessage) {
 		this.id = id;
 		this.datetime = datetime;
 		this.clearon = clearon;
 		this.isCompleted = isCompleted;
 		this.completedDate = completedDate;
 		this.duration = duration;
+		this.isError = isError;
+		this.errorMessage = errorMessage;
 	}
 
 	public int getId() {
@@ -82,5 +92,21 @@ public class SyncItem extends Model {
 
 	public void setDuration(Integer duration) {
 		this.duration = duration;
+	}
+
+	public boolean isError() {
+		return isError;
+	}
+
+	public void setError(boolean error) {
+		isError = error;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 }

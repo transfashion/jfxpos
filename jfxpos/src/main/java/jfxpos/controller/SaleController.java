@@ -494,6 +494,18 @@ public class SaleController extends Controller {
 		SaleInputHandler.focusItemTable(itemTable);
 	}
 
+	public javafx.scene.control.TableColumn<TrxItem, Integer> getColQty() {
+		return colQty;
+	}
+
+	public javafx.scene.control.TableColumn<TrxItem, TrxItem> getColItemDescr() {
+		return colItemDescr;
+	}
+
+	public javafx.scene.control.TableView<jfxpos.models.TrxItem> getItemTable() {
+		return itemTable;
+	}
+
 	public void appendLineInput(String text) {
 		SaleInputHandler.appendLineInput(lineInput, text);
 	}
@@ -859,7 +871,7 @@ public class SaleController extends Controller {
 		logger.info("open recall dialog");
 	}
 
-	private void editCurrentRowQty() {
+	public void editCurrentRowQty() {
 		TrxItem selectedItem = itemTable.getSelectionModel().getSelectedItem();
 		if (selectedItem == null) {
 			return;

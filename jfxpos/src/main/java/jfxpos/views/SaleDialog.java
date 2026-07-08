@@ -27,6 +27,61 @@ public class SaleDialog extends View {
 
 		Scene scene = loadFxml(FXML, controller);
 		controller.setConsoleNumber(consoleNumber);
+
+		// Right-click on row shows ContextMenu from itemcontextmenu.fxml, double-click edits qty
+		javafx.scene.control.ContextMenu contextMenu = null;
+		try {
+			javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(View.class.getResource("/itemcontextmenu.fxml"));
+			contextMenu = loader.load();
+
+			javafx.scene.control.MenuItem removeMenuItem = (javafx.scene.control.MenuItem) loader.getNamespace().get("removeMenuItem");
+			javafx.scene.control.MenuItem editQtyMenuItem = (javafx.scene.control.MenuItem) loader.getNamespace().get("editQtyMenuItem");
+			javafx.scene.control.MenuItem infoMenuItem = (javafx.scene.control.MenuItem) loader.getNamespace().get("infoMenuItem");
+
+			if (removeMenuItem != null) {
+				removeMenuItem.setOnAction(event -> controller.fireF8Button());
+			}
+			if (editQtyMenuItem != null) {
+				editQtyMenuItem.setOnAction(event -> controller.fireF3Button());
+			}
+			if (infoMenuItem != null) {
+				infoMenuItem.setOnAction(event -> {
+					var selected = controller.getItemTable().getSelectionModel().getSelectedItem();
+					if (selected != null) {
+						logger.info("Selected item details: ID=" + selected.getItemId() + ", Descr=" + selected.getItemDescr() + ", Art=" + selected.getItemArt() + ", Col=" + selected.getItemCol() + ", Size=" + selected.getItemSize() + ", Price=" + selected.getItemPrice() + ", Qty=" + selected.getQty());
+					} else {
+						logger.info("No item selected for Item Information.");
+					}
+				});
+			}
+		} catch (Exception e) {
+			logger.severe("Failed to load itemcontextmenu.fxml: " + e.getMessage());
+		}
+
+		if (controller.getItemTable() != null && contextMenu != null) {
+			final javafx.scene.control.ContextMenu finalContextMenu = contextMenu;
+			controller.getItemTable().setRowFactory(tv -> {
+				javafx.scene.control.TableRow<jfxpos.models.TrxItem> row = new javafx.scene.control.TableRow<>();
+
+				// Bind context menu to row
+				row.contextMenuProperty().bind(
+					javafx.beans.binding.Bindings.when(row.emptyProperty())
+						.then((javafx.scene.control.ContextMenu) null)
+						.otherwise(finalContextMenu)
+				);
+
+				// Double-click handler
+				row.setOnMouseClicked(event -> {
+					if (!row.isEmpty()) {
+						if (event.getClickCount() == 2) {
+							controller.editCurrentRowQty();
+						}
+					}
+				});
+				return row;
+			});
+		}
+
 		stage = createDialogStage(Title + " - Console #" + consoleNumber, scene, owner);
 		stage.setResizable(true);
 

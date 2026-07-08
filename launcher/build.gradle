@@ -11,10 +11,13 @@ plugins {
 // taabahkan dependency
 dependencies {
     implementation project(':jfxpos')
+    implementation project(':jfxpossyn')
+    implementation 'org.firebirdsql.jdbc:jaybird:6.0.5'
+    implementation 'com.zaxxer:HikariCP:5.1.0'
 }
 
 javafx {
-    version = "21.0.1"
+    version = "25"
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
@@ -75,33 +78,48 @@ jlink {
 }
 
 def jfxposJarTask = project(':jfxpos').tasks.named('jar')
+def jfxpossynJarTask = project(':jfxpossyn').tasks.named('jar')
 
 tasks.named('jpackageImage') {
     dependsOn(':clean')
     doLast {
         def os = org.gradle.internal.os.OperatingSystem.current()
-        def appSubDir = "app"
+        def imageAppDir
         if (os.isLinux()) {
-            appSubDir = "lib/app"
+            imageAppDir = layout.buildDirectory.dir("jpackage/jfxpos/lib/app").get().asFile
         } else if (os.isMacOsX()) {
-            appSubDir = "jfxpos.app/Contents/app"
+            imageAppDir = layout.buildDirectory.dir("jpackage/jfxpos.app/Contents/app").get().asFile
+        } else {
+            imageAppDir = layout.buildDirectory.dir("jpackage/jfxpos/app").get().asFile
         }
-        def imageAppDir = layout.buildDirectory.dir("jpackage/jfxpos/${appSubDir}").get().asFile
+        
         copy {
             from jfxposJarTask.get().archiveFile
+            from jfxpossynJarTask.get().archiveFile
             into imageAppDir
         }
-        println "jfxpos.jar copied to: ${imageAppDir}"
+        println "jfxpos.jar and jfxpossyn.jar copied to: ${imageAppDir}"
 
         // Copy seluruh folder jpackageImage ke [project_root]/build/jfxpos
         def targetDir = file("${rootProject.projectDir}/build/jfxpos")
         copy {
-            from layout.buildDirectory.dir("jpackage/jfxpos")
-            into targetDir
+            if (os.isMacOsX()) {
+                from layout.buildDirectory.dir("jpackage/jfxpos.app")
+                into "${targetDir}/jfxpos.app"
+            } else {
+                from layout.buildDirectory.dir("jpackage/jfxpos")
+                into targetDir
+            }
         }
         println "jpackageImage copied to: ${targetDir}"
 
-        if (os.isLinux()) {
+        if (os.isMacOsX()) {
+            ant.chmod(file: "${targetDir}/jfxpos.app/Contents/MacOS/jfxpos", perm: "+x")
+            println "Executable permission set on macOS binary"
+        } else if (os.isLinux()) {
+            ant.chmod(file: "${targetDir}/bin/jfxpos", perm: "+x")
+            println "Executable permission set on Linux binary"
+            
             copy {
                 from file("src/main/resources/bag.png")
                 into "${targetDir}/lib"
@@ -127,10 +145,14 @@ jar {
 
 
 tasks.withType(JavaExec).configureEach {
+    jvmArgs += [
+        '--enable-native-access=javafx.graphics'
+    ]
     if (project.hasProperty("debug")) {
         jvmArgs += [
             "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
         ]
     }
 }
+
 

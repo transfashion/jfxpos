@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" spacing="10.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox HBox.hgrow="ALWAYS">
+               <children>
+                  <HBox minWidth="-Infinity" prefWidth="620.0">
+                     <children>
+                        <Label fx:id="deviceNumLabel" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="72.0" prefWidth="65.0" styleClass="devid-info" text="01">
+                           <HBox.margin>
+                              <Insets right="20.0" />
+                           </HBox.margin>
+                        </Label>
+                        <VBox minWidth="-Infinity" HBox.hgrow="ALWAYS">
+                           <children>
+                               <Label fx:id="siteNameLabel" styleClass="store-name" text="Store Name" />
+                              <HBox styleClass="store-info-bar">
+                                 <children>
+                                    <Label fx:id="nameLabel" text="POS.COR.PIM.PIM" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="channelNameLabel" text="REGULER" translateY="-1.0" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_RIGHT" prefWidth="200.0" styleClass="datetime-info">
+                           <children>
+                              <Label fx:id="dateLabel" styleClass="tanggal" text="Selasa, 29 Juni 2026" />
+                              <Label fx:id="timeLabel" styleClass="jam" text="18:53" />
+                           </children>
+                           <HBox.margin>
+                              <Insets top="10.0" />
+                           </HBox.margin>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox alignment="BOTTOM_LEFT" minWidth="-Infinity" prefWidth="620.0" spacing="2.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: transparent transparent #e2e2e2 transparent;">
+                     <children>
+                        <Pane minHeight="-Infinity" minWidth="-Infinity" prefHeight="29.0" prefWidth="35.0" styleClass="lineinput-image">
+                           <children>
+                              <ImageView fx:id="searchModeImage" fitHeight="29.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" styleClass="lineinput-image" translateX="5.0" />
+                           </children>
+                        </Pane>
+                        <Pane minWidth="-Infinity" prefWidth="170.0">
+                           <children>
+                              <TextField fx:id="lineInput" minWidth="-Infinity" prefHeight="25.0" prefWidth="170.0" promptText="search" style="-fx-border-color: transparent; -fx-background-insets: 0; -fx-background-radius: 0; -fx-background-color: #dddddd;" styleClass="input-barcode" />
+                           </children>
+                           <HBox.margin>
+                              <Insets left="-2.0" />
+                           </HBox.margin>
+                        </Pane>
+                        <Label fx:id="itemDescriptionLabel" styleClass="input-result-descr" text="Item Description satu dua tiga, si gembul bermain bola. bola ditendang jauh, si gembul lari ketatap tembok.">
+                           <HBox.margin>
+                              <Insets bottom="3.0" left="8.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label fx:id="itemPriceLabel" alignment="CENTER_RIGHT" minWidth="-Infinity" prefWidth="85.0" styleClass="input-result-price" text="99,999,999">
+                           <HBox.margin>
+                              <Insets bottom="3.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <TableView fx:id="itemTable" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" styleClass="item-datagrid" VBox.vgrow="ALWAYS">
+                     <columns>
+                       <TableColumn fx:id="colItemDescr" prefWidth="300.0" styleClass="description" text="Description" />
+                       <TableColumn fx:id="colQty" prefWidth="50.0" styleClass="qty" text="Qty" />
+                       <TableColumn fx:id="colTotal" prefWidth="120.0" styleClass="total" text="Total" />
+                     </columns>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </TableView>
+               </children>
+            </VBox>
+            <VBox maxWidth="-Infinity" minWidth="-Infinity" prefWidth="500.0" spacing="20.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <VBox style="-fx-background-color: -fx-background;">
+                     <padding>
+                        <Insets bottom="10.0" left="15.0" right="15.0" />
+                     </padding>
+                     <children>
+                        <Label styleClass="group-title" text="Summary" translateX="-3.0" translateY="-10.0">
+                           <padding>
+                              <Insets left="4.0" right="4.0" />
+                           </padding>
+                        </Label>
+                        <HBox alignment="BOTTOM_LEFT" minWidth="-Infinity" prefWidth="468.0" styleClass="HBox">
+                           <children>
+                              <Label styleClass="subtotal-label" text="Grand Total" />
+                              <Pane HBox.hgrow="ALWAYS" />
+                              <Label fx:id="grandTotalValueLabel" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="300.0" styleClass="subtotal-value" text="999,999,999" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="BOTTOM_LEFT" styleClass="HBox">
+                           <children>
+                              <Label alignment="BASELINE_LEFT" styleClass="subtotal-label" text="Qty" />
+                              <Pane HBox.hgrow="ALWAYS" />
+                              <Label fx:id="grandTotalQtyLabel" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="300.0" styleClass="subtotal-qty" text="2" />
+                           </children>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <styleClass>
+                        <String fx:value="rounded-box" />
+                        <String fx:value="summary-info" />
+                     </styleClass>
+                  </VBox>
+                  <VBox layoutX="10.0" layoutY="10.0" spacing="5.0">
+                     <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" />
+                     </padding>
+                     <children>
+                        <Label styleClass="group-title" text="Customer" translateX="-3.0" translateY="-10.0">
+                           <padding>
+                              <Insets left="4.0" right="4.0" />
+                           </padding>
+                        </Label>
+                        <HBox>
+                           <children>
+                              <Label fx:id="customerIdLabel" text="88157996999" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="customerTypeLabel" text="VIP" />
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label fx:id="customerNameLabel" text="AGUNG NUGROHO DWI WIBOWO" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="customerDiscountLabel" text="none" />
+                           </children>
+                        </HBox>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Button fx:id="searchCustomerButton" minWidth="-Infinity" prefWidth="100.0" text="_Search" />
+                              <Button fx:id="vipCustomerButton" minWidth="-Infinity" mnemonicParsing="false" prefWidth="100.0" text="VIP" />
+                              <Button fx:id="registerCustomerButton" minWidth="-Infinity" mnemonicParsing="false" prefHeight="32.0" prefWidth="100.0" text="Register" />
+                              <Region HBox.hgrow="ALWAYS">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Region>
+                              <Button fx:id="clearCustomerButton" minWidth="-Infinity" mnemonicParsing="false" prefWidth="100.0" text="Clear" />
+                           </children>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <styleClass>
+                        <String fx:value="rounded-box" />
+                        <String fx:value="customer-info" />
+                     </styleClass>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </VBox>
+                  <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                     <content>
+                        <VBox spacing="30.0">
+                           <children>
+                              <VBox VBox.vgrow="ALWAYS">
+                                 <padding>
+                                    <Insets bottom="10.0" left="15.0" right="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label styleClass="group-title" text="Promo" translateX="-3.0" translateY="-10.0">
+                                       <padding>
+                                          <Insets left="4.0" right="4.0" />
+                                       </padding>
+                                    </Label>
+                                    <HBox alignment="BOTTOM_LEFT">
+                                       <children>
+                                          <Button fx:id="promoItemButton" minWidth="-Infinity" mnemonicParsing="false" prefWidth="70.0">
+                                             <graphic>
+                                                <VBox alignment="CENTER" spacing="2.0">
+                                                   <children>
+                                                      <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="descr" text="Item" />
+                                                      <Label fx:id="promoItemCountLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="availability" text="0" />
+                                                   </children>
+                                                </VBox>
+                                             </graphic>
+                                          </Button>
+                                          <VBox alignment="BOTTOM_LEFT" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <Label fx:id="promoItemIdLabel" style="-fx-font-size: 1.2em;" text="promoitemCode" />
+                                                <Label fx:id="promoItemNameLabel" maxWidth="1.7976931348623157E308" style="-fx-font-size: 1.8em;" text="Select Item Promo programme" />
+                                                <Label fx:id="promoItemDescrLabel" style="-fx-font-size: 1em; -fx-font-style: italic;" text="promo description" />
+                                             </children>
+                                             <HBox.margin>
+                                                <Insets left="10.0" right="10.0" />
+                                             </HBox.margin>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="BOTTOM_LEFT">
+                                       <children>
+                                          <Button fx:id="promoPaymentButton" minWidth="-Infinity" mnemonicParsing="false" prefWidth="70.0">
+                                             <graphic>
+                                                <VBox alignment="CENTER" spacing="2.0">
+                                                   <children>
+                                                      <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="descr" text="Payment" />
+                                                      <Label fx:id="promoPaymCountLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="availability" text="0" />
+                                                   </children>
+                                                </VBox>
+                                             </graphic>
+                                          </Button>
+                                          <VBox alignment="BOTTOM_LEFT" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <Label fx:id="promoPaymIdLabel" style="-fx-font-size: 1.2em;" text="promoPaymentId" />
+                                                <Label fx:id="promoPaymNameLabel" maxWidth="1.7976931348623157E308" style="-fx-font-size: 1.8em;" text="Select Payment Promo" />
+                                                <Label fx:id="promoPaymDescrLabel" style="-fx-font-size: 1em; -fx-font-style: italic;" text="promo description" />
+                                             </children>
+                                             <HBox.margin>
+                                                <Insets left="10.0" right="10.0" />
+                                             </HBox.margin>
+                                          </VBox>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets top="20.0" />
+                                       </VBox.margin>
+                                    </HBox>
+                                    <HBox alignment="BOTTOM_LEFT">
+                                       <children>
+                                          <Button fx:id="promoNextTxButton" minWidth="-Infinity" mnemonicParsing="false" prefWidth="70.0">
+                                             <graphic>
+                                                <VBox alignment="CENTER" spacing="2.0">
+                                                   <children>
+                                                      <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="descr" text="Next Tx" />
+                                                      <Label fx:id="promoNextTxCountLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="availability" text="0" />
+                                                   </children>
+                                                </VBox>
+                                             </graphic>
+                                             <HBox.margin>
+                                                <Insets />
+                                             </HBox.margin>
+                                          </Button>
+                                          <VBox alignment="BOTTOM_LEFT" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <Label fx:id="promoNextTxIdLabel" style="-fx-font-size: 1.2em;" text="promoNextTxCode" />
+                                                <Label fx:id="promoNextTxNameLabel" maxWidth="1.7976931348623157E308" style="-fx-font-size: 1.8em;" text="Select Next Purchase Promo" />
+                                                <Label fx:id="promoNextTxDescrLabel" style="-fx-font-size: 1em; -fx-font-style: italic;" text="promo description" />
+                                             </children>
+                                             <HBox.margin>
+                                                <Insets left="10.0" right="10.0" />
+                                             </HBox.margin>
+                                          </VBox>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets top="20.0" />
+                                       </VBox.margin>
+                                    </HBox>
+                                 </children>
+                                 <styleClass>
+                                    <String fx:value="rounded-box" />
+                                    <String fx:value="subtotal-box" />
+                                    <String fx:value="promo-container" />
+                                 </styleClass>
+                              </VBox>
+                              <VBox minHeight="-Infinity" prefHeight="150.0">
+                                 <padding>
+                                    <Insets bottom="10.0" left="15.0" right="15.0" />
+                                 </padding>
+                                 <children>
+                                    <Label styleClass="group-title" text="Transaction" translateX="-3.0" translateY="-10.0">
+                                       <padding>
+                                          <Insets left="4.0" right="4.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                                 <styleClass>
+                                    <String fx:value="rounded-box" />
+                                    <String fx:value="subtotal-box" />
+                                 </styleClass>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets top="10.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="50.0" spacing="10.0" styleClass="fbutton-bar">
+         <children>
+            <Button fx:id="f1Button" mnemonicParsing="false">
+               <graphic>
+                  <VBox fx:id="searchModeButton" alignment="CENTER">
+                     <children>
+                        <Label styleClass="code" text="F1" />
+                        <Label styleClass="descr" text="Search Mod" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Button fx:id="f2Button" mnemonicParsing="false">
+               <graphic>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Label styleClass="code" text="F2" />
+                        <Label styleClass="descr" text="Channel" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Button fx:id="f3Button" mnemonicParsing="false">
+               <graphic>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Label styleClass="code" text="F3" />
+                        <Label styleClass="descr" text="Edit Qty" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Button fx:id="f4Button" mnemonicParsing="false">
+               <graphic>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Label styleClass="code" text="F4" />
+                        <Label styleClass="descr" text="Promo Next Tx" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Button fx:id="f5Button" mnemonicParsing="false">
+               <graphic>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Label styleClass="code" text="F5" />
+                        <Label styleClass="descr" text="Promo Payment" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Button fx:id="f6Button" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0">
+               <graphic>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Label styleClass="code" text="F6" />
+                        <Label styleClass="descr" text="Promo Item" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Button fx:id="f7Button" mnemonicParsing="false">
+               <graphic>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Label styleClass="code" text="F7" />
+                        <Label styleClass="descr" text="New Tx" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Button fx:id="f8Button" mnemonicParsing="false">
+               <graphic>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Label styleClass="code" text="F8" />
+                        <Label styleClass="descr" text="Remove" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Button fx:id="f9Button" mnemonicParsing="false">
+               <graphic>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Label styleClass="code" text="F9" />
+                        <Label styleClass="descr" text="Recall" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Button fx:id="f10Button" mnemonicParsing="false">
+               <graphic>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Label styleClass="code" text="F10" />
+                        <Label styleClass="descr" text="Checkout" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Button fx:id="f11Button" mnemonicParsing="false">
+               <graphic>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Label styleClass="code" text="F11" />
+                        <Label styleClass="descr" text="Search Cust" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Button fx:id="f12Button" mnemonicParsing="false">
+               <graphic>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Label styleClass="code" text="F12" />
+                        <Label styleClass="descr" text="Reg Cust" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+            <Pane HBox.hgrow="ALWAYS" />
+            <Button fx:id="escButton" mnemonicParsing="false">
+               <graphic>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Label styleClass="code" text="Esc" />
+                        <Label styleClass="descr" text="Exit" />
+                     </children>
+                  </VBox>
+               </graphic>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="30.0" right="30.0" top="15.0" />
+   </padding>
+   <stylesheets>
+      <URL value="@.root.css" />
+      <URL value="@sale.css" />
+   </stylesheets>
+</VBox>

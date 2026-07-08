@@ -17,17 +17,23 @@
 			"**/.DS_Store": true,
 			"**/Thumbs.db": true,
 			"**/.gradle": true,
+			"**/.settings": true,
+			"**/.classpath": true,
+			"**/.project": true,
 			".idea": true,
 			".vscode": true,
 			"jfxpos/build": true,
 			"jfxpos/bin": true,
+			"jfxpossyn/build": true,
+			"jfxpossyn/bin": true,
 			"launcher/build": true,
 			"launcher/bin": true
 		},
 		"search.exclude": {
 			"**/build": true,
 			"**/bin": true
-		}
+		},
+		"java.compile.nullAnalysis.mode": "automatic"
 	},
 	"launch": {
 		"configurations": [
@@ -36,7 +42,16 @@
 				"name": "Attach Gradle",
 				"request": "attach",
 				"hostName": "localhost",
-				"port": 5005
+				"port": 5005,
+				"projectName": "launcher"
+			},
+			{
+				"type": "java",
+				"name": "Launch JFX POS",
+				"request": "launch",
+				"mainClass": "launcher.Launcher",
+				"projectName": "launcher",
+				"vmArgs": "--enable-native-access=javafx.graphics"
 			}
 		]
 	}

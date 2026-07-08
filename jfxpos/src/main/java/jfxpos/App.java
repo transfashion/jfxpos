@@ -5,14 +5,12 @@ import javafx.stage.Stage;
 import jfxpos.config.AppConfig;
 import jfxpos.config.AppConfigStore;
 import jfxpos.util.PosLogger;
-import jfxpos.views.MainWindow;
+import jfxpos.views.DashboardWindow;
 
 import java.util.Objects;
 import java.util.logging.Logger;
 
-
-
-public class App extends Application  {
+public class App extends Application {
 	public static final boolean isDev = !Objects.equals(System.getProperty("app.env", "prod"), "prod");
 	public static final boolean isProd = Objects.equals(System.getProperty("app.env", "prod"), "prod");
 
@@ -22,7 +20,7 @@ public class App extends Application  {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		MainWindow wnd = new MainWindow(stage);
+		DashboardWindow wnd = new DashboardWindow(stage);
 		wnd.setLoginView();
 		wnd.open();
 	}

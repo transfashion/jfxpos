@@ -7,14 +7,14 @@ import jfxpos.controller.TesterController;
 
 public class TesterDialog extends View {
     static final String Title = "Configuration";
-    static final String FXML = RESOURCE_DIR + "tester.fxml";
+    static final String FXML = RESOURCE_DIR + "/tester.fxml";
 
     final Stage stage;
     final TesterController controller = new TesterController();
 
 
     public TesterDialog(Stage owner) throws Exception {
-        super(ConfigDialog.class);
+        super(TesterDialog.class);
 
         Scene scene = loadFxml(FXML, controller);
         stage = createDialogStage(Title, scene, owner);

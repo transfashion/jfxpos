@@ -111,8 +111,26 @@ public class Launcher extends Application {
 				Updater.update(jarPath, this::updateMessage);
 
 				updateMessage("Preparing classloader...");
-				URL[] urls = { jarPath.toUri().toURL() };
-				appClassLoader = new URLClassLoader(urls, Launcher.class.getClassLoader());
+				java.util.List<URL> urlList = new java.util.ArrayList<>();
+				urlList.add(jarPath.toUri().toURL());
+
+				Path synJarPath = jarPath.getParent().resolve("jfxpossyn.jar");
+				if (Files.exists(synJarPath)) {
+					urlList.add(synJarPath.toUri().toURL());
+					logger.info("Added jfxpossyn.jar to classloader from: " + synJarPath.toString());
+				} else {
+					Path ideSynJar = Paths.get("build", "libs", "jfxpossyn.jar").toAbsolutePath();
+					if (Files.exists(ideSynJar)) {
+						urlList.add(ideSynJar.toUri().toURL());
+						logger.info("Added jfxpossyn.jar to classloader from IDE path: " + ideSynJar.toString());
+					} else {
+						logger.severe("not found: " + synJarPath);
+						throw new RuntimeException("Tidak menemukan 'jfxpossyn.jar'!\r\n" + synJarPath);
+					}
+				}
+
+				URL[] urls = urlList.toArray(new URL[0]);
+				appClassLoader = new ChildFirstClassLoader(urls, Launcher.class.getClassLoader());
 				registerShutdownHook();
 
 				updateMessage("Loading application class...");
@@ -284,7 +302,53 @@ public class Launcher extends Application {
 	private Alert createAlert(Throwable e) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setHeaderText("Error");
-		alert.setContentText(e.getMessage());
+		
+		Throwable current = e;
+		while (current.getCause() != null && (current.getMessage() == null || current instanceof java.lang.reflect.InvocationTargetException)) {
+			current = current.getCause();
+		}
+		
+		String message = current.getMessage();
+		if (message == null || message.trim().isEmpty()) {
+			message = current.toString();
+		}
+		
+		alert.setContentText(message);
 		return alert;
+	}
+
+	private static class ChildFirstClassLoader extends URLClassLoader {
+		public ChildFirstClassLoader(URL[] urls, ClassLoader parent) {
+			super(urls, parent);
+		}
+
+		@Override
+		public Class<?> loadClass(String name) throws ClassNotFoundException {
+			return loadClass(name, false);
+		}
+
+		@Override
+		protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+			// First, check if the class has already been loaded
+			Class<?> c = findLoadedClass(name);
+			if (c == null) {
+				// Avoid intercepting system/platform classes or JavaFX runtime classes
+				if (name.startsWith("java.") || name.startsWith("javax.") || name.startsWith("javafx.") || name.startsWith("jdk.")) {
+					c = super.loadClass(name, resolve);
+				} else {
+					try {
+						// Try to load from URLs first
+						c = findClass(name);
+					} catch (ClassNotFoundException e) {
+						// Fall back to parent
+						c = super.loadClass(name, resolve);
+					}
+				}
+			}
+			if (resolve) {
+				resolveClass(c);
+			}
+			return c;
+		}
 	}
 }

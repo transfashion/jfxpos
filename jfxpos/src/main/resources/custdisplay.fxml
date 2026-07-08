@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox fx:id="imageContainer" minWidth="-Infinity" prefWidth="295.0" style="-fx-background-color: #cccccc;" HBox.hgrow="ALWAYS">
+         <children>
+            <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+         </children></VBox>
+      <VBox minWidth="-Infinity" prefWidth="295.0" HBox.hgrow="ALWAYS">
+         <children>
+            <HBox>
+               <children>
+                  <VBox HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label style="-fx-font-size: 1.8em; -fx-font-weight: bold;" text="Selamat Datang,">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="customerNameLabel" text="Agung Nugroho" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="TOP_RIGHT">
+                     <children>
+                        <Label fx:id="dateLabel" text="Sabtu, 5 Juli 2026" />
+                        <Label fx:id="timeLabel" style="-fx-font-size: 2.5em; -fx-font-weight: bold; -fx-text-fill: #888888;" text="09:30" />
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <padding>
+                        <Insets right="20.0" />
+                     </padding>
+                  </VBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+            </HBox>
+            <TableView fx:id="itemTableView" maxHeight="300.0" styleClass="item-datagrid" VBox.vgrow="ALWAYS">
+              <columns>
+                <TableColumn fx:id="colItemDescr" prefWidth="300.0" styleClass="description" text="Description" />
+                <TableColumn fx:id="colQty" prefWidth="50.0" styleClass="qty" text="Qty" />
+                <TableColumn fx:id="colTotal" prefWidth="100.0" styleClass="total" text="Total" />
+              </columns>
+               <VBox.margin>
+                  <Insets bottom="20.0" right="20.0" top="30.0" />
+               </VBox.margin>
+            </TableView>
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="Grand Total" GridPane.rowIndex="1">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="grandTotalValueLabel" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" style="-fx-font-weight: bold; -fx-font-size: 2em;" text="999,999,999" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" text="Qty">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="grandTotalQtyLabel" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" style="-fx-font-weight: bold; -fx-font-size: 2em;" text="99" GridPane.columnIndex="1">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="30.0" right="20.0" />
+               </VBox.margin>
+            </GridPane>
+         </children>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </VBox>
+   </children>
+   <stylesheets>
+      <URL value="@.root.css" />
+      <URL value="@custdisplay.css" />
+   </stylesheets>
+</HBox>

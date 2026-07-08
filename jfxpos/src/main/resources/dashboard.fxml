@@ -1,17 +1,212 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1024.0" stylesheets="@dashboard.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label layoutX="60.0" layoutY="60.0" text="Selamat Datang">
-         <font>
-            <Font name="System Bold" size="35.0" />
-         </font>
-      </Label>
-      <Button layoutX="60.0" layoutY="295.0" mnemonicParsing="false" onAction="#onTesterClick" prefHeight="26.0" prefWidth="99.0" text="Tester" />
+      <HBox>
+         <children>
+            <Label fx:id="siteNameLabel" text="Site Name">
+               <font>
+                  <Font name="Arial Bold" size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" spacing="4.0" styleClass="status-bar">
+         <VBox.margin>
+            <Insets top="3.0" />
+         </VBox.margin>
+         <children>
+            <Label fx:id="siteCodeLabel" text="SiteCode">
+            </Label>
+            <Label fx:id="structCodeLabel" text="StructCode">
+            </Label>
+            <Label fx:id="deviceCodeLabel" text="DeviceCode">
+            </Label>
+            <Label fx:id="nameLabel" text="Name">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin></Label>
+            <Label text="|">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin></Label>
+            <Hyperlink focusTraversable="false" styleClass="hyperlink" text="Show Running Parameters">
+            </Hyperlink>
+            <Pane prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <Label fx:id="serverUrlLabel" text="http://localhost">
+            </Label>
+         </children>
+      </HBox>
+      <HBox minWidth="964.0" prefWidth="964.0">
+         <children>
+            <VBox minWidth="140.0" prefWidth="140.0" spacing="20.0">
+               <children>
+                  <Button fx:id="signInButton" focusTraversable="false" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onSignInClick" text="Sign In" />
+                  <Button fx:id="updateDataButton" focusTraversable="false" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onUpdateDataClick" text="Update Data" />
+                  <Button fx:id="updateJarButton" focusTraversable="false" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onUpdateJarClick" text="Update Jar" />
+               </children>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </VBox>
+            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
+               <children>
+                  <VBox fx:id="progresInfoVBox" prefWidth="400.0">
+                     <children>
+                        <Label fx:id="progressTitleLabel" text="Progress">
+                           <VBox.margin>
+                              <Insets bottom="5.0" top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <ProgressBar fx:id="progressBar" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="400.0" progress="0.0" />
+                        <Label fx:id="progressInfoLabel" text="progress information">
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="20.0" />
+                     </VBox.margin>
+                  </VBox>
+                  <VBox fx:id="alertInfoVBox" minWidth="-Infinity" prefWidth="400.0" style="-fx-border-color: #F8B4B4; -fx-border-radius: 6; -fx-background-color: #FDE8E8;">
+                     <children>
+                        <Label fx:id="alertTitleLabel" style="-fx-font-weight: bold; -fx-text-fill: #9B1C1C;" text="Alert" />
+                        <Label fx:id="alertMessageLabel" maxWidth="1.7976931348623157E308" style="-fx-text-fill: #9B1C1C;" text="Label" wrapText="true" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+                  <Label fx:id="errorInfoLabel" style="-fx-text-fill: #9B1C1C; -fx-font-weight: bold;" wrapText="true">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Label>
+               </children>
+               <HBox.margin>
+                  <Insets left="30.0" right="30.0" />
+               </HBox.margin>
+            </VBox>
+            <AnchorPane minWidth="300.0" prefWidth="300.0" style="-fx-border-color: #CCCCCC; -fx-border-radius: 6; -fx-background-radius: 6;">
+               <children>
+                  <VBox alignment="TOP_CENTER" spacing="20.0" styleClass="console-buttons" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label fx:id="posVersionLabel" alignment="TOP_CENTER" contentDisplay="TOP" maxWidth="1.7976931348623157E308" text="Versi POS" />
+                        <Button fx:id="posConsole1Button" alignment="TOP_LEFT" contentDisplay="TOP" onAction="#posConsoleButtonClick" text="POS Console #_1" />
+                        <Button fx:id="posConsole2Button" onAction="#posConsoleButtonClick" text="POS Console #_2" />
+                     </children>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="5.0" />
+               </padding>
+            </AnchorPane>
+         </children>
+         <VBox.margin>
+            <Insets top="40.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox minWidth="964.0" prefWidth="964.0" spacing="15.0">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+         <children>
+            <VBox prefHeight="117.0" prefWidth="450.0" style="-fx-border-color: #CCCCCC; -fx-border-radius: 6; -fx-background-radius: 6;" styleClass="group-box">
+               <children>
+                  <Label style="-fx-background-color: -fx-background;" text="Closing" translateX="10.0" translateY="-10.0">
+                     <padding>
+                        <Insets left="5.0" right="5.0" />
+                     </padding>
+                  </Label>
+                  <AnchorPane minHeight="100.0" minWidth="448.0" prefHeight="100.0" prefWidth="448.0">
+                     <children>
+                        <Label layoutX="38.0" layoutY="11.0" text="Date" />
+                        <DatePicker focusTraversable="false" layoutX="86.0" layoutY="7.0" prefHeight="26.0" prefWidth="131.0" promptText="Closing Date" />
+                        <CheckBox focusTraversable="false" layoutX="238.0" layoutY="12.0" mnemonicParsing="false" selected="true" text="Only this machine" />
+                        <Button focusTraversable="false" layoutX="155.0" layoutY="51.0" mnemonicParsing="false" text="Create Closing Report" />
+                        <Button focusTraversable="false" layoutX="86.0" layoutY="51.0" mnemonicParsing="false" text="Preview" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </VBox>
+            <VBox style="-fx-border-color: #CCCCCC; -fx-border-radius: 6; -fx-background-radius: 6;" styleClass="group-box" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label style="-fx-background-color: -fx-background;" text="Transaction" translateX="10.0" translateY="-10.0">
+                     <padding>
+                        <Insets left="5.0" right="5.0" />
+                     </padding>
+                  </Label>
+                  <AnchorPane minHeight="100.0" minWidth="441.0" prefHeight="100.0" prefWidth="441.0">
+                     <children>
+                        <Label layoutX="38.0" layoutY="11.0" text="Bon" />
+                        <TextField focusTraversable="false" layoutX="86.0" layoutY="7.0" prefHeight="25.0" prefWidth="286.0" />
+                        <Button focusTraversable="false" layoutX="86.0" layoutY="51.0" mnemonicParsing="false" text="Preview" />
+                        <Button focusTraversable="false" layoutX="154.0" layoutY="51.0" mnemonicParsing="false" text="Re-Print" />
+                        <Button fx:id="voidButton" focusTraversable="false" layoutX="238.0" layoutY="51.0" mnemonicParsing="false" onAction="#onVoidClick" text="Void" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <VBox minWidth="964.0" prefWidth="964.0" style="-fx-border-color: #CCCCCC; -fx-border-radius: 6; -fx-background-radius: 6;">
+         <children>
+            <Label style="-fx-background-color: -fx-background;" text="Send Data" translateX="-10.0" translateY="-10.0">
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
+            </Label>
+            <HBox spacing="15.0">
+               <children>
+                  <VBox prefWidth="197.0" spacing="8.0">
+                     <children>
+                        <DatePicker focusTraversable="false" prefHeight="37.0" promptText="Date to send" style="-fx-font-size: 18px;" />
+                        <CheckBox focusTraversable="false" mnemonicParsing="false" text="re-send all data" />
+                     </children>
+                  </VBox>
+                  <Button fx:id="sendDataButton" focusTraversable="false" mnemonicParsing="false" onAction="#onSendDataClick" text="Send Data" />
+                  <VBox spacing="5.0" HBox.hgrow="ALWAYS" />
+                  <Pane prefWidth="150.0" />
+               </children>
+            </HBox>
+         </children>
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" />
+         </padding>
+      </VBox>
+      <HBox alignment="CENTER" minWidth="964.0" prefWidth="964.0">
+         <VBox.margin>
+            <Insets top="50.0" />
+         </VBox.margin>
+         <children>
+            <Button fx:id="signOffButton" focusTraversable="false" mnemonicParsing="false" onAction="#onSignOffClick" prefWidth="140.0" text="Sign Off" />
+            <Pane HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets left="30.0" right="30.0" />
+               </HBox.margin></Pane>
+            <TextField focusTraversable="false" prefWidth="150.0" promptText="Key" />
+         </children>
+      </HBox>
    </children>
-</AnchorPane>
+   <padding>
+      <Insets bottom="10.0" left="30.0" right="30.0" top="25.0" />
+   </padding>
+</VBox>

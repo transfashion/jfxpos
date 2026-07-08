@@ -1,0 +1,102 @@
+package jfxpos.views;
+
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import jfxpos.App;
+import jfxpos.View;
+import jfxpos.controller.CustDisplayController;
+
+public class CustDisplayWindow extends View {
+	static final String Title = "Customer Display";
+	static final String FXML = RESOURCE_DIR + "/custdisplay.fxml";
+
+	private static CustDisplayWindow instance;
+
+	final Stage stage;
+	final CustDisplayController controller;
+
+	public static CustDisplayWindow getInstance() {
+		return instance;
+	}
+
+	public CustDisplayController getController() {
+		return this.controller;
+	}
+
+	public CustDisplayWindow() throws Exception {
+		this(new Stage());
+	}
+
+	public CustDisplayWindow(Stage stage) throws Exception {
+		super(CustDisplayWindow.class);
+		this.stage = stage;
+
+		if (App.isProd) {
+			stage.initStyle(StageStyle.UNDECORATED);
+		}
+
+		this.controller = new CustDisplayController();
+		instance = this;
+
+		stage.setOnHidden(e -> {
+			if (instance == this) {
+				instance = null;
+			}
+		});
+
+		stage.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+			if (isNowFocused) {
+				javafx.stage.Window targetWindow = null;
+				java.util.List<javafx.stage.Window> windows = javafx.stage.Window.getWindows();
+				for (int i = windows.size() - 1; i >= 0; i--) {
+					javafx.stage.Window w = windows.get(i);
+					if (w != stage && w.isShowing()) {
+						targetWindow = w;
+						break;
+					}
+				}
+				if (targetWindow != null) {
+					targetWindow.requestFocus();
+				}
+			}
+		});
+
+		Scene scene = loadFxml(FXML, controller);
+		setStage(stage);
+		stage.setTitle(Title);
+		stage.setScene(scene);
+
+		// Set dimensions from FXML pref size
+		double minWidth = scene.getRoot().minWidth(-1);
+		if (minWidth > 0 && minWidth != Double.NEGATIVE_INFINITY) {
+			stage.setMinWidth(minWidth);
+		}
+		double minHeight = scene.getRoot().minHeight(-1);
+		if (minHeight > 0 && minHeight != Double.NEGATIVE_INFINITY) {
+			stage.setMinHeight(minHeight);
+		}
+	}
+
+	@Override
+	public void open() {
+		if (App.isProd) {
+			stage.setMaximized(true);
+		} else {
+			if (Double.isNaN(stage.getX())) {
+				javafx.geometry.Rectangle2D primaryBounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+				double width = stage.getScene().getRoot().prefWidth(-1);
+				double height = stage.getScene().getRoot().prefHeight(-1);
+				stage.setX(primaryBounds.getMaxX() - width);
+				stage.setY(primaryBounds.getMaxY() - height);
+			}
+		}
+		stage.show();
+	}
+
+	public void updateDateTime(String dateText, String timeText) {
+		if (controller != null) {
+			controller.updateDateTime(dateText, timeText);
+		}
+	}
+}

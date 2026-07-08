@@ -1,0 +1,56 @@
+package jfxpos.repository;
+
+import jfxpos.models.User;
+import jfxpos.util.DbPool;
+import jfxpos.util.PosLogger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class UserRepository {
+	private static final Logger logger = PosLogger.createLogger(UserRepository.class.getName());
+
+	public User findByUsername(String username) {
+		if (username == null || username.trim().isEmpty()) {
+			return null;
+		}
+
+		String sql = String.format("SELECT * FROM %s WHERE %s = ?",
+				User.Contract.TABLE_NAME, User.Contract.Columns.USERNAME);
+
+		try (Connection conn = DbPool.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql)) {
+
+			ps.setString(1, username.trim());
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					int id = rs.getInt(User.Contract.Columns.ID);
+					String user = rs.getString(User.Contract.Columns.USERNAME);
+					String password = rs.getString(User.Contract.Columns.PASSWORD);
+					String role = rs.getString(User.Contract.Columns.ROLE);
+					boolean isActive = rs.getBoolean(User.Contract.Columns.IS_ACTIVE);
+
+					Timestamp ts = rs.getTimestamp(User.Contract.Columns.CREATED_AT);
+					LocalDateTime createdAt = ts != null ? ts.toLocalDateTime() : null;
+
+					Timestamp tsModified = rs.getTimestamp(User.Contract.Columns.MODIFIED_AT);
+					LocalDateTime modifiedAt = tsModified != null ? tsModified.toLocalDateTime() : null;
+
+					Timestamp tsData = rs.getTimestamp(User.Contract.Columns.DATATIMESTAMP);
+					LocalDateTime dataTimestamp = tsData != null ? tsData.toLocalDateTime() : null;
+
+					return new User(id, user, password, role, isActive, createdAt, modifiedAt, dataTimestamp);
+				}
+			}
+		} catch (SQLException e) {
+			logger.log(Level.SEVERE, "Error finding user by username: " + username, e);
+		}
+		return null;
+	}
+}

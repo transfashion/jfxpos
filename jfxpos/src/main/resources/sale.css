@@ -1,0 +1,172 @@
+.devid-info {
+	-fx-font-size: 3.6em;
+	-fx-font-weight: bold;
+	-fx-text-fill: #aaaaaa;
+	-fx-background-color: #333333;
+
+}
+
+.store-name {
+	-fx-font-size: 2.4em;
+	-fx-font-weight: bold;
+}
+
+.store-info-bar .label {
+	-fx-font-size: 1em;
+}
+
+
+.datetime-info .tanggal {
+	-fx-font-size: 1.4em;
+}
+
+.datetime-info .jam {
+	-fx-font-size: 2.4em;
+	-fx-font-weight: bold;
+	-fx-text-fill: #aaaaaa;
+}
+
+
+.rounded-box {
+	-fx-border-color: #cccccc;
+	-fx-border-radius: 6px;
+	-fx-background-radius: 6px;
+}
+
+
+.rounded-box .group-title {
+	-fx-font-size: 1.3em;
+	-fx-background-color: -fx-background;
+
+}
+
+.summary-info .HBox {
+	-fx-border-color: transparent transparent #e2e2e2 transparent;
+	-fx-border-width: 0 0 1 0;
+	-fx-border-style: none none dashed none;
+}
+
+
+.summary-info .subtotal-label {
+	-fx-font-size: 1.4em;
+	-fx-font-weight: bold;
+}
+
+.summary-info .subtotal-value {
+	-fx-font-size: 3.2em;
+	-fx-font-weight: bold;
+}
+
+.summary-info .subtotal-qty {
+	-fx-font-size: 1.8em;
+	-fx-font-weight: bold;
+}
+
+
+.customer-info .button {
+	-fx-font-size: 1.6em;
+}
+
+
+
+
+
+
+.lineinput-image {
+	-fx-border-width: 0 0 0 0;
+	-fx-background-color: #dddddd;
+	-fx-margin: 0 0 0 0;
+}
+
+
+.input-barcode {
+	-fx-font-size: 1.8em;
+	-fx-padding: 2 5 2 5;
+	-fx-margin: 0 0 0 0;
+}
+
+.input-result-descr {
+	-fx-font-size: 1.6em;
+}
+
+.input-result-price {
+	-fx-font-size: 1.6em;
+	-fx-font-weight: bold;
+}
+
+
+
+.item-datagrid .column-header.description .label {
+	-fx-alignment: CENTER_LEFT;
+	-fx-padding: 0 0 0 10px;
+
+}
+
+
+.item-datagrid .column-header.total .label {
+	-fx-alignment: CENTER_RIGHT;
+	-fx-padding: 0 10px 0 0;
+}
+
+
+.item-datagrid .table-cell.description {
+	-fx-alignment: TOP_LEFT;
+	-fx-padding: 0 0 0 10px;
+}
+
+.item-datagrid .table-cell.qty {
+	-fx-alignment: TOP_CENTER;
+}
+
+.item-datagrid .table-cell.total {
+	-fx-alignment: TOP_RIGHT;
+	-fx-padding: 0 10px 0 0;
+}
+
+
+
+.fbutton-bar .button {
+	-fx-pref-width: 78px;
+	-fx-pref-height: 50px;
+
+	-fx-min-width: -fx-pref-width;
+	-fx-min-height: -fx-pref-height;
+
+	-fx-max-width: 85px;
+	-fx-max-height: -fx-pref-height;
+
+	-fx-padding: 0 0 0 0;
+}
+
+.fbutton-bar .code {
+	-fx-font-size: 0.8em;
+	-fx-font-weight: bold;
+}
+
+.fbutton-bar .descr {
+	-fx-font-size: 0.65em;
+}
+
+
+
+.promo-container .button {
+	-fx-pref-width: 70px;
+	-fx-pref-height: 56px;
+
+	-fx-min-width: -fx-pref-width;
+	-fx-min-height: -fx-pref-height;
+
+	-fx-max-width: 85px;
+	-fx-max-height: -fx-pref-height;
+
+	-fx-padding: 0 0 0 0;
+}
+
+.promo-container .descr {
+	-fx-font-size: 0.65em;
+}
+
+.promo-container .availability {
+	-fx-font-size: 1.6em;
+	-fx-font-weight: bold;
+}

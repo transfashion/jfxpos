@@ -1,0 +1,36 @@
+.root {
+	-fx-font-size: 10px;
+	-fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+	-fx-base: #f4f4f4;
+}
+
+.label {
+	-fx-font-size: 1.6em;
+}
+
+.button {
+	-fx-font-size: 1.6em;
+}
+
+.text-field {
+	-fx-font-size: 1.6em;
+}
+
+.tab {
+	-fx-font-size: 1.6em;
+}
+
+
+.table-view {
+	-fx-font-size: 1.6em;
+}
+
+.table-row-cell {
+	-fx-font-size: 1.6em;
+}
+
+
+.radio-button {
+	-fx-font-size: 1.6em;
+
+}

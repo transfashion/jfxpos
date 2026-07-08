@@ -1,10 +1,17 @@
 module jfxpos {
 	requires transitive javafx.controls;
 	requires transitive javafx.fxml;
+	requires transitive javafx.graphics;
 
 	requires transitive java.logging;
 
 	requires java.prefs;
+	requires java.sql;
+	requires java.net.http;
+	requires org.firebirdsql.jaybird;
+	requires com.zaxxer.hikari;
+	requires transitive jfxpossyn;
+	requires java.desktop;
 
 	exports jfxpos;
 	exports jfxpos.config;
@@ -13,4 +20,5 @@ module jfxpos {
 	opens jfxpos.config to javafx.fxml;
 	opens jfxpos.controller to javafx.fxml;
 	opens jfxpos.util to javafx.fxml;
+	opens jfxpos.models to javafx.base, javafx.fxml;
 }

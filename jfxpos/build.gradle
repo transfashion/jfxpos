@@ -3,8 +3,14 @@ plugins {
 }
 
 javafx {
-    version = "21.0.1"
+    version = "25"
     modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+
+dependencies {
+    implementation project(':jfxpossyn')
+    implementation 'org.firebirdsql.jdbc:jaybird:6.0.5'
+    implementation 'com.zaxxer:HikariCP:5.1.0'
 }
 
 jar {

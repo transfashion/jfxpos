@@ -93,13 +93,14 @@
                   </TableView>
                   <HBox prefWidth="200.0">
                      <children>
-                        <VBox prefWidth="241.0">
+                        <VBox prefHeight="48.0" prefWidth="332.0">
                            <children>
-                              <Label style="-fx-font-size: 1.2em;" text="Sales Person" />
-                              <HBox alignment="BOTTOM_LEFT" style="-fx-border-color: transparent transparent #cccccc transparent;">
+                              <Label style="-fx-font-size: 1.2em;" text="Sales Person" translateY="5.0" />
+                              <HBox alignment="BOTTOM_LEFT" spacing="8.0" style="-fx-border-color: transparent transparent #cccccc transparent;">
                                  <children>
-                                    <Label maxWidth="1.7976931348623157E308" text="SASTRO" HBox.hgrow="ALWAYS" />
-                                    <Button mnemonicParsing="false" style="-fx-font-size: 1.4em;" text="..." />
+                                    <Label fx:id="salespersonNikLabel" text="NIK" />
+                                    <Label fx:id="salespersonNameLabel" maxWidth="1.7976931348623157E308" text="SASTRO" HBox.hgrow="ALWAYS" />
+                                    <Button fx:id="salespersonButton" mnemonicParsing="false" style="-fx-font-size: 1.4em;" text="..." />
                                  </children>
                                  <padding>
                                     <Insets bottom="3.0" />
@@ -434,7 +435,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F11" />
-                        <Label styleClass="descr" text="Search Cust" />
+                        <Label styleClass="descr" text="Customer" />
                      </children>
                   </VBox>
                </graphic>
@@ -444,7 +445,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F12" />
-                        <Label styleClass="descr" text="Reg Cust" />
+                        <Label styleClass="descr" text="Sales Person" />
                      </children>
                   </VBox>
                </graphic>

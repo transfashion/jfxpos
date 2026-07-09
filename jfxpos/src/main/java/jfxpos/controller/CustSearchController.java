@@ -14,6 +14,7 @@ import jfxpos.config.AppConfigStore;
 import jfxpos.models.Customer;
 import jfxpos.util.MessageBox;
 import jfxpos.util.JfxposApi;
+import jfxpos.views.CustRegisterDialog;
 
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
@@ -67,6 +68,9 @@ public class CustSearchController extends Controller {
 	@FXML
 	private Button cancelButton;
 
+	@FXML
+	private Button newCustomerButton;
+
 	private final ToggleGroup searchGroup = new ToggleGroup();
 	private Customer selectedCustomer = null;
 
@@ -109,6 +113,7 @@ public class CustSearchController extends Controller {
 		submitButton.setOnAction(e -> handleSearch());
 		selectButton.setOnAction(e -> confirmSelection());
 		cancelButton.setOnAction(e -> closeDialog());
+		newCustomerButton.setOnAction(e -> openCustRegister());
 
 		// Double-click row to select
 		tableViewResult.setOnMouseClicked(event -> {
@@ -156,6 +161,12 @@ public class CustSearchController extends Controller {
 					if (code == KeyCode.F1) {
 						event.consume();
 						rotateRadioButtons();
+						return;
+					}
+
+					if (code == KeyCode.F2) {
+						event.consume();
+						newCustomerButton.fire();
 						return;
 					}
 
@@ -293,6 +304,30 @@ public class CustSearchController extends Controller {
 	private void closeDialog() {
 		if (submitButton.getScene() != null && submitButton.getScene().getWindow() instanceof Stage stage) {
 			stage.close();
+		}
+	}
+
+	private void openCustRegister() {
+		try {
+			CustRegisterDialog dialog = new CustRegisterDialog(getCurrentStage());
+			String currentSearch = searchInput.getText() != null ? searchInput.getText().trim() : "";
+			if (!currentSearch.isEmpty() && currentSearch.matches("\\d+")) {
+				dialog.setCustomerId(currentSearch);
+			}
+			dialog.openDialog();
+			if (dialog.isSaved()) {
+				Customer c = new Customer();
+				c.setCustomerId(Long.parseLong(dialog.getCustomerId()));
+				c.setCustomerName(dialog.getCustomerName());
+				String gender = dialog.getCustomerGender();
+				c.setCustomerGender(gender != null && !gender.isEmpty() ? Integer.parseInt(gender) : 0);
+				c.setCustomerBirthdate(dialog.getCustomerBirthdate());
+				
+				this.selectedCustomer = c;
+				closeDialog();
+			}
+		} catch (Exception e) {
+			logger.log(java.util.logging.Level.SEVERE, "Failed to open CustRegisterDialog", e);
 		}
 	}
 

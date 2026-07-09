@@ -193,8 +193,37 @@ public class CustRegisterController extends Controller {
 			}
 		});
 
+		// Keyboard controls and shortcuts on scene
+		btnSave.sceneProperty().addListener((observable, oldScene, newScene) -> {
+			if (newScene != null) {
+				newScene.addEventFilter(javafx.scene.input.KeyEvent.KEY_PRESSED, event -> {
+					KeyCode code = event.getCode();
+
+					if (code == KeyCode.F1) {
+						event.consume();
+						rotateGenderSelection();
+						return;
+					}
+				});
+			}
+		});
+
 		// Auto focus Customer ID on load
 		Platform.runLater(() -> txtCustomerId.requestFocus());
+	}
+
+	private void rotateGenderSelection() {
+		if (rbPria.isSelected()) {
+			rbWanita.setSelected(true);
+			if (rbPria.isFocused()) {
+				rbWanita.requestFocus();
+			}
+		} else {
+			rbPria.setSelected(true);
+			if (rbWanita.isFocused()) {
+				rbPria.requestFocus();
+			}
+		}
 	}
 
 	private void handleSave() {

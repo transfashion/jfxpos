@@ -6,6 +6,7 @@ import jfxpossyn.repository.SyncItemRepository;
 import jfxpossyn.sync.SyncProgressListener;
 import jfxpossyn.sync.ItemSyncer;
 import jfxpossyn.sync.InventorySyncer;
+import jfxpossyn.sync.SalespersonSyncer;
 import jfxpossyn.sync.PromoSyncer;
 import jfxpossyn.sync.PaymSyncer;
 import jfxpossyn.util.DbPool;
@@ -19,9 +20,8 @@ public class UpdateData {
 	private static final long MIN_SYNC_INTERVAL_MINUTES = 5;
 
 	/**
-	 * Starts the sequential synchronization process for Items, Inventory, Promos,
-	 * and Payments,
-	 * dividing progress equally among them.
+	 * Starts the sequential synchronization process for Items, Inventory, Salespersons, Promos,
+	 * and Payments, dividing progress equally among them.
 	 *
 	 * @param config   The application configuration.
 	 * @param listener The progress listener to notify.
@@ -58,38 +58,47 @@ public class UpdateData {
 		long startTime = System.currentTimeMillis();
 
 		try {
-			// 1. ItemSyncer (0.0 to 0.25)
+			// 1. ItemSyncer (0.0 to 0.20)
 			ItemSyncer itemSyncer = new ItemSyncer();
 			itemSyncer.syncItem(config, (progress, title, message) -> {
 				if (listener != null) {
-					double overallProgress = 0.0 + (progress * 0.25);
+					double overallProgress = 0.0 + (progress * 0.20);
 					listener.onProgress(overallProgress, title, message);
 				}
 			});
 
-			// 2. InventorySyncer (0.25 to 0.50)
+			// 2. InventorySyncer (0.20 to 0.40)
 			InventorySyncer inventorySyncer = new InventorySyncer();
 			inventorySyncer.syncInventory(config, (progress, title, message) -> {
 				if (listener != null) {
-					double overallProgress = 0.25 + (progress * 0.25);
+					double overallProgress = 0.20 + (progress * 0.20);
 					listener.onProgress(overallProgress, title, message);
 				}
 			});
 
-			// 3. PromoSyncer (0.50 to 0.75)
+			// 3. SalespersonSyncer (0.40 to 0.60)
+			SalespersonSyncer salespersonSyncer = new SalespersonSyncer();
+			salespersonSyncer.syncSalesperson(config, (progress, title, message) -> {
+				if (listener != null) {
+					double overallProgress = 0.40 + (progress * 0.20);
+					listener.onProgress(overallProgress, title, message);
+				}
+			});
+
+			// 4. PromoSyncer (0.60 to 0.80)
 			PromoSyncer promoSyncer = new PromoSyncer();
 			promoSyncer.syncPromo(config, (progress, title, message) -> {
 				if (listener != null) {
-					double overallProgress = 0.50 + (progress * 0.25);
+					double overallProgress = 0.60 + (progress * 0.20);
 					listener.onProgress(overallProgress, title, message);
 				}
 			});
 
-			// 4. PaymSyncer (0.75 to 1.00)
+			// 5. PaymSyncer (0.80 to 1.00)
 			PaymSyncer paymSyncer = new PaymSyncer();
 			paymSyncer.syncPaym(config, (progress, title, message) -> {
 				if (listener != null) {
-					double overallProgress = 0.75 + (progress * 0.25);
+					double overallProgress = 0.80 + (progress * 0.20);
 					listener.onProgress(overallProgress, title, message);
 				}
 			});

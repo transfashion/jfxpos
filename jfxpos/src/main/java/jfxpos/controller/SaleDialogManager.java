@@ -84,6 +84,22 @@ public class SaleDialogManager {
 		}
 	}
 
+	public static void openSalespersonDialog(Stage parent, Trx trx) {
+		if (trx == null)
+			return;
+		try {
+			jfxpos.views.SalespersonDialog dialog = new jfxpos.views.SalespersonDialog(parent);
+			dialog.openDialog();
+			jfxpos.models.Salesperson selected = dialog.getSelectedSalesperson();
+			if (selected != null) {
+				logger.info("Selected Salesperson: ID=" + selected.getSalespersonId() + ", Name=" + selected.getSalespersonName());
+				trx.setSalesperson(selected);
+			}
+		} catch (Exception e) {
+			logger.severe("Failed to open SalespersonDialog: " + e.getMessage());
+		}
+	}
+
 	public static void openPromoItemDialog(Stage parent, Trx trx) {
 		if (trx == null)
 			return;

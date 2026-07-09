@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -13,7 +12,7 @@
 
 <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="601.0" prefWidth="900.0" stylesheets="@.root.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id="customerTitleLabel" style="-fx-font-weight: bold; -fx-font-size: 2.4em;" text="Customers" />
+      <Label fx:id="customerTitleLabel" style="-fx-font-weight: bold; -fx-font-size: 2.4em;" text="Sales Person" />
       <HBox alignment="CENTER_LEFT" spacing="10.0">
          <children>
             <Label alignment="CENTER_RIGHT" prefWidth="100.0" text="Search">
@@ -24,7 +23,6 @@
             <TextField fx:id="searchInput" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="311.0" />
             <Button fx:id="submitButton" minWidth="-Infinity" mnemonicParsing="false" prefWidth="100.0" text="Submit" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button fx:id="newCustomerButton" mnemonicParsing="false" text="[F2] New Customer" />
          </children>
          <VBox.margin>
             <Insets top="20.0" />
@@ -33,39 +31,20 @@
       <HBox spacing="10.0">
          <children>
             <Region prefWidth="100.0" />
-            <Label style="-fx-font-size: 1.1em;" text="tekan F1 untuk penggantian mode pencarian (Nomor HP, Nama, 4 digit terakhir nomor HP), F2 untuk mendaftarkan customer baru" />
          </children>
          <VBox.margin>
             <Insets top="3.0" />
          </VBox.margin>
       </HBox>
-      <HBox spacing="10.0">
-         <children>
-            <Region prefWidth="100.0" />
-            <RadioButton fx:id="radioById" mnemonicParsing="false" selected="true" text="Nomor HP" />
-            <RadioButton fx:id="radioByName" mnemonicParsing="false" text="Name">
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </RadioButton>
-            <RadioButton fx:id="radioBy4LastDigit" mnemonicParsing="false" text="4 digit terakhir no HP">
-               <HBox.margin>
-                  <Insets left="20.0" />
-               </HBox.margin>
-            </RadioButton>
-         </children>
-         <VBox.margin>
-            <Insets bottom="20.0" top="15.0" />
-         </VBox.margin>
-      </HBox>
       <TableView fx:id="tableViewResult" VBox.vgrow="ALWAYS">
         <columns>
-          <TableColumn fx:id="colId" prefWidth="201.0" text="ID" />
+          <TableColumn fx:id="colNik" prefWidth="201.0" text="NIK" />
           <TableColumn fx:id="colName" prefWidth="400.0" text="Name" />
-          <TableColumn fx:id="colBirthdate" prefWidth="62.0" text="Birthdate" visible="false" />
-          <TableColumn fx:id="colGender" prefWidth="100.0" text="Gender" />
-          <TableColumn fx:id="colType" minWidth="0.0" prefWidth="100.0" text="Type" />
+          <TableColumn fx:id="colBrand" minWidth="0.0" prefWidth="100.0" text="Brand" />
         </columns>
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
       </TableView>
       <HBox alignment="CENTER" prefWidth="200.0" spacing="10.0">
          <children>

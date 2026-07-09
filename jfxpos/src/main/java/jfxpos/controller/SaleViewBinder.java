@@ -48,6 +48,24 @@ public class SaleViewBinder {
                             },
                             newTrx.customerNameProperty()));
         }
+        if (controller.salespersonNikLabel != null) {
+            controller.salespersonNikLabel.textProperty().bind(
+                    Bindings.createStringBinding(
+                            () -> {
+                                String nik = newTrx.salespersonNikProperty().get();
+                                return nik == null ? "" : nik;
+                            },
+                            newTrx.salespersonNikProperty()));
+        }
+        if (controller.salespersonNameLabel != null) {
+            controller.salespersonNameLabel.textProperty().bind(
+                    Bindings.createStringBinding(
+                            () -> {
+                                String name = newTrx.salespersonNameProperty().get();
+                                return name == null ? "" : name;
+                            },
+                            newTrx.salespersonNameProperty()));
+        }
         if (controller.customerDiscountLabel != null) {
             controller.customerDiscountLabel.textProperty().bind(
                     Bindings.format("%,.0f", newTrx.customerDiscountProperty()));
@@ -127,6 +145,12 @@ public class SaleViewBinder {
         }
         if (controller.customerNameLabel != null) {
             controller.customerNameLabel.textProperty().unbind();
+        }
+        if (controller.salespersonNikLabel != null) {
+            controller.salespersonNikLabel.textProperty().unbind();
+        }
+        if (controller.salespersonNameLabel != null) {
+            controller.salespersonNameLabel.textProperty().unbind();
         }
         if (controller.customerDiscountLabel != null) {
             controller.customerDiscountLabel.textProperty().unbind();

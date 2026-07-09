@@ -30,6 +30,11 @@ public class Trx extends Model {
 			public static final String CUSTOMERTYPE_ID = "CUSTOMERTYPE_ID";
 			public static final String CUSTOMER_GENDER = "CUSTOMER_GENDER";
 			public static final String CUSTOMER_BIRTHDATE = "CUSTOMER_BIRTHDATE";
+
+			public static final String SALESPERSON_ID = "SALESPERSON_ID";
+			public static final String SALESPERSON_NIK = "SALESPERSON_NIK";
+			public static final String SALESPERSON_NAME = "SALESPERSON_NAME";
+
 			public static final String QTY = "QTY";
 			public static final String SUBTOTAL_GROSS = "SUBTOTAL_GROSS";
 			public static final String SUBTOTAL_DISCOUNT = "SUBTOTAL_DISCOUNT";
@@ -98,6 +103,10 @@ public class Trx extends Model {
 	private final StringProperty customerTypeName = new SimpleStringProperty(this, "customerTypeName", "");
 	private final IntegerProperty customerGender = new SimpleIntegerProperty(this, "customerGender", 0);
 	private final ObjectProperty<LocalDate> customerBirthdate = new SimpleObjectProperty<>(this, "customerBirthdate");
+
+	private final IntegerProperty salespersonId = new SimpleIntegerProperty(this, "salespersonId", 0);
+	private final StringProperty salespersonNik = new SimpleStringProperty(this, "salespersonNik", "");
+	private final StringProperty salespersonName = new SimpleStringProperty(this, "salespersonName", "");
 
 	private final ObjectProperty<BigDecimal> customerDiscount = new SimpleObjectProperty<>(this, "customerDiscount",
 			BigDecimal.ZERO);
@@ -383,6 +392,42 @@ public class Trx extends Model {
 
 	public ObjectProperty<LocalDate> customerBirthdateProperty() {
 		return customerBirthdate;
+	}
+
+	public Integer getSalespersonId() {
+		return salespersonId.get();
+	}
+
+	public void setSalespersonId(Integer salespersonId) {
+		this.salespersonId.set(salespersonId != null ? salespersonId : 0);
+	}
+
+	public IntegerProperty salespersonIdProperty() {
+		return salespersonId;
+	}
+
+	public String getSalespersonNik() {
+		return salespersonNik.get();
+	}
+
+	public void setSalespersonNik(String salespersonNik) {
+		this.salespersonNik.set(salespersonNik != null ? salespersonNik : "");
+	}
+
+	public StringProperty salespersonNikProperty() {
+		return salespersonNik;
+	}
+
+	public String getSalespersonName() {
+		return salespersonName.get();
+	}
+
+	public void setSalespersonName(String salespersonName) {
+		this.salespersonName.set(salespersonName != null ? salespersonName : "");
+	}
+
+	public StringProperty salespersonNameProperty() {
+		return salespersonName;
 	}
 
 	public Integer getCustomerTypeId() {
@@ -674,6 +719,18 @@ public class Trx extends Model {
 			setCustomerTypeName("");
 			setCustomerGender(0);
 			setCustomerBirthdate(null);
+		}
+	}
+
+	public void setSalesperson(jfxpos.models.Salesperson salesperson) {
+		if (salesperson != null) {
+			setSalespersonId(salesperson.getSalespersonId());
+			setSalespersonNik(salesperson.getSalespersonNik());
+			setSalespersonName(salesperson.getSalespersonName());
+		} else {
+			setSalespersonId(0);
+			setSalespersonNik("");
+			setSalespersonName("");
 		}
 	}
 }

@@ -123,6 +123,12 @@ public class SaleController extends Controller {
 	Label customerDiscountLabel;
 
 	@FXML
+	Label salespersonNikLabel;
+
+	@FXML
+	Label salespersonNameLabel;
+
+	@FXML
 	Button searchCustomerButton;
 
 	@FXML
@@ -133,6 +139,9 @@ public class SaleController extends Controller {
 
 	@FXML
 	Button clearCustomerButton;
+
+	@FXML
+	Button salespersonButton;
 
 	@FXML
 	Label promoItemCountLabel;
@@ -394,7 +403,11 @@ public class SaleController extends Controller {
 		}
 
 		if (f12Button != null) {
-			f12Button.setOnAction(e -> openCustRegisterDialog());
+			f12Button.setOnAction(e -> openSalespersonDialog());
+		}
+
+		if (salespersonButton != null) {
+			salespersonButton.setOnAction(e -> openSalespersonDialog());
 		}
 
 		// Register customer on button click
@@ -865,6 +878,10 @@ public class SaleController extends Controller {
 
 	private void openPromoItemDialog() {
 		SaleDialogManager.openPromoItemDialog(getCurrentWindow(), currentTrx.get());
+	}
+
+	private void openSalespersonDialog() {
+		SaleDialogManager.openSalespersonDialog(getCurrentWindow(), currentTrx.get());
 	}
 
 	private void openPromoPaymentDialog() {

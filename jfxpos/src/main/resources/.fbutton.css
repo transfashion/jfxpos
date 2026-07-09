@@ -1,0 +1,21 @@
+.fbutton-bar .button {
+	-fx-pref-width: 78px;
+	-fx-pref-height: 50px;
+
+	-fx-min-width: -fx-pref-width;
+	-fx-min-height: -fx-pref-height;
+
+	-fx-max-width: 85px;
+	-fx-max-height: -fx-pref-height;
+
+	-fx-padding: 0 0 0 0;
+}
+
+.fbutton-bar .code {
+	-fx-font-size: 0.8em;
+	-fx-font-weight: bold;
+}
+
+.fbutton-bar .descr {
+	-fx-font-size: 0.65em;
+}

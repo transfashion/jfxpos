@@ -24,6 +24,7 @@ import jfxpos.views.EditQtyDialog;
 import jfxpos.Controller;
 import jfxpos.util.MessageBox;
 import jfxpos.views.CustDisplayWindow;
+import jfxpos.views.CheckoutDialog;
 
 public class SaleController extends Controller {
 
@@ -355,22 +356,22 @@ public class SaleController extends Controller {
 
 		// Select Promo for Next Transaction
 		if (f4Button != null) {
-			f4Button.setOnAction(e -> openPromoNextTxDialog());
+			f4Button.setOnAction(e -> openCheckoutDialog());
 		}
 
 		// Select Payment Promo
 		if (f5Button != null) {
-			f5Button.setOnAction(e -> openPromoPaymentDialog());
+			f5Button.setOnAction(e -> openPromoNextTxDialog());
 		}
 
 		// Select Item Promo
 		if (f6Button != null) {
-			f6Button.setOnAction(e -> openPromoItemDialog());
+			f6Button.setOnAction(e -> openPromoPaymentDialog());
 		}
 
 		// Show message box on F7 button click
 		if (f7Button != null) {
-			f7Button.setOnAction(e -> createNewTransaction());
+			f7Button.setOnAction(e -> openPromoItemDialog());
 		}
 
 		// Remove current Row
@@ -385,7 +386,7 @@ public class SaleController extends Controller {
 
 		// Checkout
 		if (f10Button != null) {
-			f10Button.setOnAction(e -> openCheckoutDialog());
+			f10Button.setOnAction(e -> createNewTransaction());
 		}
 
 		if (f11Button != null) {
@@ -841,6 +842,13 @@ public class SaleController extends Controller {
 
 	private void openCheckoutDialog() {
 		logger.info("open checkout dialog");
+		try {
+			CheckoutDialog dialog = new CheckoutDialog(getCurrentWindow(), currentTrx.get());
+			dialog.openDialog();
+		} catch (Exception e) {
+			logger.severe("Failed to open CheckoutDialog: " + e.getMessage());
+			MessageBox.error(getCurrentWindow(), "Gagal membuka dialog Checkout: " + e.getMessage());
+		}
 	}
 
 	private void closeSaleDialog() {

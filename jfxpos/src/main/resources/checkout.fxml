@@ -4,9 +4,11 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
@@ -16,9 +18,96 @@
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="477.0" HBox.hgrow="ALWAYS">
+            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="477.0" spacing="10.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Label maxWidth="1.7976931348623157E308" style="-fx-font-size: 2.4em; -fx-font-weight: bold;" text="Checkout" />
+                  <Label maxWidth="1.7976931348623157E308" style="-fx-font-size: 2.4em; -fx-font-weight: bold;" text="Checkout">
+                     <VBox.margin>
+                        <Insets bottom="30.0" />
+                     </VBox.margin></Label>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
+                     <children>
+                        <Label alignment="BOTTOM_RIGHT" prefHeight="19.0" prefWidth="123.0" text="Device Type" />
+                        <Label minWidth="-Infinity" prefHeight="19.0" prefWidth="230.0" style="-fx-border-color: transparent transparent #cccccc transparent;" text="EDC" />
+                        <Button mnemonicParsing="false" text="..." />
+                        <CheckBox mnemonicParsing="false" text="Integration">
+                           <HBox.margin>
+                              <Insets left="40.0" />
+                           </HBox.margin></CheckBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="108.0" spacing="10.0">
+                     <children>
+                        <Label alignment="BOTTOM_RIGHT" prefHeight="19.0" prefWidth="123.0" text="EDC" />
+                        <Label minWidth="-Infinity" prefHeight="19.0" prefWidth="230.0" style="-fx-border-color: transparent transparent #cccccc transparent;" text="Select EDC" />
+                        <Button mnemonicParsing="false" text="..." />
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="BOTTOM_LEFT" layoutX="10.0" layoutY="147.0" spacing="10.0">
+                     <children>
+                        <Label alignment="BOTTOM_RIGHT" prefHeight="19.0" prefWidth="123.0" text="Installment" />
+                        <Label minWidth="-Infinity" prefHeight="19.0" prefWidth="230.0" style="-fx-border-color: transparent transparent #cccccc transparent;" text="Full Payment" />
+                        <Button mnemonicParsing="false" text="..." />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="69.0" spacing="10.0">
+                     <children>
+                        <Label alignment="BOTTOM_RIGHT" prefHeight="19.0" prefWidth="123.0" text="Approval" />
+                        <TextField />
+                     </children>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="176.0" spacing="10.0">
+                     <children>
+                        <Label alignment="BOTTOM_RIGHT" prefHeight="19.0" prefWidth="123.0" text="Card Number" />
+                        <TextField prefHeight="29.0" prefWidth="315.0" />
+                     </children>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="108.0" spacing="10.0">
+                     <children>
+                        <Label alignment="BOTTOM_RIGHT" prefHeight="19.0" prefWidth="123.0" text="Card Holder" />
+                        <TextField prefHeight="29.0" prefWidth="315.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="186.0" spacing="10.0">
+                     <children>
+                        <Label alignment="BOTTOM_RIGHT" prefHeight="19.0" prefWidth="123.0" text="Value" />
+                        <TextField alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="166.0" style="-fx-font-size: 2em; -fx-font-weight: bold;" text="99,999,999" />
+                        <Label alignment="BOTTOM_RIGHT" layoutX="10.0" layoutY="15.0" prefHeight="19.0" prefWidth="36.0" text="of" />
+                        <Label alignment="BOTTOM_RIGHT" layoutX="351.0" layoutY="15.0" style="-fx-font-weight: bold;" text="999,999,999" />
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="225.0" spacing="10.0">
+                     <children>
+                        <Label alignment="BOTTOM_RIGHT" prefHeight="19.0" prefWidth="123.0" text="Cash" />
+                        <TextField alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="166.0" style="-fx-font-size: 2em; -fx-font-weight: bold;" text="99,999,999" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="303.0" spacing="10.0">
+                     <children>
+                        <Label alignment="BOTTOM_RIGHT" prefHeight="19.0" prefWidth="123.0" />
+                        <Button mnemonicParsing="false" text="Add to Payment" />
+                     </children>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </HBox>
                </children>
             </VBox>
             <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="477.0" HBox.hgrow="ALWAYS">
@@ -33,54 +122,81 @@
                               <Insets left="4.0" right="4.0" />
                            </padding>
                         </Label>
-                        <HBox alignment="BOTTOM_RIGHT" spacing="10.0" styleClass="HBox">
+                        <HBox alignment="BOTTOM_RIGHT" styleClass="HBox">
                            <children>
-                              <Label fx:id="grandTotalQtyLabel1" alignment="BOTTOM_RIGHT" minWidth="-Infinity" styleClass="subtotal" text="2" />
-                              <Label alignment="BASELINE_LEFT" layoutX="238.0" layoutY="15.0" styleClass="info-label" text="item(s)" />
+                              <Label fx:id="grandTotalQtyLabel1" alignment="BOTTOM_RIGHT" minWidth="-Infinity" text="2">
+                                 <styleClass>
+                                    <String fx:value="subtotal" />
+                                    <String fx:value="info-value" />
+                                 </styleClass></Label>
+                              <Label alignment="BASELINE_LEFT" layoutX="238.0" layoutY="15.0" styleClass="info-label" text="item(s)">
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding></Label>
                               <Region HBox.hgrow="ALWAYS" />
                               <Label alignment="BASELINE_LEFT" styleClass="info-label" text="Subtotal Value" />
-                              <Label fx:id="grandTotalQtyLabel" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="190.0" styleClass="subtotal" text="999,999,999" />
+                              <Label fx:id="grandTotalQtyLabel" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="190.0" styleClass="info-value" text="999,999,999" />
                            </children>
                            <VBox.margin>
                               <Insets top="10.0" />
                            </VBox.margin>
                         </HBox>
-                        <HBox alignment="BOTTOM_RIGHT" layoutX="26.0" layoutY="38.0" spacing="10.0" styleClass="HBox">
+                        <HBox alignment="BOTTOM_RIGHT" layoutX="26.0" layoutY="38.0" styleClass="HBox">
                            <children>
                               <Label alignment="BASELINE_LEFT" styleClass="info-label" text="Additional Rebate / Disc Voucher" />
-                              <Label fx:id="grandTotalQtyLabel1" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="190.0" styleClass="subtotal" text="999,999,999" />
+                              <Label fx:id="grandTotalQtyLabel1" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="190.0" text="999,999,999">
+                                 <styleClass>
+                                    <String fx:value="subtotal" />
+                                    <String fx:value="info-value" />
+                                 </styleClass></Label>
                            </children>
                         </HBox>
-                        <HBox alignment="BOTTOM_RIGHT" layoutX="26.0" layoutY="62.0" spacing="10.0" styleClass="HBox">
+                        <HBox alignment="BOTTOM_RIGHT" layoutX="26.0" layoutY="62.0" styleClass="HBox">
                            <children>
                               <Label alignment="BASELINE_LEFT" styleClass="info-label" text="Payment Discount" />
-                              <Label fx:id="grandTotalQtyLabel11" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="190.0" styleClass="subtotal" text="999,999,999" />
+                              <Label fx:id="grandTotalQtyLabel11" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="190.0" text="999,999,999">
+                                 <styleClass>
+                                    <String fx:value="subtotal" />
+                                    <String fx:value="info-value" />
+                                 </styleClass></Label>
                            </children>
                         </HBox>
-                        <HBox alignment="BOTTOM_RIGHT" layoutX="26.0" layoutY="86.0" spacing="10.0" styleClass="HBox">
+                        <HBox alignment="BOTTOM_RIGHT" layoutX="26.0" layoutY="86.0" styleClass="HBox">
                            <children>
                               <Label alignment="BASELINE_LEFT" styleClass="info-label" text="TOTAL" />
-                              <Label fx:id="grandTotalQtyLabel111" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="190.0" styleClass="subtotal" text="999,999,999" />
+                              <Label fx:id="grandTotalQtyLabel111" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="190.0" text="999,999,999">
+                                 <styleClass>
+                                    <String fx:value="subtotal" />
+                                    <String fx:value="info-value" />
+                                 </styleClass></Label>
                            </children>
                         </HBox>
-                        <HBox alignment="BOTTOM_RIGHT" layoutX="26.0" layoutY="110.0" spacing="10.0" styleClass="HBox">
+                        <HBox alignment="BOTTOM_RIGHT" layoutX="26.0" layoutY="110.0" styleClass="HBox">
                            <children>
                               <Label alignment="BASELINE_LEFT" styleClass="info-label" text="Donasi" />
-                              <Label fx:id="grandTotalQtyLabel1111" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="190.0" styleClass="subtotal" text="999,999,999" />
+                              <Label fx:id="grandTotalQtyLabel1111" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="190.0" text="999,999,999">
+                                 <styleClass>
+                                    <String fx:value="subtotal" />
+                                    <String fx:value="info-value" />
+                                 </styleClass></Label>
                            </children>
                            <VBox.margin>
                               <Insets top="20.0" />
                            </VBox.margin>
                         </HBox>
-                        <HBox alignment="BOTTOM_RIGHT" layoutX="26.0" layoutY="134.0" spacing="10.0" styleClass="HBox">
+                        <HBox alignment="BOTTOM_RIGHT" layoutX="26.0" layoutY="134.0" styleClass="HBox">
                            <children>
                               <Label alignment="BASELINE_LEFT" styleClass="info-label" text="Delivery" />
-                              <Label fx:id="grandTotalQtyLabel11111" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="190.0" styleClass="subtotal" text="999,999,999" />
+                              <Label fx:id="grandTotalQtyLabel11111" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="190.0" text="999,999,999">
+                                 <styleClass>
+                                    <String fx:value="subtotal" />
+                                    <String fx:value="info-value" />
+                                 </styleClass></Label>
                            </children>
                         </HBox>
-                        <HBox alignment="BOTTOM_RIGHT" spacing="10.0" styleClass="HBox">
+                        <HBox alignment="BOTTOM_RIGHT" styleClass="HBox">
                            <children>
-                              <Label styleClass="info-label" text="Grand Total">
+                              <Label style="-fx-font-weight: bold;" text="Grand Total">
                                  <HBox.margin>
                                     <Insets />
                                  </HBox.margin>
@@ -102,7 +218,7 @@
                         <Insets top="20.0" />
                      </VBox.margin>
                   </Label>
-                  <TableView prefHeight="200.0" prefWidth="200.0">
+                  <TableView prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <columns>
                       <TableColumn prefWidth="75.0" text="C1" />
                       <TableColumn prefWidth="75.0" text="C2" />
@@ -114,13 +230,13 @@
                   <HBox alignment="BOTTOM_RIGHT" spacing="10.0" styleClass="HBox">
                      <children>
                         <Label alignment="BASELINE_LEFT" styleClass="info-label" text="Total Payment" />
-                        <Label fx:id="grandTotalQtyLabel11112" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="190.0" styleClass="subtotal" text="999,999,999" />
+                        <Label fx:id="grandTotalQtyLabel11112" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefHeight="19.0" prefWidth="117.0" styleClass="subtotal" text="999,999,999" />
                      </children>
                   </HBox>
                   <HBox alignment="BOTTOM_RIGHT" layoutX="10.0" layoutY="556.0" spacing="10.0" styleClass="HBox">
                      <children>
                         <Label alignment="BASELINE_LEFT" styleClass="info-label" text="Refund" />
-                        <Label fx:id="grandTotalQtyLabel111121" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefWidth="190.0" styleClass="subtotal" text="999,999,999" />
+                        <Label fx:id="grandTotalQtyLabel111121" alignment="BOTTOM_RIGHT" minWidth="-Infinity" prefHeight="19.0" prefWidth="117.0" styleClass="subtotal" text="999,999,999" />
                      </children>
                   </HBox>
                </children>
@@ -134,7 +250,7 @@
                   <VBox fx:id="searchModeButton" alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F1" />
-                        <Label styleClass="descr" text="Search Mod" />
+                        <Label styleClass="descr" text="Device Type" />
                      </children>
                   </VBox>
                </graphic>
@@ -144,7 +260,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F2" />
-                        <Label styleClass="descr" text="Channel" />
+                        <Label styleClass="descr" text="EDC" />
                      </children>
                   </VBox>
                </graphic>
@@ -154,7 +270,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F3" />
-                        <Label styleClass="descr" text="Edit Qty" />
+                        <Label styleClass="descr" text="Installment" />
                      </children>
                   </VBox>
                </graphic>
@@ -164,7 +280,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F4" />
-                        <Label styleClass="descr" text="Promo Next Tx" />
+                        <Label styleClass="descr" text="..." />
                      </children>
                   </VBox>
                </graphic>
@@ -174,7 +290,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F5" />
-                        <Label styleClass="descr" text="Promo Payment" />
+                        <Label styleClass="descr" text="Add Paym" />
                      </children>
                   </VBox>
                </graphic>
@@ -184,7 +300,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F6" />
-                        <Label styleClass="descr" text="Promo Item" />
+                        <Label styleClass="descr" text="..." />
                      </children>
                   </VBox>
                </graphic>
@@ -194,7 +310,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F7" />
-                        <Label styleClass="descr" text="New Tx" />
+                        <Label styleClass="descr" text="..." />
                      </children>
                   </VBox>
                </graphic>
@@ -214,7 +330,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F9" />
-                        <Label styleClass="descr" text="Recall" />
+                        <Label styleClass="descr" text="..." />
                      </children>
                   </VBox>
                </graphic>
@@ -224,7 +340,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F10" />
-                        <Label styleClass="descr" text="Checkout" />
+                        <Label styleClass="descr" text="Print" />
                      </children>
                   </VBox>
                </graphic>
@@ -234,7 +350,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F11" />
-                        <Label styleClass="descr" text="Search Cust" />
+                        <Label styleClass="descr" text="..." />
                      </children>
                   </VBox>
                </graphic>
@@ -244,7 +360,7 @@
                   <VBox alignment="CENTER">
                      <children>
                         <Label styleClass="code" text="F12" />
-                        <Label styleClass="descr" text="Reg Cust" />
+                        <Label styleClass="descr" text="Integration" />
                      </children>
                   </VBox>
                </graphic>

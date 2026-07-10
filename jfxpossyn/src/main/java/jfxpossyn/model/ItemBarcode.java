@@ -11,7 +11,7 @@ public class ItemBarcode extends Model {
 			public static final String ITEM_ID = "ITEM_ID";
 			public static final String BARCODE = "BARCODE";
 			public static final String BRAND_ID = "BRAND_ID";
-			public static final String IS_ACTIVE = "IS_ACTIVE";
+			public static final String ITEMBARCODE_ISDISABLED = "ITEMBARCODE_ISDISABLED";
 			public static final String CREATED_AT = "CREATED_AT";
 			public static final String MODIFIED_AT = "MODIFIED_AT";
 			public static final String DATATIMESTAMP = "DATATIMESTAMP";
@@ -22,7 +22,7 @@ public class ItemBarcode extends Model {
 	private long itemId;
 	private String barcode;
 	private Integer brandId;
-	private boolean active = true;
+	private boolean itembarcodeIsDisabled = false;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 	private LocalDateTime dataTimestamp;
@@ -59,12 +59,12 @@ public class ItemBarcode extends Model {
 		this.brandId = brandId;
 	}
 
-	public boolean isActive() {
-		return active;
+	public boolean isItembarcodeIsDisabled() {
+		return itembarcodeIsDisabled;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setItembarcodeIsDisabled(boolean itembarcodeIsDisabled) {
+		this.itembarcodeIsDisabled = itembarcodeIsDisabled;
 	}
 
 	public LocalDateTime getCreatedAt() {

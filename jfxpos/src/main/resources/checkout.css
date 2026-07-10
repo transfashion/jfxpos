@@ -1,13 +1,20 @@
 .summary-info .HBox {
-	-fx-border-color: transparent transparent #e2e2e2 transparent;
-	-fx-border-width: 0 0 1 0;
-	-fx-border-style: none none dashed none;
+	/* -fx-border-color: transparent transparent #e2e2e2 transparent; */
+	/* -fx-border-width: 0 0 1 0; */
+	/* -fx-border-style: none none dashed none; */
 }
 
 
 .summary-info .info-label {
 	-fx-font-size: 1.4em;
 	-fx-font-weight: bold;
+	-fx-border-color: transparent transparent #e2e2e2 transparent;
+	-fx-border-width: 0 0 1 0;
+}
+
+.summary-info .info-value {
+	-fx-border-color: transparent transparent #e2e2e2 transparent;
+	-fx-border-width: 0 0 1 0;
 }
 
 .summary-info .grandtotal {

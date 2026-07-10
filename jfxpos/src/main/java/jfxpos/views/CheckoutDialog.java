@@ -2,6 +2,7 @@ package jfxpos.views;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import jfxpos.App;
 import jfxpos.View;
 import jfxpos.controller.CheckoutController;
 import jfxpos.models.Trx;
@@ -19,7 +20,11 @@ public class CheckoutDialog extends View {
 		this.controller = new CheckoutController(trx);
 		Scene scene = loadFxml(FXML, controller);
 		stage = createDialogStage(Title, scene, owner);
-		stage.setResizable(false);
+		stage.setResizable(true);
+
+		if (App.isProd) {
+			stage.setMaximized(true);
+		}
 	}
 
 	@Override

@@ -397,7 +397,7 @@ public class ItemSyncer {
 
 						Object disabled = bcMap.get("itembarcode_isdisabled");
 						if (disabled != null) {
-							ib.setActive(!Boolean.parseBoolean(disabled.toString()));
+							ib.setItembarcodeIsDisabled(Boolean.parseBoolean(disabled.toString()));
 						}
 
 						Object bcCreatedVal = bcMap.get("created_at");

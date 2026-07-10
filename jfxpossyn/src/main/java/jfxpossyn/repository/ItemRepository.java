@@ -94,7 +94,7 @@ public class ItemRepository {
 				ItemBarcode.Contract.Columns.ITEM_ID,
 				ItemBarcode.Contract.Columns.BARCODE,
 				ItemBarcode.Contract.Columns.BRAND_ID,
-				ItemBarcode.Contract.Columns.IS_ACTIVE,
+				ItemBarcode.Contract.Columns.ITEMBARCODE_ISDISABLED,
 				ItemBarcode.Contract.Columns.CREATED_AT,
 				ItemBarcode.Contract.Columns.DATATIMESTAMP,
 				ItemBarcode.Contract.Columns.ITEMBARCODE_ID
@@ -167,7 +167,7 @@ public class ItemRepository {
 							} else {
 								psBarcode.setNull(4, java.sql.Types.INTEGER);
 							}
-							psBarcode.setBoolean(5, bc.isActive());
+							psBarcode.setBoolean(5, bc.isItembarcodeIsDisabled());
 							if (bc.getCreatedAt() != null) {
 								psBarcode.setTimestamp(6, Timestamp.valueOf(bc.getCreatedAt()));
 							} else {
@@ -201,13 +201,14 @@ public class ItemRepository {
 		String sql = String.format(
 				"SELECT i.* FROM %s i " +
 				"JOIN %s ib ON i.%s = ib.%s " +
-				"WHERE ib.%s = ? AND i.%s = FALSE",
+				"WHERE ib.%s = ? AND i.%s = FALSE AND ib.%s = FALSE",
 				Item.Contract.TABLE_NAME,
 				ItemBarcode.Contract.TABLE_NAME,
 				Item.Contract.Columns.ITEM_ID,
 				ItemBarcode.Contract.Columns.ITEM_ID,
 				ItemBarcode.Contract.Columns.BARCODE,
-				Item.Contract.Columns.ITEM_ISDISABLED
+				Item.Contract.Columns.ITEM_ISDISABLED,
+				ItemBarcode.Contract.Columns.ITEMBARCODE_ISDISABLED
 		);
 
 		try (Connection conn = DbPool.getConnection();

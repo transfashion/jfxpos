@@ -1,0 +1,15 @@
+dependencies {
+    // Add dependencies here if needed in the future
+}
+
+jar {
+    archiveFileName = 'jfxposecr.jar'
+    manifest {
+        attributes(
+            'Main-Class': 'jfxposecr.Main',
+            'Implementation-Title': project.name,
+            'Implementation-Version': project.version,
+            'Implementation-Vendor': project.vendor
+        )
+    }
+}

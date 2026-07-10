@@ -8,7 +8,7 @@ Server/backend API untuk POS ini dikembangkan sebagai project terpisah di reposi
 
 ## 🛠️ Arsitektur & Struktur Modul
 
-Project ini dibagi menjadi 3 modul utama:
+Project ini dibagi menjadi 4 modul utama:
 
 1. **`launcher`**  
    Titik awal (*start point*) jalannya aplikasi. Modul ini bertanggung jawab atas proses pemeriksaan dan pembaruan otomatis (*autoupdate*), khususnya mengunduh/mengganti file `jfxpos.jar` utama sebelum menjalankan aplikasi POS.
@@ -16,6 +16,8 @@ Project ini dibagi menjadi 3 modul utama:
    Modul aplikasi utama berisi UI POS, FXML Controller, logika bisnis, dan integrasi database.
 3. **`jfxpossyn`**  
    Modul sinkronisasi data independen yang murni berjalan untuk keperluan data tanpa bergantung pada JavaFX / UI library, sehingga dapat digunakan kembali oleh modul lain.
+4. **`jfxposecr`**  
+   Modul penanganan ECR (Electronic Cash Register) / integrasi EDC independen yang murni berjalan untuk keperluan integrasi perangkat luar tanpa bergantung pada JavaFX / UI library, sehingga dapat digunakan kembali oleh modul lain.
 
 Untuk detail pedoman pengembangan, pola desain (Repository, Model, Data Contract), dan aturan arsitektur lainnya, silakan merujuk ke [GEMINI.md].
 
